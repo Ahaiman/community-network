@@ -1,7 +1,7 @@
 /*
  * BHatMatrix.h
  *
- *  Created on: 12 ·‡Â‚◊ 2020
+ *  Created on: 12 √°√†√•√¢√ó 2020
  *      Author: Avital
  */
 
@@ -18,22 +18,23 @@ typedef struct _BHatMatrix{
 	/*Keeping the degrees of the current nodes in the group
 	 * in degrees vector
 	 */
+	spmat *A_g;
 	double *degrees;
-
-	int size;
-
-	spmat *A;
-
-	spmat *F;
-
-//	int **K_Matrix;
-
+	double *f_vector;
 	double matrixNorm;
+	int size;
+	int *nodesIndices;
 
-	double (**createMatrixBHat)(double *degrees, spmat *A, spmat *F, double *b_k);
+	//spmat *F;
+	//int **K_Matrix;
+	/*
+	 calculating a b-hat-matrix eigen vector (b_k will be calculated inside this method) 
+	*/
+	double (**calcBHatMatrixEigenVector)(BHatMatrix *B);
+	BHatMatrix (**createMatrixBHat) (spmat *A_g, double *degrees, double *F, double matrixNorm);
 	void (*free)(struct __BHatMatrix *B);
 
 
-};
+} BHatMatrix;
 
 #endif /* STRUCTURES_BHATMATRIX_H_ */
