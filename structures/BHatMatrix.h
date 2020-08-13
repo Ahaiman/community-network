@@ -28,7 +28,7 @@ typedef struct _BHatMatrix{
 	 calculating a b-hat-matrix eigen vector (b_k will be calculated inside this method) 
 	*/
 	double (**calcBHatMatrixEigenVector)(__BHatMatrix *B);
-	void (*free)(struct __BHatMatrix *B);
+	void (*freeBHat)(struct __BHatMatrix *B);
 } BHatMatrix;
 
 BHatMatrix* createMatrixBHat (spmat *A_g, double *degrees, double *f_vector, double matrixNorm, int size, int *nodesIndices);
