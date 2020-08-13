@@ -5,18 +5,17 @@
  *      Author: Avital
  */
 
+#include "./structures/BHatMatrix.h"
 
 void divisionGraphToTwo(graph *group){
 
 	BHatMatrix *B_g_shifted;
-	B_g = createMatrixBHat();
-	tuple return_value;
 	List division;
 	double eigenValue;
 	double *eigenVector;
 	int *s;
 
-
+	B_g_shifted = createMatrixBHat();
 	/*(1) degrees - needs to be built by nodes list in the graph
 	 * (2) F
 	 */
@@ -34,9 +33,9 @@ void divisionGraphToTwo(graph *group){
 
 
 	/*Avital - REMEMBER THAT THE b_g is not matrix is structure*/
-	return_value = findEigen(B_g, B_g -> size);
-	eigenVector = return_value[0];
-	eigenValue = return_value [1];
+	eigenValue = findEigen(B_g_shifted, eigenVector, B_g_shifted -> size);
+//	eigenVector = return_value[0];
+//	eigenValue = return_value [1];
 
 
 	//if (b1 <= 0): The network is indivisible
