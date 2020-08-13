@@ -6,9 +6,9 @@
  */
 
 #include "graph.h"
-#include "node.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "graph_node.h"
 
 
 
@@ -22,9 +22,9 @@
 	void set_size(graph *, int);
 	void set_num_edges(graph *, int);
 	void set_relate_matrix(graph *, int **);
-	void set_nodes(graph *, node **);
+	void set_nodes(graph *, graph_node **);
 	void free_graph(graph *);
-	graph* allocate_graph(int, int, node **, int **);
+	graph* allocate_graph(int, int, graph_node **, int **);
 
 
 	/*
@@ -33,7 +33,7 @@
 
 /*constructor for graph*/
 
-graph* allocate_graph(int n, int m, struct _node **graph_nodes, int **relate_matrix){
+graph* allocate_graph(int n, int m, graph_node **graph_nodes, int **relate_matrix){
 	graph* myGraph;
 	myGraph	= (graph *) malloc (sizeof(myGraph));
 
@@ -82,13 +82,13 @@ void set_relate_matrix(graph *G, int **matrix){
 	G -> relate_matrix = matrix;
 
 }
-void set_nodes(graph *G, node **nodes_list){
+void set_nodes(graph *G, graph_node **nodes_list){
 	G -> graph_nodes = nodes_list;
 }
 void free_graph(graph *G){
 	int i = 0;
 	int *curr_arr;
-	node *curr_node;
+	graph_node *curr_node;
 
 	/*free matrix*/
 	for(; i < G -> n; i++){
