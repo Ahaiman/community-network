@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../structures/graph.h"
-#include "../structures/node.h"
+#include "../structures/graph_node.h"
 #include "../structures/spmat.h"
 
 graph *createGraph(char *name_of_input_file){
@@ -18,25 +18,29 @@ graph *createGraph(char *name_of_input_file){
 	/*Variables deceleration*/
 	FILE	*input_file;
 	graph *input_graph;
-	node *curr_node;
-	node **nodes_list, **neighbors;
-	int *curr_neighbors;
-	int **relate_matrix;
+	graph_node *curr_node;
+	graph_node **nodes_list, **neighbors;
+	int *curr_neighbors, *matrix_row;
+	spmat **relate_matrix;
 	int n, m = 0, degree, j, neighboor_index;
 	int succ;
 
+	/*File Reading into variable, and asserting the process was successful.
+	 * if not - exiting the program.
+	 */
 	input_file =  fopen(name_of_input_file, "rb");
 	if(input_file == NULL){
 		exit("The file is not valid");
 	}
 
+	/*Reading number of nodes in the graph*/
 	succ = fread(&n, sizeof(int), 1, input_file);
 	if(succ != 1){
 		exit("The file is empty");
 	}
 
-	/*list of pointers to node in size n representing the nodes of the graph*/
-	nodes_list = (node*) malloc(sizeof(node) * (n));
+	/*Initializing list size n, of pointers to the nodes of the graph*/
+	nodes_list = (graph_node*) malloc(sizeof(graph_node) * (n));
 	relate_matrix = (int**) malloc(sizeof(int*) * (n));
 
 	/*Initialize Nodes list*/
@@ -46,6 +50,22 @@ graph *createGraph(char *name_of_input_file){
 		nodes_list++;
 	}
 	nodes_list -= n;
+
+
+	/*Reading the input matrix (one row at a time).
+	 * For each row, adding it to the sparse matrix*/
+
+	for(j = 0; j < n; j++){
+		matrix_row =  (double*) malloc(sizeof(double)*(n));
+		assert(matrix_row != NULL);
+
+		succ = fread(matrix_row, sizeof(double), n, input_file);
+		//assert(n == matrixSize);
+
+		relate_matrix -> add_row(relate_matrix, matrix_row, j);
+		free(matrix_row);
+	}
+
 
 	/*Reading File*/
 	 while( !feof(input_file) ) {

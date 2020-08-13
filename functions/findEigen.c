@@ -11,7 +11,81 @@
 #include <time.h>
 #include <math.h>
 #include "./structures/spmat.h"
+#include "./structures/BHatMatrix.h"
 #include <string.h>
+
+double* creatRandomVector(double* b0, int size);
+void print(int size, double *row);
+int counterNonZero(int size, FILE *inputMatrix);
+void divide(double *vector1, double norm, int size);
+double calcDotProduct(double *vector1, double *vector2, int size);
+int checkDifference(double *vector1, double *vector2, int size, double eps);
+
+
+double findEigenValue(BHatMatrix *B, int *eigenVector, int matrixSize){
+
+	/*Variables deceleration*/
+	int i = 0 , ifGreatThenEps = 1, place = 0;
+	double *initialVec, *matrixRow, *tmp;
+	double vector_norm, epsilon = 0.00001, eigenValue;
+	spmat *sparseMatrix;
+	clock_t start, end;
+
+	srand(time(NULL));
+	start = clock();
+
+	sparseMatrix = spmat_allocate_list(matrixSize);
+	creatRandomVector(initialVec, matrixSize);
+
+	/*Reading the vector*/
+	initialVec = (double*) malloc(sizeof(double)*(matrixSize));
+	if(initialVec == NULL){
+		printf("Intial Vector Allocation Failed");
+		exit(0);
+	}
+
+	/*Perform power iteration to obtain the eigenvector*/
+	/*Running the algorithm of power iteration*/
+	while(ifGreatThenEps){
+
+		/*Creating A*Bk*/
+		//eigenValue = (double*) malloc(sizeof(double)*(matrixSize));
+
+		sparseMatrix -> mult(sparseMatrix, initialVec,eigenVector);
+
+		/*calculating the vector's magnitude*/
+		vector_norm = sqrt(calcDotProduct(eigenValue, eigenValue, matrixSize));
+
+		/*normalizing the vector*/
+		if(vector_norm != 0.0) {
+			divide(eigenVector, vector_norm, matrixSize);
+		}
+
+		/*Checking if the difference between vectors is smaller then epsilon*/
+		ifGreatThenEps = checkDifference(initialVec, eigenVector,matrixSize, epsilon);
+
+		/*Swaping information between variables to continue the algorithm
+		 * b_k = b_k1*/
+		tmp = initialVec;
+		initialVec = eigenValue;
+		eigenVector = tmp;
+
+	}
+
+
+	/*Calculating the corresponding dominant eigenvalue	 */
+	eigenValue = (calcDotProduct(initialVec, eigenValue, matrixSize) /calcDotProduct(eigenValue,eigenValue, matrixSize));
+
+	free(initialVec);
+	sparseMatrix -> free(sparseMatrix);
+//	end = clock();
+//	printf("Prog  took: %f seconds\n", (double)(end - start) / CLOCKS_PER_SEC);
+
+	return eigenValue;
+}
+
+
+
 
 double* creatRandomVector(double* b0, int size){
 	int i;
@@ -106,73 +180,5 @@ int checkDifference(double *vector1, double *vector2, int size, double eps){
 	}
 	return 0;
 }
-
-
-double findEigenValue(int **matrix, int matrixSize){
-
-	/*Variables deceleration*/
-	int i = 0 , ifGreatThenEps = 1, place = 0;
-	double *initialVec, *matrixRow, *result, *tmp;
-	double vector_norm, epsilon = 0.00001, eigenValue;
-	spmat *sparseMatrix;
-	clock_t start, end;
-
-	srand(time(NULL));
-	start = clock();
-
-	sparseMatrix = spmat_allocate_list(matrixSize);
-	creatRandomVector(initialVec, matrixSize);
-
-	/*Reading the vector*/
-	initialVec = (double*) malloc(sizeof(double)*(matrixSize));
-	if(initialVec == NULL){
-		printf("Intial Vector Allocation Failed");
-		exit(0);
-	}
-
-	/*Perform power iteration to obtain the eigenvector*/
-	/*Running the algorithm of power iteration*/
-	while(ifGreatThenEps){
-
-		/*Creating A*Bk*/
-		result = (double*) malloc(sizeof(double)*(matrixSize));
-
-		sparseMatrix -> mult(sparseMatrix, initialVec,result);
-
-		/*calculating the vector's magnitude*/
-		vector_norm = sqrt(calcDotProduct(result, result, matrixSize));
-
-		/*normalizing the vector*/
-		if(vector_norm != 0.0) {
-			divide(result, vector_norm, matrixSize);
-		}
-
-		/*Checking if the difference between vectors is smaller then epsilon*/
-		ifGreatThenEps = checkDifference(initialVec, result,matrixSize, epsilon);
-
-		/*Swaping information between variables to continue the algorithm
-		 * b_k = b_k1*/
-		tmp = initialVec;
-		initialVec = result;
-		result = tmp;
-
-	}
-
-
-	/*Calculating the corresponding dominant eigenvalue	 */
-	eigenValue = (calcDotProduct(initialVec, result, matrixSize) /calcDotProduct(result,result, matrixSize));
-
-	free(result);
-	free(initialVec);
-	sparseMatrix -> free(sparseMatrix);
-//	end = clock();
-//	printf("Prog  took: %f seconds\n", (double)(end - start) / CLOCKS_PER_SEC);
-
-	return eigenValue;
-}
-
-
-
-
 
 
