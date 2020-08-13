@@ -1,19 +1,41 @@
  /* BHatMatrix.c
  *
- *  Created on: 12 áàåâ× 2020
+ *  Created on: 12 Ã¡Ã Ã¥Ã¢Ã— 2020
  *      Author: Avital
  */
 
 #include "BHatMatrix.h"
 #include "spmat.h"
 
-double* createMatrixBHat(double *degrees, spmat *A, spmat *F, double *b_k){
-	/*implenet*/
+BHatMatrix *createMatrixBHat (spmat *A_g, double *degrees, double *f_vector, double matrixNorm, int size, int *nodesIndices)
+{
+	BHatMatrix *B;
+    	B = (BHatMatrix *) malloc (sizeof(BHatMatrix));
+    	if(B == NULL)
+    	{
+    		printf("B Allocation Failed");
+    		exit(0);
+    	}
+	B -> A_g=A_g;
+	B -> degrees=degrees;
+	B -> f_vector=f_vector;
+	B -> matrixNorm=matrixNorm;
+	B -> size=size;
+	B -> nodesIndices=nodesIndices;
+	B -> calcBHatMatrixEigenVector=calcBHatMatrixEigenVector;
+	B -> freeBHat=freeBHat;
+	return B;
 }
 
 
-void *free(struct __BHatMatrix *B){
+//double* createMatrixBHat(double *degrees, spmat *A, double *f, double *b_k){
+	/*implenet*/
+//}
+
+
+void *freeBHat(struct __BHatMatrix *B){
+	spmat_free(B - > A_g);
 	free(B - > degrees);
-	spmat_free(B - > A);
-	spmat_free( B -> F);
+	free(B - >  f_vector);
+	free(B -> nodesIndices);
 }
