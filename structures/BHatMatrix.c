@@ -26,11 +26,12 @@ BHatMatrix *createMatrixBHat (spmat *A_g, double *degrees, double *f_vector, dou
 	B -> freeBHat=freeBHat;
 	return B;
 }
+/*
 double *calcBHatMatrixEigenVector(__BHatMatrix *B)
 {
 		
 }
-
+*/
 void *freeBHat(struct __BHatMatrix *B)
 {
 	spmat_free(B - > A_g);
