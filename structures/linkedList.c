@@ -12,7 +12,7 @@
 
 
 /*constructor for node*/
-linked_list_node *createNode(graph_node *value, int index) {
+linked_list_node *createNode(int value) {
 	linked_list_node *newNode = (linked_list_node *)malloc(sizeof(linked_list_node));
 	if(newNode == NULL){
 	    	printf("Allocation of newNode Failed");
@@ -20,7 +20,7 @@ linked_list_node *createNode(graph_node *value, int index) {
 	    }
 
     newNode->value = value;
-    newNode->index = value -> index;
+//    newNode->index = column;
     newNode->next = NULL;
     return newNode;
 }
@@ -33,5 +33,6 @@ linkedList *createLinkedList() {
     	exit(0);
     }
     list->head = NULL;
+    list -> size = 0;
     return list;
 }

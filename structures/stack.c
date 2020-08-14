@@ -5,7 +5,7 @@
   */
 
 #include "stack.h"
-#include "linkedList.h"
+#include "graph.h"
 
 void initialize(stack *stk)
 {
@@ -13,33 +13,33 @@ void initialize(stack *stk)
    stk -> top = NULL;
 }
 
-void push(linkedList list, stack *stk)
+void push(graph *group, stack *stk)
 { 
    elem   *p;
 
    p = malloc(sizeof(elem));
-   p -> list = list;
+   p -> group = group;
    p -> next = stk -> top;
    stk -> top = p;
    stk -> cnt++;
 }
 
-linkedList pop(stack *stk)
+graph* pop(stack *stk)
 { 
-   linkedList   list;
+   graph*   group;
    elem   *p;
 
-   list = stk -> top -> list;
+   group = stk -> top -> group;
    p = stk -> top;
    stk -> top = stk -> top -> next;
    stk -> cnt--;
    free(p);
-   return list;
+   return group;
 }
 
-linkedList top(const stack *stk)
+graph* top(const stack *stk)
 { 
-   return (stk -> top -> list);
+   return (stk -> top -> group);
 }
 
 boolean empty(const stack *stk)

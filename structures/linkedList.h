@@ -8,8 +8,7 @@
 #include "graph_node.h"
 
 typedef struct linked_list_node {
-    int index;
-    graph_node *value;
+    int value;
     struct linked_list_node  *next;
 
 } linked_list_node;
@@ -17,8 +16,9 @@ typedef struct linked_list_node {
 
 typedef struct linkedList {
 	linked_list_node   *head;
+	int size;
 
 } linkedList;
 
-linked_list_node *createNode(double value, int index);
+linked_list_node *createNode(int value);
 linkedList *createLinkedList();

@@ -14,8 +14,6 @@
 void add_row_to_list(spmat *A, const double *row, int i);
 void freeRow_list(linked_list_node *rowHead);
 void free_list(struct _spmat *A);
-void mult_list(const struct _spmat *A, const double *v, double *result);
-
 
 /*
  * --------Linked List---------
@@ -39,8 +37,7 @@ spmat *spmat_allocate_list(int n) {
     matrix->private = rows;
     matrix->n = n;
     matrix->add_row = add_row_to_list;
-    matrix->free = free_list;
-    matrix->mult = mult_list;
+    matrix->spmat_free = free_list;
     return matrix;
 }
 
@@ -49,14 +46,14 @@ spmat *spmat_allocate_list(int n) {
 /*
  * adds a the i'th row in the linkedList implementation
  */
-void add_row_to_list(struct _spmat *A, const double *row, int i) {
+void add_row_to_list(struct _spmat *A, const double *row, int row_size, int i) {
     int col;
     linked_list_node *curr, *tmp;
     bool headUpdated = 0;
     linkedList *currRow = createLinkedList(); /* currRow->size = 0, currRow->head = NULL; */
-    for (col = 0; col < A->n; col++) {
-        if (*row != 0) {
-            tmp = createNode(*row, col);   /*tmp->value = *row, tmp->index = col*/
+
+    for (col = 0; col < row_size; col++) {
+            tmp = createNode(1, *row);   /*tmp->value = 1, tmp->index = *row*/
             if (headUpdated == 0) {
                 currRow->head = tmp;
                 curr = tmp;
@@ -65,13 +62,34 @@ void add_row_to_list(struct _spmat *A, const double *row, int i) {
             else {
                 curr->next = tmp;
                 curr = curr->next;
+                curr -> next = NULL;
             }
-        }
         row++;
     }
     ((linkedList **) A->private)[i] = currRow;
 }
 
+
+void mult_list(spmat *A, const double *v, double *result) {
+    int row;
+    register double sum;
+    linked_list_node *currNode;
+    linkedList *currRow, **rows = A->private;
+    assert(result!=NULL);
+
+    for (row = 0; row < A->n; row++) {
+        currRow = *rows;    /*  currRow = rows[row]; */
+        currNode = currRow->head;
+        sum = 0;
+        while (currNode != NULL) {
+            sum += (currNode->value)*(v[currNode->value]);
+            currNode = currNode->next;
+        }
+        rows++;
+        *result = sum;
+        result++;
+    }
+}
 
 
 /*
@@ -100,25 +118,4 @@ void freeRow_list(linked_list_node *rowHead) {
     }
 }
 
-
-void mult_list(const struct _spmat *A, const double *v, double *result) {
-    int row;
-    register double sum;
-    linked_list_node* currNode;
-    linkedList *currRow, **rows = A->private;
-    assert(result!=NULL);
-
-    for (row = 0; row < A->n; row++) {
-        currRow = *rows;    /*  currRow = rows[row]; */
-        currNode = currRow->head;
-        sum = 0;
-        while (currNode != NULL) {
-            sum += (currNode->value)*(v[currNode->index]);
-            currNode = currNode->next;
-        }
-        rows++;
-        *result = sum;
-        result++;
-    }
-}
 
