@@ -16,68 +16,80 @@
 
 double* creatRandomVector(double* b0, int size);
 void print(int size, double *row);
-int counterNonZero(int size, FILE *inputMatrix);
-void divide(double *vector1, double norm, int size);
+void divideByNorm(double *vector1, double norm, int size);
 double calcDotProduct(double *vector1, double *vector2, int size);
 int checkDifference(double *vector1, double *vector2, int size, double eps);
 
+/*eigen vector is pre - initaliize
+ * function returns eigenValue and sets value into eigenvector
+ */
 
-double findEigenValue(BHatMatrix *B, int *eigenVector, int matrixSize){
+double findEigenValue(BHatMatrix *B, int *eigenVector){
 
-	/*Variables deceleration*/
-	int i = 0 , ifGreatThenEps = 1, place = 0;
-	double *initialVec, *matrixRow, *tmp;
+	/*Variables Deceleration*/
+	int i = 0 , ifGreatThenEps = 1, matrixSize;
+	double *tmp, *result;
 	double vector_norm, epsilon = 0.00001, eigenValue;
-	spmat *sparseMatrix;
 	clock_t start, end;
 
 	srand(time(NULL));
 	start = clock();
 
-	sparseMatrix = spmat_allocate_list(matrixSize);
-	creatRandomVector(initialVec, matrixSize);
+	matrixSize = B -> size;
 
-	/*Reading the vector*/
-	initialVec = (double*) malloc(sizeof(double)*(matrixSize));
-	if(initialVec == NULL){
+	/*Creating Initial Random Vector*/
+	if(eigenVector == NULL){
 		printf("Intial Vector Allocation Failed");
 		exit(0);
 	}
+	creatRandomVector(eigenVector, matrixSize);
 
-	/*Perform power iteration to obtain the eigenvector*/
-	/*Running the algorithm of power iteration*/
+
+
+	/*Perform power iteration to obtain the eigenvector
+	 * Running the algorithm of power iteration
+	 */
+
 	while(ifGreatThenEps){
 
-		/*Creating A*Bk*/
-		//eigenValue = (double*) malloc(sizeof(double)*(matrixSize));
+		result = (double*) malloc(sizeof(double)*(matrixSize));
 
-		sparseMatrix -> mult(sparseMatrix, initialVec,eigenVector);
+		/*Calculating (result = ^B[g] * b_k) */
+		B -> mult(B, eigenVector ,result);
 
 		/*calculating the vector's magnitude*/
-		vector_norm = sqrt(calcDotProduct(eigenValue, eigenValue, matrixSize));
+		vector_norm = sqrt(calcDotProduct(result, result, matrixSize));
+
+		/*Calculating the corresponding dominant eigenvalue
+		 *
+		 *     (Ab_k)*(b_k)
+		 * â = --------------
+		 *     b_k * b_ k
+		 *
+		 */
+		eigenValue = (calcDotProduct(result, eigenVector, matrixSize) /
+				calcDotProduct(eigenVector,eigenVector, matrixSize));
+
 
 		/*normalizing the vector*/
 		if(vector_norm != 0.0) {
-			divide(eigenVector, vector_norm, matrixSize);
+			divideByNorm(result, vector_norm, matrixSize);
 		}
 
 		/*Checking if the difference between vectors is smaller then epsilon*/
-		ifGreatThenEps = checkDifference(initialVec, eigenVector,matrixSize, epsilon);
+		ifGreatThenEps = checkDifference(eigenVector, result, matrixSize, epsilon);
 
 		/*Swaping information between variables to continue the algorithm
 		 * b_k = b_k1*/
-		tmp = initialVec;
-		initialVec = eigenValue;
-		eigenVector = tmp;
+
+		free(tmp);
+		tmp = eigenVector;
+		eigenVector = result;
+		result = tmp;
 
 	}
 
-
-	/*Calculating the corresponding dominant eigenvalue	 */
-	eigenValue = (calcDotProduct(initialVec, eigenValue, matrixSize) /calcDotProduct(eigenValue,eigenValue, matrixSize));
-
-	free(initialVec);
-	sparseMatrix -> free(sparseMatrix);
+	free(tmp);
 //	end = clock();
 //	printf("Prog  took: %f seconds\n", (double)(end - start) / CLOCKS_PER_SEC);
 
@@ -93,7 +105,6 @@ double* creatRandomVector(double* b0, int size){
 		*b0 = rand();
 		b0++;
 	}
-	/*b0 = b0 - size;*/
 	return b0;
 }
 
@@ -107,32 +118,6 @@ void print(int size, double *row){
 	}
 
 }
-
-
-/* counts non zero values of the input matrix */
-int counterNonZero(int size, FILE *inputMatrix){
-	int counter = 0, i = 0, j = 0;
-	int n;
-	double *row;
-	row = (double*) malloc(sizeof(double)*(size));
-	assert(row != NULL);
-
-	for(; i < size; i++){
-		n = fread(row, sizeof(double), size, inputMatrix);
-		assert(n == size);
-
-		for(j = 0; j < size; j++){
-			if(*row != 0)
-				counter++;
-			row++;
-		}
-
-		row = row - size;
-	}
-	free(row);
-	return counter;
-}
-
 
 
 /*Divide
