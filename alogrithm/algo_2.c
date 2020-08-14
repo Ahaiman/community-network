@@ -6,37 +6,21 @@
  */
 
 #include "./structures/BHatMatrix.h"
+#include "./structures/stack.h"
 
-void divisionGraphToTwo(graph *group){
+stack *divisionGraphToTwo(graph *group){
 
 	BHatMatrix *B_g_shifted;
-	List division;
+	stack *division;
 	double eigenValue;
 	double *eigenVector;
 	int *s;
 
-	B_g_shifted = createMatrixBHat();
-	/*(1) degrees - needs to be built by nodes list in the graph
-	 * (2) F
-	 */
+	B_g_shifted = createMatrixBHat(group);
 
-	/*Calculate B matrix */
-	/* B -> A === group -> related_matrix */
-	/* B -> degrees === (1)
-	/* B -> F === (2)
-	/* Matrix norm
-
-	/*Compute leading eigenpair u1 and 1 of the modularity matrix b B[g] */
-	/*TODO: findEigen needs to return both vector and value */
-
-	/*B-g need to be shiftes*/
-
-
-	/*Avital - REMEMBER THAT THE b_g is not matrix is structure*/
-	eigenValue = findEigen(B_g_shifted, eigenVector, B_g_shifted -> size);
-//	eigenVector = return_value[0];
-//	eigenValue = return_value [1];
-
+	/*Compute leading eigenpair u1 and b1 of the modularity matrix b B[g] */
+	eigenVector = (double *) malloc (sizeof(double) * (B_g_shifted -> size));
+	eigenValue = findEigen(B_g_shifted, eigenVector);
 
 	//if (b1 <= 0): The network is indivisible
 	if(eigenValue <= 0){
@@ -45,17 +29,22 @@ void divisionGraphToTwo(graph *group){
 	}
 
 	//compute s
-	 s = computeS(eigenValue, B_g -> size);
+	 s = computeS(eigenVector, B_g_shifted -> size);
 
 
-	//if (sT b B[g]s <= 0): The network is indivisible
-	 if(computeQ(s, B_g) <= 0){
+	//TODO OR: implement Q
+	 //if (sT b B[g]s <= 0): The network is indivisible
+	 if(computeQ(s, B_g_shifted) <= 0){
 		 printf();
 		 return NULL;
 	 }
 
 	// return a division into two groups according to s
-	 division = getDivisionByS(s);
+	 //returns 1 , cnt = 2,  stack wich holds 2 graphs : the division
+	 initialize(division);
+
+	 division = getDivisionByS(s, group);
+
 	 return division;
 
 
