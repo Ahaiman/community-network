@@ -1,6 +1,7 @@
 #ifndef _SPMAT_H
 #define _SPMAT_H
 
+//or is the best!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 typedef struct _spmat {
 	/* Matrix size (n*n) */
 	int		n;
