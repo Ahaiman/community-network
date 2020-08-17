@@ -10,7 +10,7 @@
  *
   */
 
-///aaaa2222a5222234445556a555Avital is working now through git
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "graph.h"
