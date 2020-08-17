@@ -5,6 +5,7 @@
 #include <math.h>
 #include <string.h>
 
+
 double* creatRendomVector(double* b0, int size){
 	int i;
 	for(i = 0; i < size; i++){
@@ -21,7 +22,7 @@ void print(int size, double *row){
 	double k;
 	for(i= 0; i < size; i++){
 		k = *(row +i);
-		printf("curent row is : %f\n", k);
+		printf("current row is : %f\n", k);
 	}
 
 }

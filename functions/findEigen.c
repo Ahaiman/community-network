@@ -19,11 +19,72 @@ void print(int size, double *row);
 void divideByNorm(double *vector1, double norm, int size);
 double calcDotProduct(double *vector1, double *vector2, int size);
 int checkDifference(double *vector1, double *vector2, int size, double eps);
+void multNumVec(int size, double num, double *vec, double *res);
+void multTwoVecs(int size, double *fVector, double *eigenVector, double *res);
+void findEigen_MultResult(int size, double *A_g_eigenVector, double *degVec, double *fbVec, double *Bnorm_eigenVector, double *result);
+void SubtractTwoVectors(int size, double *vec1, double *vec2);
+void AddTwoVectors(int size, double *vec1, double *vec2);
+double findEigenValue(BHatMatrix *B, int *eigenVector);
+
+//pointers!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+void multNumVec(int size, double num, double *vec, double *res)
+{
+	int i;
+	for(i=0;i<size;i++)
+	{
+		*res=(*vec)*num;
+		res++;
+		vec++;
+	}
+}
+void multTwoVecs(int size, double *fVector, double *eigenVector, double *res)
+{
+	int i;
+	for(i=0;i<size;i++)
+	{
+		*res=(*fVector)*(*eigenVector);
+		res++;
+		fVector++;
+		eigenVector++;
+	}
+}
+void findEigen_MultResult(int size, double *A_g_eigenVector, double *degVec, double *fbVec, double *Bnorm_eigenVector, double *result)
+{
+	double *sub1, *sub2;
+	*sub1=(double*) malloc(sizeof(double)*(size));
+	*sub2=(double*) malloc(sizeof(double)*(size));
+	SubtractTwoVectors(size, A_g_eigenVector, degVec, sub1);
+	SubtractTwoVectors(size, sub1, fbVec, sub2);
+	AddTwoVectors(size, sub2, Bnorm_eigenVector, result);
+	free(sub1);
+	free(sub2);
+}
+void SubtractTwoVectors(int size, double *vec1, double *vec2, double *result)
+{
+	int i;
+	for (i=0;i<size;i++)
+	{
+		*result=*vec1-*vec2;
+		result++;
+		vec1++;
+		vec2++;
+	}
+}
+void AddTwoVectors(int size, double *vec1, double *vec2, double *result)
+{
+	int i;
+	for (i=0;i<size;i++)
+	{
+		*result=*vec1+*vec2;
+		result++;
+		vec1++;
+		vec2++;
+	}
+}
 
 /*eigen vector is pre - initaliize
  * function returns eigenValue and sets value into eigenvector
  */
-
 double findEigenValue(BHatMatrix *B, int *eigenVector){
 
 	/*Variables Deceleration*/
