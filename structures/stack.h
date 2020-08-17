@@ -15,7 +15,12 @@
 #include <stdlib.h>
 #include "graph.h"
 
+<<<<<<< HEAD
 #define   EMPTY      100
+=======
+
+#define   EMPTY      156
+>>>>>>> refs/remotes/origin/master
 #define   FULL       5000000 // five million
 
 typedef   enum {false, true}   boolean;
