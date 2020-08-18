@@ -43,7 +43,7 @@ graph* allocate_graph(int n, int m, graph_node **graph_nodes, spmat *relate_matr
     }
 
     myGraph -> n = n;
-    myGraph -> m = m;
+    /*myGraph -> m = m;*/
     myGraph -> relate_matrix = relate_matrix;
     myGraph -> graph_nodes = graph_nodes;
     myGraph -> free_graph = free_graph;

@@ -48,16 +48,21 @@ void multTwoVecs(int size, double *fVector, double *eigenVector, double *res)
 		eigenVector++;
 	}
 }
+void MultBMatAndVector(int size, double *A_g_eigenVector, double *degVec, double *fbVec, double *result)
+{
+	double *sub1;
+	*sub1=(double*) malloc(sizeof(double)*(size));
+	SubtractTwoVectors(size, A_g_eigenVector, degVec, sub1);
+	SubtractTwoVectors(size, sub1, fbVec, result);
+	free(sub1);
+}
+
 void findEigen_MultResult(int size, double *A_g_eigenVector, double *degVec, double *fbVec, double *Bnorm_eigenVector, double *result)
 {
-	double *sub1, *sub2;
-	*sub1=(double*) malloc(sizeof(double)*(size));
-	*sub2=(double*) malloc(sizeof(double)*(size));
-	SubtractTwoVectors(size, A_g_eigenVector, degVec, sub1);
-	SubtractTwoVectors(size, sub1, fbVec, sub2);
-	AddTwoVectors(size, sub2, Bnorm_eigenVector, result);
-	free(sub1);
-	free(sub2);
+	double* sub=(double*) malloc(sizeof(double)*(size));
+	MultBMatAndVector(size, A_g_eigenVector, degVec, fbVec, sub);
+	AddTwoVectors(size, sub, Bnorm_eigenVector, result);
+	free(sub);
 }
 void SubtractTwoVectors(int size, double *vec1, double *vec2, double *result)
 {
@@ -96,7 +101,7 @@ double findEigenValue(BHatMatrix *B, int *eigenVector){
 	srand(time(NULL));
 	start = clock();
 
-	matrixSize = B -> size;
+	matrixSize = (B -> G)->n;
 
 	/*Creating Initial Random Vector*/
 	if(eigenVector == NULL){
@@ -116,7 +121,7 @@ double findEigenValue(BHatMatrix *B, int *eigenVector){
 		result = (double*) malloc(sizeof(double)*(matrixSize));
 
 		/*Calculating (result = ^B[g] * b_k) */
-		B -> mult(B, eigenVector ,result);
+		B -> BHatMult(B, eigenVector ,result);
 
 		/*calculating the vector's magnitude*/
 		vector_norm = sqrt(calcDotProduct(result, result, matrixSize));
@@ -140,7 +145,7 @@ double findEigenValue(BHatMatrix *B, int *eigenVector){
 		/*Checking if the difference between vectors is smaller then epsilon*/
 		ifGreatThenEps = checkDifference(eigenVector, result, matrixSize, epsilon);
 
-		/*Swaping information between variables to continue the algorithm
+		/*Swapping information between variables to continue the algorithm
 		 * b_k = b_k1*/
 
 		free(tmp);

@@ -12,7 +12,7 @@
 #include "./structures/graph_node.h"
 
 
-void *findCommunities(graph *G){
+void findCommunities(graph *G){
 	stack *P, *O, *divisionToTwo;
 	graph *group, *group1, *group2;
 	int *s;
@@ -22,7 +22,7 @@ void *findCommunities(graph *G){
 	initialize(O);
 	initialize(P);
 	initialize(divisionToTwo);
-	s = (int *) malloc (sizeof(int) * (G -> size));
+	s = (int *) malloc (sizeof(int) * (G -> n));
 
 	//	1.Start with a trivial division into one group: the all nodes in the graph
 	P -> push(G, P);

@@ -21,10 +21,9 @@ typedef struct _BHatMatrix{
 	double *f_vector;
 	double matrixNorm;
 
-
-	double (**calcBHatMatrixEigenVector)(struct __BHatMatrix *B);
 	void (*freeBHat)(struct __BHatMatrix *B);
-	void (*BHatMult)(BHatMatrix *B, double* eigenVector ,double*result);
+	void (*BHatMultBk)(BHatMatrix *B, double* eigenVector ,double*result);
+	void (*BHatMult)(BHatMatrix *B, double* vector ,double *result);
 } BHatMatrix;
 
 BHatMatrix* createMatrixBHat (spmat *A_g, int *degrees, double *f_vector, double matrixNorm, int size, int *nodesIndices);

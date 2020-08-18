@@ -7,6 +7,7 @@
 
 #include "./structures/BHatMatrix.h"
 #include "./structures/stack.h"
+#include "./functions/computeDQ.c"
 
 stack *divisionGraphToTwo(graph *group, stack *division, int *s){
 
@@ -19,7 +20,7 @@ stack *divisionGraphToTwo(graph *group, stack *division, int *s){
 	B_g_shifted = createMatrixBHat(group);
 
 	/*Compute leading eigenpair u1 and b1 of the modularity matrix b B[g] */
-	eigenVector = (double *) malloc (sizeof(double) * (B_g_shifted -> size));
+	eigenVector = (double *) malloc (sizeof(double) * ((B_g_shifted -> G)->n));
 	eigenValue = findEigen(B_g_shifted, eigenVector);
 
 	//if (b1 <= 0): The network is indivisible
@@ -29,7 +30,7 @@ stack *divisionGraphToTwo(graph *group, stack *division, int *s){
 	}
 
 	//compute s
-	 s = computeS(eigenVector, B_g_shifted -> size);
+	 s = computeS(eigenVector, (B_g_shifted -> G)->n);
 
 	 Dq = computeDQ(s, B_g_shifted);
 	//TODO OR: implement DQ in function "compueDQ"
