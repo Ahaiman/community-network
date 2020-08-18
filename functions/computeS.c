@@ -10,7 +10,6 @@ int *createSVector(double *eigenVector, int size){
 	int *s;
 	int i = 0;
 
-	s = (int *) malloc (sizeof(int) * size);
 
 	for(; i < size; i++){
 		if(*eigenVector > 0){

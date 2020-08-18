@@ -1,4 +1,6 @@
 
+///18..08
+
 
 #include "spmat.h"
 #include "linkedList.h"
@@ -37,6 +39,7 @@ spmat *spmat_allocate_list(int n) {
     matrix->private = rows;
     matrix->n = n;
     matrix->add_row = add_row_to_list;
+    matrix -> spmat_mult = mult_list;
     matrix->spmat_free = free_list;
     return matrix;
 }

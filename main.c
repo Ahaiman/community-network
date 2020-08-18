@@ -13,6 +13,7 @@
 #include <time.h>
 #include "./structures/graph.h"
 #include "./functions/CreateGraph.c"
+#include "./algorithm/algo_3.c"
 #include <string.h>
 
 
@@ -32,6 +33,7 @@ int main(int argc, char* argv[]){
 
 
 	/*Send to Algorithm 3 */
+	findCommunities(input_graph);
 
 	end = clock();
 	//printf("Prog  took: %f seconds\n", (double)(end - start) / CLOCKS_PER_SEC);

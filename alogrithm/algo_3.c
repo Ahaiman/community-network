@@ -13,28 +13,38 @@
 
 
 void *findCommunities(graph *G){
-	stack *P, *O;
+	stack *P, *O, *divisionToTwo;
 	graph *group, *group1, *group2;
-	stack *divisionToTwo;
+	int *s;
+	double dQ;
 
+
+	initialize(O);
+	initialize(P);
+	initialize(divisionToTwo);
+	s = (int *) malloc (sizeof(int) * (G -> size));
 
 	//	1.Start with a trivial division into one group: the all nodes in the graph
-	group = G -> graph_nodes;
-	initialize(O);
+	P -> push(G, P);
 
 	while(!empty(P)){
 		group = P -> pop(P);
 
 		/* 1) Divide g into g1; g2 with Algorithm 2 */
-		divisionToTwo  = algorithm2(group);
+		dQ  = algorithm2(group, s);
 
-		group1 = divisionToTwo -> pop(divisionToTwo);
-		group2 = divisionToTwo -> pop(divisionToTwo);
 
-		/*2) Implenet optimiztiom */
+		/*2) Implenet optimiztiom - */
+		 algorithm4(s, dQ);
+
+		 /*after the "s" changed, we need to organize again the group*/
+		 doDivisionByS(s, divisionToTwo);
+
+		 group1 = divisionToTwo -> pop(divisionToTwo);
+		 group2 = divisionToTwo -> pop(divisionToTwo);
 
 		/* 3) if either g1 or g2 is of size 0: Add g to O*/
-		if(group1 -> n == 0 || group1 -> n == 0 ){
+		if(group1 -> n == 0 || group2 -> n == 0 ){
 			O.push(group);
 		}
 
@@ -53,6 +63,10 @@ void *findCommunities(graph *G){
 			P.push(group2);
 		}
 	}
+
+/*O consists of several graphs, we need to make it as the input file requires*/
+
+
 	/*writing the output file */
 //
 //	fclose(inputMatrix);

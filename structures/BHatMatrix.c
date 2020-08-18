@@ -13,7 +13,11 @@
 	void (*freeBHat)(struct __BHatMatrix);
 	void (*BHatMult)(BHatMatrix, double*, double*);
 
-BHatMatrix *createMatrixBHat (graph *G, int *degrees, double *f_vector, double matrixNorm)
+
+	/*OR: needs to recive onlt G.
+	 * build function to calculate other based on the G
+	 */
+BHatMatrix *createMatrixBHat (graph *G, double *f_vector, double matrixNorm)
 {
 	BHatMatrix *B;
     	B = (BHatMatrix *) malloc (sizeof(BHatMatrix));
@@ -23,7 +27,11 @@ BHatMatrix *createMatrixBHat (graph *G, int *degrees, double *f_vector, double m
     		exit(0);
     	}
 	B -> G=G;
-	B -> degrees=degrees;
+
+	B -> degrees= G-> degrees;
+	/*example:
+		 * 	B -> f_vector=calculaeF(G);
+		 */
 	B -> f_vector=f_vector;
 	B -> matrixNorm=matrixNorm;
 	B -> calcBHatMatrixEigenVector=calcBHatMatrixEigenVector;

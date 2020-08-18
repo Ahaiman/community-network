@@ -5,6 +5,8 @@
  *
  */
 
+//updated 18.8
+
 #ifndef GRAPH_H_
 #define GRAPH_H_
 
@@ -16,12 +18,15 @@ typedef struct _graph {
 	int		n;
 
 	/* Number of edges in the graph : |E| = m */
-	int     m;
+//	int     m;
 
 	/* Matrix that represent the relationship between nodes in the graph */
 	spmat    *relate_matrix;
 
 	graph_node **graph_nodes;
+
+	/*Vector representing the degrees of the nodes */
+	int *degrees;
 
 	/* Frees all resources used by G */
 	void (*free_graph)(struct _graph *G);

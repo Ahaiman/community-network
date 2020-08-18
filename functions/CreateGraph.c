@@ -20,7 +20,7 @@ graph *createGraph(char *name_of_input_file){
 	graph *input_graph;
 	graph_node *curr_node;
 	graph_node **nodes_list, **neighbors;
-	int *curr_neighbors, *matrix_row;
+	int *curr_neighbors, *matrix_row, *degrees;
 	spmat *relate_matrix;
 	int n, m = 0, degree, j, neighboor_index, i = 0;
 	int succ;
@@ -53,6 +53,7 @@ graph *createGraph(char *name_of_input_file){
 	/*Allocating space to sparse matrix represeinting .... */
 	relate_matrix = spmat_allocate_list(n);
 
+	degrees = (int *) malloc(sizeof(int) * (n));
 
 	/*Reading File
 	 * Reading the input matrix (one row at a time).
@@ -68,6 +69,8 @@ graph *createGraph(char *name_of_input_file){
 		 	}
 
 		 curr_node -> set_degree(degree);
+		 *degrees = degree;
+		 degree++;
 
 		 /*ASK TAL : how to hold the neighbors?
 		  * as list of nodes? or as list of int?

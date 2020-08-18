@@ -8,13 +8,13 @@
 #include "./structures/BHatMatrix.h"
 #include "./structures/stack.h"
 
-stack *divisionGraphToTwo(graph *group){
+stack *divisionGraphToTwo(graph *group, stack *division, int *s){
 
 	BHatMatrix *B_g_shifted;
-	stack *division;
-	double eigenValue;
+	/*size : 2 */
+
+	double eigenValue, Dq;
 	double *eigenVector;
-	int *s;
 
 	B_g_shifted = createMatrixBHat(group);
 
@@ -24,28 +24,28 @@ stack *divisionGraphToTwo(graph *group){
 
 	//if (b1 <= 0): The network is indivisible
 	if(eigenValue <= 0){
-		printf();
+		printf("not possible");
 		return NULL;
 	}
 
 	//compute s
 	 s = computeS(eigenVector, B_g_shifted -> size);
 
-
-	//TODO OR: implement Q
-	 //if (sT b B[g]s <= 0): The network is indivisible
-	 if(computeQ(s, B_g_shifted) <= 0){
-		 printf();
+	 Dq = computeDQ(s, B_g_shifted);
+	//TODO OR: implement DQ in function "compueDQ"
+	 //if (s^T b B[g]s <= 0): The network is indivisible
+	 if( Dq <= 0){
+		 printf("not possible");
 		 return NULL;
 	 }
 
 	// return a division into two groups according to s
 	 //returns 1 , cnt = 2,  stack wich holds 2 graphs : the division
-	 initialize(division);
 
-	 division = getDivisionByS(s, group);
 
-	 return division;
+	 /*Avital */
+//	 division = getDivisionByS(s, group);
+	 return Dq;
 
 
 }
