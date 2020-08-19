@@ -7,7 +7,7 @@
 
 #include "graph_node.h"
 
-typedef struct linked_list_node {
+typedef struct linkedList_node {
     int value;
     struct linked_list_node  *next;
 

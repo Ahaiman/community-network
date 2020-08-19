@@ -28,8 +28,8 @@ typedef struct _graph {
 	/*Vector representing the degrees of the nodes */
 	int *degrees;
 
-	/* Frees all resources used by G */
-	void (*free_graph)(struct _graph *G);
+	/* Frees all resources used by G , freeNode - represents whether nodes should be free to*/
+	void (*free_graph)(struct _graph *G, int freeNode, int freeLists);
 
 } graph;
 

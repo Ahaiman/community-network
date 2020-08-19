@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "./structures/graph.h"
-#include "./functions/CreateGraph.c"
+#include "./functions/CreateGraphFromFile.c"
 #include "./algorithm/algo_3.c"
 #include <string.h>
 

@@ -10,6 +10,7 @@
 #include "./structures/linkedList.h"
 #include "./structures/graph.h"
 #include "./structures/graph_node.h"
+#include "./function/doDivisionByS.c"
 
 
 void findCommunities(graph *G){
@@ -34,17 +35,18 @@ void findCommunities(graph *G){
 		dQ  = algorithm2(group, s);
 
 
-		/*2) Implenet optimiztiom - */
+		/*2) Together :
+		 * Implenet optimiztiom - */
 		 algorithm4(s, dQ);
 
-		 /*after the "s" changed, we need to organize again the group*/
-		 doDivisionByS(s, divisionToTwo);
+		 /*Creating the division*/
+		 doDivisionByS(group, s, divisionToTwo);
 
 		 group1 = divisionToTwo -> pop(divisionToTwo);
 		 group2 = divisionToTwo -> pop(divisionToTwo);
 
 		/* 3) if either g1 or g2 is of size 0: Add g to O*/
-		if(group1 -> n == 0 || group2 -> n == 0 ){
+		if(group1  == NULL || group2 == NULL ){
 			O.push(group);
 		}
 

@@ -23,7 +23,7 @@
 	void set_num_edges(graph *, int);
 	void set_relate_matrix(graph *, spmat *);
 	void set_nodes(graph *, graph_node **);
-	void free_graph(graph *);
+	void free_graph(graph *, int freeNode, int freeLists);
 	graph* allocate_graph(int, int, graph_node **, spmat *);
 
 
@@ -51,22 +51,25 @@ graph* allocate_graph(int n, int m, graph_node **graph_nodes, spmat *relate_matr
 }
 
 
-void free_graph(graph *G){
+void free_graph(graph *G, int freeNode, int freeLists){
 	int i = 0;
 	int *curr_arr;
 	graph_node *curr_node;
 
 	/*free matrix*/
-	spmat_free(G -> relate_matrix);
+	spmat_free(G -> relate_matrix, freeLists);
 
-	/*free nodes list*/
-	for(i = 0; i < G -> n; i++){
-		curr_node = *(G -> graph_nodes);
-		free_node(curr_node);
-		(G -> graph_nodes)++;
+	/*free nodes list - if needed*/
+	if(freeNode == 1){
+		for(i = 0; i < G -> n; i++){
+			curr_node = *(G -> graph_nodes);
+			free_node(curr_node);
+			(G -> graph_nodes)++;
+		}
+	G -> graph_nodes = (G -> graph_nodes) - (G -> n);
 	}
 
-	G -> graph_nodes = (G -> graph_nodes) - (G -> n);
+
 	free(G -> graph_nodes);
 
 }

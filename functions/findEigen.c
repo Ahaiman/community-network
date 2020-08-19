@@ -13,6 +13,7 @@
 #include "./structures/spmat.h"
 #include "./structures/BHatMatrix.h"
 #include <string.h>
+#include "functions.h"
 
 double* creatRandomVector(double* b0, int size);
 void print(int size, double *row);

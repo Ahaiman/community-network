@@ -5,6 +5,7 @@
  *      Author: Avital
  */
 
+#include "functions.h"
 
 int *createSVector(double *eigenVector, int size){
 	int *s;

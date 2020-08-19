@@ -5,7 +5,7 @@
  *      Author: OR
  */
 
-#include "./functions/findEigen.c"
+#include "functions.h"
 
 /*returns a double, multiplies a row vector and a column vector*/
 double RowVecMultColVec(int size, double *row, double *col)

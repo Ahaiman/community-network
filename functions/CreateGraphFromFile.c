@@ -12,6 +12,7 @@
 #include "../structures/graph.h"
 #include "../structures/graph_node.h"
 #include "../structures/spmat.h"
+#include "functions.h"
 
 graph *createGraph(char *name_of_input_file){
 
