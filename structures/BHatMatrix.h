@@ -16,12 +16,13 @@
 
 typedef struct _BHatMatrix{
 
-	graph G;
+	graph *G;
 	double *f_vector;
 	int matrixNorm;
 
 	void (*freeBHat)(struct __BHatMatrix *B);
 	void (*BHatMult)(BHatMatrix *B, double* vector ,double *result);
+
 } BHatMatrix;
 
 BHatMatrix* createMatrixBHat (spmat *A_g, int *degrees, double *f_vector, double matrixNorm, int size, int *nodesIndices);

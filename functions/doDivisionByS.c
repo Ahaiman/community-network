@@ -5,7 +5,6 @@
 #include "./structures/linkedList.h"
 
 
-
 /*
  * --------Functions Declaration---------
  */
@@ -55,8 +54,8 @@ void doDivisionByS(Graph *group, int *s, stack *divisionToTwo){
 
 
 	/*Allocating new list of nodes for each group*/
-	graph_nodes1 = (graph_node*) malloc(sizeof(graph_node) * (n1);
-	graph_nodes2 = (graph_node*) malloc(sizeof(graph_node) * (n2);
+	graph_nodes1 = (graph_node*) malloc(sizeof(graph_node) * (n1));
+	graph_nodes2 = (graph_node*) malloc(sizeof(graph_node) * (n2));
 
 	/*degree of node is CHANGEING?????? */
 
@@ -87,8 +86,8 @@ void doDivisionByS(Graph *group, int *s, stack *divisionToTwo){
 	createRelateMatrix(n, n2, graph_nodes2, relate_matrix2);
 
 	/*Allocating new graph representing each new group */
-	group1 = allocate_graph(n1, graph_node **graph_nodes1, spmat *relate_matrix1);
-	group2 = allocate_graph(n2, graph_node **graph_nodes2, spmat *relate_matrix2);
+	group1 = allocate_graph(n1, **graph_nodes1, *relate_matrix1);
+	group2 = allocate_graph(n2, **graph_nodes2, *relate_matrix2);
 
 	/*Adding division (two graph) to the input stack */
 	divisionToTwo.push(group2);

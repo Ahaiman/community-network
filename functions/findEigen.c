@@ -21,6 +21,9 @@ void divideByNorm(double *vector1, double norm, int size);
 double calcDotProduct(double *vector1, double *vector2, int size);
 int checkDifference(double *vector1, double *vector2, int size, double eps);
 double findEigenValue(BHatMatrix *B, int *eigenVector);
+
+
+
 /*eigen vector is pre - initaliize
  * function returns eigenValue and sets value into eigenvector
  */

@@ -9,10 +9,10 @@
 #include "spmat.h"
 #include "./functions/findEigen.c" /*necessary for calcDorProduct in BHatMult*/
 
-void (freeBHat)(struct __BHatMatrix);
-void (BHatMult)(BHatMatrix, double*, double*);
-double* (calculate_fVector)(graph*);
-int (calc_MatrixNorm)(graph*);
+void freeBHat(struct __BHatMatrix);
+void BHatMult(BHatMatrix, double*, double*);
+double* calculate_fVector(graph*);
+int  calc_MatrixNorm(graph*);
 void multNumVec(int, double, double*, double*);
 void multTwoVecs(int, double*, double*, double*);
 void MultBMatAndVector(int, double*, double*, double*, double*);
@@ -47,6 +47,7 @@ void multNumVec(int size, double num, double *vec, double *res)
 		vec++;
 	}
 }
+
 void multTwoVecs(int size, double *fVector, double *eigenVector, double *res)
 {
 	int i;
@@ -123,7 +124,7 @@ double* calculate_fVector(graph *G)
 		{
 			//we need to provide M!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			sub=((G->graph_nodes)[i]->degree)*((G->graph_nodes)[j]->degree)/M;
-			*fVec+=((G->relate_matrix)[i,j]-sub);
+			*fVec+=((G->relate_matrix)[i][j]-sub);
 		}
 		fVec++;
 	}
@@ -138,7 +139,7 @@ int calc_MatrixNorm(graph *G)
 		sum=0;
 		for(i=0;i<G->n;i++)
 		{
-			sum+=(G->relate_matrix)[i,j];
+			sum+=(G->relate_matrix)[i][j];
 		}
 		if (sum>max)
 			max=sum;

@@ -27,9 +27,9 @@
 	graph* allocate_graph(int, int, graph_node **, spmat *);
 
 
-	/*
-	 * --------Functions Implementation---------
-	 */
+/*
+ * --------Functions Implementation---------
+ */
 
 /*constructor for graph*/
 
@@ -68,7 +68,6 @@ void free_graph(graph *G, int freeNode, int freeLists){
 		}
 	G -> graph_nodes = (G -> graph_nodes) - (G -> n);
 	}
-
 
 	free(G -> graph_nodes);
 

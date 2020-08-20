@@ -17,6 +17,7 @@ typedef struct linkedList_node {
 typedef struct linkedList {
 	linked_list_node   *head;
 	int size;
+	int node_index;
 
 } linkedList;
 
