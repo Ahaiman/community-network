@@ -66,9 +66,20 @@ double* (calculate_fVector)(graph *G)
 	return fVec;
 }
 /*returns the sum of the largest column*/
-double (calc_MatrixNorm)(graph *G)
+int (calc_MatrixNorm)(graph *G)
 {
-
+	int sum, max=0, i, j;
+	for(j=0;j<G->n;j++)
+	{
+		sum=0;
+		for(i=0;i<G->n;i++)
+		{
+			sum+=(G->relate_matrix)[i,j];
+		}
+		if (sum>max)
+			max=sum;
+	}
+	return max;
 }
 void BHatMult(BHatMatrix *B, double *eigenVector ,double *result)
 {
