@@ -17,12 +17,10 @@
 typedef struct _BHatMatrix{
 
 	graph G;
-	int *degrees;
 	double *f_vector;
-	double matrixNorm;
+	int matrixNorm;
 
 	void (*freeBHat)(struct __BHatMatrix *B);
-	void (*BHatMultBk)(BHatMatrix *B, double* eigenVector ,double*result);
 	void (*BHatMult)(BHatMatrix *B, double* vector ,double *result);
 } BHatMatrix;
 

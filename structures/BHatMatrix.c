@@ -7,35 +7,97 @@
 #include "BHatMatrix.h"
 #include "graph.h"
 #include "spmat.h"
-#include "./functions/findEigen.c"
+#include "./functions/findEigen.c" /*necessary for calcDorProduct in BHatMult*/
 
-	void (freeBHat)(struct __BHatMatrix);
-	void (BHatMult)(BHatMatrix, double*, double*);
-	double* (calculate_fVector)(graph*);
-	double (calc_MatrixNorm)(graph*);
+void (freeBHat)(struct __BHatMatrix);
+void (BHatMult)(BHatMatrix, double*, double*);
+double* (calculate_fVector)(graph*);
+int (calc_MatrixNorm)(graph*);
+void multNumVec(int, double, double*, double*);
+void multTwoVecs(int, double*, double*, double*);
+void MultBMatAndVector(int, double*, double*, double*, double*);
+void findEigen_MultResult(int, double*, double*, double*, double*, double*);
+void SubtractTwoVectors(int, double*, double*);
+void AddTwoVectors(int, double*, double*);
 
-	/*OR: needs to receive only G.
-	 * build function to calculate other based on the G
-	 */
 BHatMatrix *createMatrixBHat (graph *G)
 {
 	BHatMatrix *B;
     	B = (BHatMatrix *) malloc (sizeof(BHatMatrix));
-    	if(B == NULL)
+    	if(B == 0)
     	{
     		printf("B Allocation Failed");
     		exit(0);
     	}
-	B -> G=G;
 
-	B -> degrees= G-> degrees;
+	B -> G=G;
 	B -> f_vector=calculate_fVector(G);
 	B -> matrixNorm=calc_MatrixNorm(G);
 	B -> freeBHat=freeBHat;
-	B->BHatMult=BHatMult;
+	B -> BHatMult=BHatMult;
 	return B;
 }
-/*we need to provid M!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+void multNumVec(int size, double num, double *vec, double *res)
+{
+	int i;
+	for(i=0;i<size;i++)
+	{
+		*res=(*vec)*num;
+		res++;
+		vec++;
+	}
+}
+void multTwoVecs(int size, double *fVector, double *eigenVector, double *res)
+{
+	int i;
+	for(i=0;i<size;i++)
+	{
+		*res=(*fVector)*(*eigenVector);
+		res++;
+		fVector++;
+		eigenVector++;
+	}
+}
+void MultBMatAndVector(int size, double *A_g_eigenVector, double *degVec, double *fbVec, double *result)
+{
+	double *sub1;
+	*sub1=(double*) malloc(sizeof(double)*(size));
+	SubtractTwoVectors(size, A_g_eigenVector, degVec, sub1);
+	SubtractTwoVectors(size, sub1, fbVec, result);
+	free(sub1);
+}
+
+void findEigen_MultResult(int size, double *A_g_eigenVector, double *degVec, double *fbVec, double *Bnorm_eigenVector, double *result)
+{
+	double* sub=(double*) malloc(sizeof(double)*(size));
+	MultBMatAndVector(size, A_g_eigenVector, degVec, fbVec, sub);
+	AddTwoVectors(size, sub, Bnorm_eigenVector, result);
+	free(sub);
+}
+void SubtractTwoVectors(int size, double *vec1, double *vec2, double *result)
+{
+	int i;
+	for (i=0;i<size;i++)
+	{
+		*result=*vec1-*vec2;
+		result++;
+		vec1++;
+		vec2++;
+	}
+}
+void AddTwoVectors(int size, double *vec1, double *vec2, double *result)
+{
+	int i;
+	for (i=0;i<size;i++)
+	{
+		*result=*vec1+*vec2;
+		result++;
+		vec1++;
+		vec2++;
+	}
+}
+//we need to provide M!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//calculates a local M
 int calcM(graph *G)
 {
 	int i, M=0;
@@ -46,7 +108,8 @@ int calcM(graph *G)
 	}
 	return M;
 }
-double* (calculate_fVector)(graph *G)
+//the i number in the fVector is the sum of the i row in the B[g] matrix (B[g]=Ag_ij-k_i*k_j/M)
+double* calculate_fVector(graph *G)
 {
 	int size, i, j;
 	double *fVec;
@@ -58,6 +121,7 @@ double* (calculate_fVector)(graph *G)
 		*fVec=0;
 		for(i=0;i<size;i++)
 		{
+			//we need to provide M!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			sub=((G->graph_nodes)[i]->degree)*((G->graph_nodes)[j]->degree)/M;
 			*fVec+=((G->relate_matrix)[i,j]-sub);
 		}
@@ -66,7 +130,7 @@ double* (calculate_fVector)(graph *G)
 	return fVec;
 }
 /*returns the sum of the largest column*/
-int (calc_MatrixNorm)(graph *G)
+int calc_MatrixNorm(graph *G)
 {
 	int sum, max=0, i, j;
 	for(j=0;j<G->n;j++)
@@ -89,12 +153,14 @@ void BHatMult(BHatMatrix *B, double *eigenVector ,double *result)
 	//calculating A_g*bk
 	((B->G)->relate_matrix)->spmat_mult((B->G)->relate_matrix, eigenVector, A_g_eigenVector);
 
-	//calculating (degreesTranspose*bk)*degrees/M:
-		//calculating (degreesTranspose*bk)
-		dotProduct=calcDotProduct(B->degrees,eigenVector, (B->G)->n);
+	//calculating (degrees^T*bk)*degrees/M:
+		//calculating (degrees^T*bk)
+		dotProduct=calcDotProduct((B->G)->degrees,eigenVector, (B->G)->n);
 		//calculating dotProduct*(degrees/M):
+		//here I used a local M and not the entire graph's M!!!!!!!!!!!!!!!!!!!!!!!!
 		degVec=(double*) malloc(sizeof(double)*((B->G)->n));
-		multNumVec((B->G)->n, dotProduct/(((B->G)->n)*2), B->degrees, degVec);
+		//here I used a local M and not the entire graph's M!!!!!!!!!!!!!!!!!!!!!!!!
+		multNumVec((B->G)->n, dotProduct/(((B->G)->n)*2), (B->G)->degrees, degVec);
 
 	//calculating fVector*bk
 	fbVec=(double*) malloc(sizeof(double)*((B->G)->n));
@@ -107,11 +173,13 @@ void BHatMult(BHatMatrix *B, double *eigenVector ,double *result)
 	findEigen_MultResult((B->G)->n, A_g_eigenVector, degVec, fbVec, Bnorm_eigenVector, result);
 	free(degVec);
 	free(fbVec);
+	free(Bnorm_eigenVector);
 }
 
 void freeBHat(struct __BHatMatrix *B)
 {
+	/*other inputs?????????????????????????*/
 	free_graph(B->G);
-	free(B->degrees);
+	/*free(B->degrees);*/
 	free(B->f_vector);
 }

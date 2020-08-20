@@ -21,7 +21,7 @@ double RowVecMultColVec(int size, double *row, double *col)
 	return res;
 }
 
-/*returns a double - delta Q*/
+/*returns a double - delta Q = (0.5) * s^T * B_g_hat * s*/
 double computeDQ(double *s, BHatMatrix *B){
 	double dq;
 	int size;
@@ -36,9 +36,10 @@ double computeDQ(double *s, BHatMatrix *B){
 	/*   calculating: (0.5) * s^T * B_g_hat * s. returns a number    */
 
 		/*   calculating: B_g_hat * s and the output is a vector - res    */
-		MultBMatAndVector(size, Ag_s, B->degrees, B->f_vector, res);
+		MultBMatAndVector(size, Ag_s, (B->G)->degrees, B->f_vector, res); /*this function is in BHatMatrix.C*/
 
 		/*   calculating: s^T * res. returns a number    */
+		/*use calcDotProduct?????????????????????????????????*/
 		dq=RowVecMultColVec(size, s, res);
 
 	free(res);
