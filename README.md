@@ -5,3 +5,4 @@ In complex networks, a network is said to have community structure if the nodes 
 In this project, we implemented an algorithm for detecting community structures (or clusters) in a network. The ability to detect such groups is of significant importance.
 For example, partitioning a protein-protein interaction network into clusters can provide a modular view of the network, with different groups of nodes performing different functions within the cell.
 
+or worked on it! from github
