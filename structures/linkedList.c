@@ -12,8 +12,8 @@
 
 
 /*constructor for node*/
-linked_list_node *createNode(int value) {
-	linked_list_node *newNode = (linked_list_node *)malloc(sizeof(linked_list_node));
+linkedList_node *createNode(int value) {
+	linkedList_node *newNode = (linkedList_node *)malloc(sizeof(linkedList_node));
 	if(newNode == NULL){
 	    	printf("Allocation of newNode Failed");
 	    	exit(0);
@@ -36,3 +36,27 @@ linkedList *createLinkedList() {
     list -> size = 0;
     return list;
 }
+
+
+void delete_node(linkedList *list, int node_index){
+	linkedList_node *curr = list -> head, *tmp = list -> head;
+
+	//first node in the list
+	if(curr -> value == node_index){
+		list -> head = curr -> next;
+		free(curr);
+	}
+	else{
+		//put curr to point on the next element (not the head)
+		curr = curr -> next;
+		while(curr != NULL){
+			if(curr -> value == node_index){
+				tmp -> next = curr -> next;
+				break;
+			}
+			tmp = curr;
+			curr = curr -> next;
+		}
+	}
+}
+

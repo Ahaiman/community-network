@@ -9,6 +9,8 @@
 
 typedef struct linkedList_node {
     int value;
+
+    /* TO ADD: INT INDEX;*/
     struct linked_list_node  *next;
 
 } linked_list_node;
@@ -22,4 +24,5 @@ typedef struct linkedList {
 } linkedList;
 
 linked_list_node *createNode(int value);
+void delete_node(linkedList *list, int place);
 linkedList *createLinkedList();
