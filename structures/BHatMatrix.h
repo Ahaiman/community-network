@@ -1,11 +1,4 @@
 /*
- * BHatMatrix.h
- *
- *  Created on: 12 áàåâ× 2020
- *      Author: Avital
- */
-
-/*
  * its shifted in the calculation
  */
 #include "spmat.h"
@@ -21,7 +14,7 @@ typedef struct _BHatMatrix{
 	int matrixNorm;
 
 	void (*freeBHat)(struct __BHatMatrix *B);
-	void (*BHatMult)(BHatMatrix *B, double* vector ,double *result);
+	void (*multBHat)(BHatMatrix *B, double* vector ,double *result);
 
 } BHatMatrix;
 
