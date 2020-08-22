@@ -15,18 +15,13 @@
 #include <stdlib.h>
 #include "graph.h"
 
-<<<<<<< HEAD
-#define   EMPTY      100
-=======
-
-#define   EMPTY      156
->>>>>>> refs/remotes/origin/master
+#define   EMPTY      0
 #define   FULL       5000000 // five million
 
 typedef   enum {false, true}   boolean;
 
 struct elem {                   /* an element on the stack */
-	graph          group;
+	graph          *group;
     struct elem   *next;
 };
 
@@ -44,4 +39,3 @@ void            push(graph *group, stack *stk);
 graph*     	    pop(stack *stk);
 boolean         empty(const stack *stk);
 
-//graph*          top(const stack *stk);

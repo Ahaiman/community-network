@@ -23,23 +23,26 @@ void free_list(struct _spmat *, int);
 
 spmat *spmat_allocate_list(int n) {
     spmat *matrix;
-    linkedList **rows_indices;
+    linkedList **nodesList;
     matrix = (spmat *)malloc(sizeof(spmat));
+
     if(matrix == NULL){
        	printf("Allocation of matrix Failed");
        	exit(0);
        }
-    rows_indices = (linkedList **)malloc(n*sizeof(linkedList *));
+
+    nodesList = (linkedList **)malloc(n* sizeof(linkedList *));
+
     if(rows_indices == NULL){
 		printf("Allocation of rows Failed");
 		exit(0);
           }
 
-    matrix->private = rows_indices;
-    matrix->n = n;
-    matrix->add_row = add_row_to_list;
+    matrix -> private = nodesList;
+    matrix -> n = n;
+    matrix -> add_row = add_row_to_list;
     matrix -> spmat_mult = mult_list;
-    matrix->spmat_free = free_list;
+    matrix-> spmat_free = free_list;
     return matrix;
 }
 
@@ -50,7 +53,7 @@ spmat *spmat_allocate_list(int n) {
  */
 void add_row_to_list(struct _spmat *A, const double *row, int row_size, int i) {
 
-    linkedList *currRow = createLinkedList();
+    linkedList *currList = createLinkedList();
     linkedList_node *curr, *tmp;
     bool headUpdated = 0;
     int col;
@@ -65,15 +68,13 @@ void add_row_to_list(struct _spmat *A, const double *row, int row_size, int i) {
             else {
                 curr -> next = tmp;
                 curr = curr-> next;
-                curr -> next = NULL;
             }
         row++;
     }
+    currList -> node_index = i;
+    currList -> size  = row_size;
 
-    A->private[i] = currRow;
-
-    /*the index of the node */
-    (A->private)[i] -> value = i;
+    A->private[i] = currList;
 }
 
 
@@ -106,7 +107,7 @@ void mult_list(spmat *A, const double *v, double *result) {
 /*
  * frees the linkedList implementation of the sparsMatrix
  */
-void free_list(struct _spmat *A, freeInnerLists) {
+void free_list(struct _spmat *A, int freeInnerLists) {
 	linkedList **rows =  ((linkedList **) A->private), **rowsStart = rows, *currRow;
 	int row;
 	if(freeInnerLists){

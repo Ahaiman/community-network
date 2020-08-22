@@ -6,6 +6,7 @@
 
 #include "stack.h"
 #include "graph.h"
+#include <stdbool.h>
 
 void initialize(stack *stk)
 {
@@ -29,17 +30,12 @@ graph* pop(stack *stk)
    graph*   group;
    elem   *p;
 
-   group = stk -> top -> group;
+   group = (stk -> top) -> group;
    p = stk -> top;
-   stk -> top = stk -> top -> next;
+   stk -> top = (stk -> top) -> next;
    stk -> cnt--;
    free(p);
    return group;
-}
-
-graph* top(const stack *stk)
-{ 
-   return (stk -> top -> group);
 }
 
 boolean empty(const stack *stk)

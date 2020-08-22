@@ -16,14 +16,7 @@
  * --------Functions Definition---------
  */
 
-	int	get_size(graph *);
-	int	get_num_edges(graph *);
-	spmat *get_relate_matrix(graph *);
-	void set_size(graph *, int);
-	void set_num_edges(graph *, int);
-	void set_relate_matrix(graph *, spmat *);
-	void set_nodes(graph *, graph_node **);
-	void free_graph(graph *, int freeNode, int freeLists);
+	void free_graph(graph *, int , int);
 	graph* allocate_graph(int, int, graph_node **, spmat *);
 
 
@@ -44,31 +37,34 @@ graph* allocate_graph(int n, int m, graph_node **graph_nodes, spmat *relate_matr
 
     myGraph -> n = n;
     /*myGraph -> m = m;*/
+    myGraph -> degrees = NULL;
     myGraph -> relate_matrix = relate_matrix;
     myGraph -> graph_nodes = graph_nodes;
     myGraph -> free_graph = free_graph;
+
     return myGraph;
 }
 
 
-void free_graph(graph *G, int freeNode, int freeLists){
+void free_graph(graph *G, int doFreeNode, int doFreeLists){
 	int i = 0;
 	int *curr_arr;
 	graph_node *curr_node;
 
-	/*free matrix*/
-	spmat_free(G -> relate_matrix, freeLists);
+	/*(1) free relate matrix*/
+	spmat_free(G -> relate_matrix, doFreeLists);
 
-	/*free nodes list - if needed*/
-	if(freeNode == 1){
+	/*(2) free nodes list - if needed*/
+	if(doFreeNode == 1){
 		for(i = 0; i < G -> n; i++){
 			curr_node = *(G -> graph_nodes);
-			free_node(curr_node);
+			free_graph_node(curr_node);
 			(G -> graph_nodes)++;
 		}
 	G -> graph_nodes = (G -> graph_nodes) - (G -> n);
 	}
 
+	/*(3) free the list itself */
 	free(G -> graph_nodes);
 
 }

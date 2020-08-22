@@ -37,12 +37,12 @@ void doDivisionByS(Graph *group, int *s, stack *divisionToTwo){
 			n2++;
 		}
 		/*Updating "group" field to the original nodes*/
-		*(curr_nodes) -> group = *s;
-		curr_nodes++;
+//		*(curr_nodes) -> group = *s;
+//		curr_nodes++;
 		s++;
 	}
 
-	curr_nodes -= n;
+//	curr_nodes -= n;
 	s -= n;
 
 	/* Checking sizes before building the groups*/
@@ -54,8 +54,8 @@ void doDivisionByS(Graph *group, int *s, stack *divisionToTwo){
 
 
 	/*Allocating new list of nodes for each group*/
-	graph_nodes1 = (graph_node*) malloc(sizeof(graph_node) * (n1));
-	graph_nodes2 = (graph_node*) malloc(sizeof(graph_node) * (n2));
+	graph_nodes1 = (graph_node **) malloc(sizeof(graph_node *) * (n1));
+	graph_nodes2 = (graph_node **) malloc(sizeof(graph_node *) * (n2));
 
 	/*degree of node is CHANGEING?????? */
 
@@ -113,13 +113,14 @@ void createRelateMatrix(int originalSize, int currentSize, graph_node **listOfNo
 	for(; i < currentSize; i++){
 		curr_index = *(listOfNodes) -> index;
 		for(; j < originalSize; j++){
-			if((*rows) -> value == curr_index){
-				matrix[i] = **rows;
-				matrix[i] -> value = curr_index;
+			if((*rows) -> node_index == curr_index){
+				*(matrix -> private) = *rows;
+				matrix -> private++;
 				break;
 			}
 			rows++;
 		}
+		listOfNodes++;
 	}
 }
 
