@@ -1,0 +1,54 @@
+-Stack-
+
+element in stack = graph
+stack {cnt, elem   *top}    
+___________________________________________
+
+-LinkedList_node-
+	int value; //what you see on the node
+	int index //like ID
+	*next;
+
+   ------------------------------
+   
+-LinkedList- 
+
+	linked_list_node   *head;
+	int size;
+	int node_index;
+	
+	
+___________________________________________
+
+
+-graph_node-
+
+	int		index;
+	int    degree;
+	int		group;
+	struct _graph_node		**neighbors;
+	
+	  ------------------------------
+	  
+-graph- 
+
+	int n;
+	spmat    *relate_matrix;
+	graph_node **graph_nodes;
+	int *degrees;   ///*Vector representing the degrees of the nodes */
+
+	
+	
+___________________________________________
+
+-spmat-
+
+	int		n;
+	void	*private;
+	
+	
+	
+	
+	
+	
+	

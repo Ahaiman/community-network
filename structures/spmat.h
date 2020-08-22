@@ -11,7 +11,7 @@ typedef struct _spmat {
 	void	(*add_row)(struct _spmat *A, const double *row, int i);
 
 	/* Frees all resources used by A */
-	void	(*spmat_free)(struct _spmat *A);
+	void	(*spmat_free)(struct _spmat *A, int freeInnerLists);
 
 	/* Multiplies matrix A by vector v, into result (result is pre-allocated) */
 	void	(*spmat_mult)(const struct _spmat *A, const double *v, double *result);

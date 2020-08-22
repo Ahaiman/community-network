@@ -9,20 +9,20 @@
 
 typedef struct linkedList_node {
     int value;
+    int index;
+    struct linkedList_node  *next;
 
-    /* AVITAL : TODO ADD: INT INDEX;*/
-    struct linked_list_node  *next;
-
-} linked_list_node;
+} linkedList_node;
 
 
 typedef struct linkedList {
-	linked_list_node   *head;
+	linkedList_node   *head;
 	int size;
 	int node_index;
 
 } linkedList;
 
-linked_list_node *createNode(int value);
-void delete_node(linkedList *list, int place);
+linkedList_node *createNode(int value);
+void delete_node(linkedList *list, int node_value);
 linkedList *createLinkedList();
+linkedList *allocateListWithNodes(int n);

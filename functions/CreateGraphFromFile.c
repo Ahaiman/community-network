@@ -14,6 +14,7 @@
 #include "../structures/spmat.h"
 #include "functions.h"
 
+
 graph *createGraph(char *name_of_input_file){
 
 	/*Variables deceleration*/
@@ -27,8 +28,7 @@ graph *createGraph(char *name_of_input_file){
 	int succ;
 
 	/*File Reading into variable, and asserting the process was successful.
-	 * if not - exiting the program.
-	 */
+	 * if not - exiting the program.*/
 	input_file =  fopen(name_of_input_file, "rb");
 	if(input_file == NULL){
 		exit("The file is not valid");
@@ -43,6 +43,11 @@ graph *createGraph(char *name_of_input_file){
 	/*Initializing list size n, of pointers to the nodes of the graph*/
 	nodes_list = (graph_node*) malloc(sizeof(graph_node) * (n));
 
+	/*assert allocation*/
+	if(nodes_list == NULL){
+			exit("Allocation Failed");
+	}
+
 	/*Initialize Nodes list*/
 	for(j = 0; j < n; j++ ){
 		/*allocate returns node*/
@@ -55,6 +60,9 @@ graph *createGraph(char *name_of_input_file){
 	relate_matrix = spmat_allocate_list(n);
 
 	degrees = (int *) malloc(sizeof(int) * (n));
+	if(degrees == NULL){
+				exit("Allocation Failed");
+	}
 
 	/*Reading File
 	 * Reading the input matrix (one row at a time).
@@ -69,41 +77,45 @@ graph *createGraph(char *name_of_input_file){
 		 		exit("Failed File Read");
 		 	}
 
-		 curr_node -> set_degree(degree);
+		 curr_node -> degree = degree;
 		 *degrees = degree;
-		 degree++;
-
-		 /*ASK TAL : how to hold the neighbors?
-		  * as list of nodes? or as list of int?
-				  */
-		 neighbors = allocate_neighbors(degree);
+		 degrees++;
 
 
-		 /*read the neighbors into row*/
+//		 neighbors = allocate_neighbors(degree);
+
+
+		 /*read the neighbors indices into row*/
 		 matrix_row =  (int*) malloc(sizeof(int)*(degree));
+		 if(matrix_row == NULL){
+		 				exit("Allocation Failed");
+		 }
+
 		 succ =  fread(matrix_row, sizeof(int), degree, input_file);
-
-		 /*assert*/
-
-		 /*ASK TAL : how to hold the sparse matrix as the relativ matrix?
-		  * CHANGE IN SPMAT.C the function add row
-		  */
-		 relate_matrix -> add_row(relate_matrix, matrix_row, degree, i);
-
-		// curr_neighbors = (int*) calloc(sizeof(int),degree);
-
-
-
-		for(j = 0; j < degree; j++){
-			 /*adding to neighbors list the corresponding neighbor*/
-			*neighbors = nodes_list[*matrix_row];
-			neighbors++;
-			matrix_row++;
+		 if(succ != degree){
+			exit("Failed File Read");
 		}
 
-		 m += degree /*updating number of edges*/
-				 /* m/2 ????*/
-		 curr_node -> set_neighbors(neighbors);
+		 relate_matrix -> add_row(relate_matrix, matrix_row, degree, i);
+
+		 /*NEIGHBORD LIST CREATING AND UPDAINT */
+
+		//		curr_neighbors = (int*) calloc(sizeof(int),degree);
+		//		 adding to neighbors list the corresponding neighbor
+
+		//
+		//		for(j = 0; j < degree; j++){
+		//
+		//			*neighbors = nodes_list[*matrix_row];
+		//			neighbors++;
+		//			matrix_row++;
+		//		}
+		// curr_node -> set_neighbors(neighbors);
+
+
+//		 m += degree /*updating number of edges*/
+//				 /* m/2 ????*/
+
 
 		 nodes_list++;
 		 free(matrix_row);
@@ -111,7 +123,7 @@ graph *createGraph(char *name_of_input_file){
 
 	 }
 
-	 m = m/2;
+//	 m = m/2;
 
 	fclose(input_file);
 	nodes_list -= n;
@@ -119,6 +131,8 @@ graph *createGraph(char *name_of_input_file){
 
 	/*Graph building*/
 	input_graph = allocate_graph(n, m, nodes_list, relate_matrix);
+	input_graph -> degrees = degrees;
+
 	return input_graph;
 
 

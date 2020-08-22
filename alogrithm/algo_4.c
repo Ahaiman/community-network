@@ -10,14 +10,18 @@
 	 int *score, *indices, *improve;
 
 	 /*Avital: to implement in linkedlist.c
-	  * creats a list of all the indices value 0..Ng and a index of the place in s*/
-	 unmoved - > allocateWithNodes(unmoved, n);
+	  * creats a list of all the indices value 0..Ng and a index of the place in s*
+	  *
+	  * NOTE 22/8: DONE
+	  * there is no need to keep the index of the node, just the number 0..., size of s*/
+
+	 unmoved - > allocateWithNodes(unmoved, n); // == 0 -> 1 -> 2 -> ,,, -> ng
 
 	 score = (int *)malloc(n * sizeof(int));
 	 indices = (int *)malloc(n * sizeof(int));
 	 improve = (int *)malloc(n * sizeof(int));
 
-	 curr = unmoved -> head;
+
 
 	//1 : Repeat
 	 while(dQ > 0) {
@@ -32,6 +36,7 @@
 				 Q0 = computeDQ(s, B);
 			 }
 
+			 curr = unmoved -> head;
 			 //6 : runining over the unmoved linked list
 			 while(curr != NULL){
 				 placeInS = curr -> index;

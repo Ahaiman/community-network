@@ -17,7 +17,7 @@ typedef struct _graph_node{
 	int    degree;
 
 	/*0(initial), 1 , -1 */
-	int		group;
+//	int		group;
 
 	struct _graph_node		**neighbors;
 
