@@ -6,7 +6,7 @@
  */
 
 #include "functions.h"
-#include "./functions/functions.h" /*necessary for calcDorProduct in computeDQ*/
+#include "./functions/functions.h" /*necessary for calcDotProduct in computeDQ*/
 #include "./structures/linkedList.h"
 
 /*
@@ -49,16 +49,16 @@ double computeDQ(double *s, BHatMatrix *B)
 	return dq*(0.5);
 }
 
-
 /*
  * Returns a new delta Q, after a change in a single index in the vector s.
  */
 //we need to provide M!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 double computeDQChange(double *s, BHatMatrix *B, int index, int dq)
 {
-	double dqChange, bjj;
-	linked_list_node *currNode;
-	int indexDegree, sum=0, i=0;
+	double dqChange, bjj, sub, sum=0;
+	linkedList_node *currNode;
+	int indexDegree;
+
 	indexDegree=(B->G)->degrees[index];
 	currNode=(((B->G)->relate_matrix)->private[index])->head;
 
@@ -68,12 +68,14 @@ double computeDQChange(double *s, BHatMatrix *B, int index, int dq)
 	//calculating the sum of column #index.
 	while (currNode!=NULL)
 	{
-		sum+=(currNode->value*(*(s+i)));
+		sum+=s[currNode->index];
+		//I use the original degree of currNode!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+		sub=indexDegree*(B->G)->degrees[currNode->value]/M;
+		sum-=sub;
 		currNode=currNode->next;
-		i++;
 	}
 
-	dqChange=dq-4*(*(s+index))*sunRowS+4*bjj;
+	dqChange=dq-4*(*(s+index))*sum+4*bjj;
 	return dqChange;
 }
 /*

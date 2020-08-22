@@ -8,6 +8,7 @@
 
 /*computeDQ.c*/
 double (*computeDQ)(double *s, BHatMatrix *B);
+double (*computeDQChange)(double *s, BHatMatrix *B, int index, int dq);
 
 /*findEigen.c*/
 double (*calcDotProduct)(double *vector1, double *vector2, int size);

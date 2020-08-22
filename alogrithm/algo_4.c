@@ -4,10 +4,10 @@
  void algorithm4(BHatMatrix *B, int *s, int dQ){
 	 int i = 0, j, n = (B -> G) -> n;
 	 int max_place, max_i, placeInS;
-	 double Q0, max = 0, maxImprove = 0;
+	 double Q0, max = 0, maxImprove = 0, *score;
 	 linkedList *unmoved;
 	 linkedList_node *curr;
-	 int *score, *indices, *improve;
+	 int *indices, *improve;
 
 	 /*Avital: to implement in linkedlist.c
 	  * creats a list of all the indices value 0..Ng and a index of the place in s*
@@ -17,7 +17,7 @@
 
 	 unmoved - > allocateWithNodes(unmoved, n); // == 0 -> 1 -> 2 -> ,,, -> ng
 
-	 score = (int *)malloc(n * sizeof(int));
+	 score = (double *)malloc(n * sizeof(double));
 	 indices = (int *)malloc(n * sizeof(int));
 	 improve = (int *)malloc(n * sizeof(int));
 
@@ -43,7 +43,7 @@
 
 				 *(s + placeInS) *= -1;
 				 /*replace : computeDQ(s, B) */
-				 score[placeInS] =  computeDQMohamad(s, B) - Q0;
+				 score[placeInS] =  computeDQChange(s, B, placeInS, dQ) - Q0;
 				 *(s + placeInS) *= -1;
 
 				 if(score[placeInS] > max){
