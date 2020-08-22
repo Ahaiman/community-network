@@ -42,7 +42,6 @@
 				 placeInS = curr -> index;
 
 				 *(s + placeInS) *= -1;
-				 /*replace : computeDQ(s, B) */
 				 score[placeInS] =  computeDQChange(s, B, placeInS, dQ) - Q0;
 				 *(s + placeInS) *= -1;
 
@@ -58,6 +57,7 @@
 			 if(i == 0){
 				 /*improve[i] = score[max_place]*/
 				 improve[i] = max;
+			 }
 			 else{
 				 /*improve[i] = improve[i-1] - score[max_place]*/
 				 improve[i] = improve[i-1] + max;
@@ -80,7 +80,7 @@
 			dQ = 0;
 		}
 		else{
-			dQ = improve[max_i]
+			dQ = improve[max_i];
 		}
 
  }
