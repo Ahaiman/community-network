@@ -10,7 +10,7 @@
 typedef struct linkedList_node {
     int value;
 
-    /* TO ADD: INT INDEX;*/
+    /* AVITAL : TODO ADD: INT INDEX;*/
     struct linked_list_node  *next;
 
 } linked_list_node;

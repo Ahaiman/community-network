@@ -19,7 +19,7 @@ typedef struct _graph_node{
 	/*0(initial), 1 , -1 */
 	int		group;
 
-	struct _graph_node		*neighbors;
+	struct _graph_node		**neighbors;
 
 	/* Sets the array representing the node's neighbors */
 	void (*allocate_neighbors)(struct _graph_node *N, int degree);
