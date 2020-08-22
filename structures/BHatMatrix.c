@@ -117,32 +117,35 @@ double* calculate_fVector(graph *G)
 	double sub;
 	fVec=(double*)malloc(sizeof(double)*size);
 	size=G->n;
-	for(j=0;j<size;j++)
+	//calculating f_i for every i in g
+	for(i=0;i<size;i++)
 	{
-		*fVec=0;
-		for(i=0;i<size;i++)
+		sub=0;
+		//for every j in g
+		for(j=0;j<size;j++)
 		{
 			//we need to provide M!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			sub=((G->graph_nodes)[i]->degree)*((G->graph_nodes)[j]->degree)/M;
-			*fVec+=((G->relate_matrix)[i][j]-sub);
+			sub+=((G->graph_nodes)[i]->degree)*((G->graph_nodes)[j]->degree)/M;
 		}
+		//row sum equals it's length because the relate matrix have only '1's in it.
+		*fvec=((G->relate_matrix)->private[i])->size-sub;
 		fVec++;
 	}
 	return fVec;
 }
-/*returns the sum of the largest column*/
+/*
+ * Returns the sum of the largest column.
+ * The relate matrix is symmetric. Therefore the largest column is also the largest row.
+ * The relate matrix is a sparse matrix that contains only '1's, so the largest row means the longest one.
+ */
 int calc_MatrixNorm(graph *G)
 {
-	int sum, max=0, i, j;
-	for(j=0;j<G->n;j++)
+	int max=0, i, rowlen;
+	for(i=0;i<G->n;i++)
 	{
-		sum=0;
-		for(i=0;i<G->n;i++)
-		{
-			sum+=(G->relate_matrix)[i][j];
-		}
-		if (sum>max)
-			max=sum;
+		rowlen=((G->relate_matrix)->private)[i]->size;
+		if (rowlen>max)
+			max=rowlen;
 	}
 	return max;
 }
