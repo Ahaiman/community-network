@@ -14,21 +14,18 @@ double (*calcDotProduct)(double *vector1, double *vector2, int size);
 double (*findEigenValue)(BHatMatrix *B, int *eigenVector);
 
 /*doDivisionByS.c */
-void (*doDivisionByS)(Graph *group, int *s, stack *divisionToTwo);
+void (*doDivisionByS)(graph *group, int *s, stack *divisionToTwo);
 
 /*createGraphFromFile.c*/
 graph (*createGraph)(char *name_of_input_file);
 
-/*compueS.c*/
+/*computeS.c*/
 int (*createSVector)(double *eigenVector, int size);
 
-/*?????????*/
-void multNumVec(int size, double num, double *vec, double *res);
-void multTwoVecs(int size, double *fVector, double *eigenVector, double *res);
-void findEigen_MultResult(int size, double *A_g_eigenVector, double *degVec, double *fbVec, double *Bnorm_eigenVector, double *result);
-void SubtractTwoVectors(int size, double *vec1, double *vec2);
-void AddTwoVectors(int size, double *vec1, double *vec2);
-double findEigenValue(BHatMatrix *B, int *eigenVector);
+/*BHatMatrix.c*/
+void (*calcFirstThreeVecs)(BHatMatrix *B, double *eigenVector ,double *Ag_eigenVector, double *degVec, double *fbVec);
+void (*subtractFirstThreeVecs)(int size, double *A_g_eigenVector, double *degVec, double *fbVec, double *result);
+
 
 
 

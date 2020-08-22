@@ -34,10 +34,10 @@ double computeDQ(double *s, BHatMatrix *B)
 	fsVec=(double*)malloc(sizeof(double)*size);
 	result=(double*)malloc(sizeof(double)*size);
 
-	multFirstThreeVecs(B, s, Ag_s, degVec, fsVec);
+	calcFirstThreeVecs(B, s, Ag_s, degVec, fsVec);
 
 	//calculating Bg_hat * s , and the output is in "result" vector
-	MultBMatAndVector(size, Ag_s, degVec, fsVec, result);
+	subtractFirstThreeVecs(size, Ag_s, degVec, fsVec, result);
 
 	//calculating s^T * result
 	dq=calcDotProduct(size, s, result);
