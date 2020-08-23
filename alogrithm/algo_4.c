@@ -1,7 +1,11 @@
 
 #include "./structures/linkedList"
+#include "./structures/BHatMatrix.h"
+#include "./function/function.h"
 
- void algorithm4(BHatMatrix *B, int *s, int dQ){
+
+ void algorithm4(Graph *G, int *s, int dQ){
+	 BHatMatrix *B;
 	 int i = 0, j, n = (B -> G) -> n;
 	 int max_place, max_i, placeInS;
 	 double Q0, max = 0, maxImprove = 0, *score;
@@ -9,11 +13,8 @@
 	 linkedList_node *curr;
 	 int *indices, *improve;
 
-	 /*Avital: to implement in linkedlist.c
-	  * creats a list of all the indices value 0..Ng and a index of the place in s*
-	  *
-	  * NOTE 22/8: DONE
-	  * there is no need to keep the index of the node, just the number 0..., size of s*/
+
+	 B = createMatrixBHat(G);
 
 	 unmoved - > allocateWithNodes(unmoved, n); // == 0 -> 1 -> 2 -> ,,, -> ng
 

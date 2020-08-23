@@ -16,10 +16,6 @@ typedef struct _graph_node{
 	/* Number of edges in the graph : |E| = m */
 	int    degree;
 
-	/*0(initial), 1 , -1 */
-//	int		group;
-
-	struct _graph_node		**neighbors;
 
 	/* Sets the array representing the node's neighbors */
 	void (*allocate_neighbors)(struct _graph_node *N, int degree);
@@ -72,3 +68,10 @@ graph_node* allocate_node(int i);
 //
 //	/* Sets the array representing the node's neighbors */
 //	void (*set_neighbors)(struct _graph_node *N, struct _graph_node **neighbors);
+
+
+
+/*0(initial), 1 , -1 */
+//	int		group;
+
+//struct _graph_node		**neighbors;

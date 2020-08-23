@@ -10,8 +10,9 @@
 #include "./structures/linkedList.h"
 #include "./structures/graph.h"
 #include "./structures/graph_node.h"
-#include "./function/doDivisionByS.c"
 
+#include "./functions/functions.h"
+#include "./algorithm.h"
 
 void findCommunities(graph *G){
 	stack *P, *O, *divisionToTwo;
@@ -32,15 +33,15 @@ void findCommunities(graph *G){
 		group = P -> pop(P);
 
 		/* 1) Divide g into g1; g2 with Algorithm 2 */
-		dQ  = algorithm2(group, s);
+		dQ  = divisionGraphToTwo(group, s);
 
 
 		/*2) Together :
 		 * Implenet optimiztiom - */
-		 algorithm4(s, dQ);
+		 algorithm4(group, s, dQ);
 
 		 /*Creating the division*/
-		 doDivisionByS(group, s, divisionToTwo);
+		 doDivisionByS(group, divisionToTwo, s);
 
 		 group1 = divisionToTwo -> pop(divisionToTwo);
 		 group2 = divisionToTwo -> pop(divisionToTwo);

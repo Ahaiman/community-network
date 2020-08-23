@@ -4,20 +4,18 @@
  *  This Main FIle us ..........
  
  
- Avital !
-
-
-
- */
+*/
 
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "./structures/graph.h"
-#include "./functions/CreateGraphFromFile.c"
-#include "./algorithm/algo_3.c"
 #include <string.h>
+
+
+#include "./structures/graph.h"
+#include "./functions/functions.h"
+#include "./algorithm/algorithm.h"
 
 
 int main(int argc, char* argv[]){
@@ -32,14 +30,13 @@ int main(int argc, char* argv[]){
 	(void)argc;
 
 	/*Create Graph */
-	input_graph = createGraph(argv[1]);
-
+	input_graph = createGraphFromFile(argv[1]);
 
 	/*Send to Algorithm 3 */
 	findCommunities(input_graph);
 
 	end = clock();
-	//printf("Prog  took: %f seconds\n", (double)(end - start) / CLOCKS_PER_SEC);
+	printf("Prog  took: %f seconds\n", (double)(end - start) / CLOCKS_PER_SEC);
 	return 0;
 }
 

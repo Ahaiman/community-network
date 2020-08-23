@@ -89,6 +89,10 @@ void doDivisionByS(Graph *group, int *s, stack *divisionToTwo){
 	group1 = allocate_graph(n1, **graph_nodes1, *relate_matrix1);
 	group2 = allocate_graph(n2, **graph_nodes2, *relate_matrix2);
 
+	/*Avital TODO: Create degrees vector for each new graph*/
+	group1 = degreesCalculate(n1, **graph_nodes1);
+	group1 = degreesCalculate(n1, **graph_nodes1);
+
 	/*Adding division (two graph) to the input stack */
 	divisionToTwo.push(group2);
 	divisionToTwo.push(group1);
@@ -104,6 +108,7 @@ void doDivisionByS(Graph *group, int *s, stack *divisionToTwo){
 
 /* The function "createRelateMatrix"
  	 The function creates the new relation matrix, according to input data.
+ 	 Avital TODO
  */
 void createRelateMatrix(int originalSize, int currentSize, graph_node **listOfNodes, spmat *matrix){
 	linkedList **rows;
