@@ -111,7 +111,7 @@ double* creatRandomVector(double* b0, int size){
 	return b0;
 }
 
-
+/*To Delete */
 void print(int size, double *row){
 	int i;
 	double k;

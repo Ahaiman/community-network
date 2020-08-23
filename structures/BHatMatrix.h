@@ -14,7 +14,7 @@ typedef struct _BHatMatrix{
 	int matrixNorm;
 
 	void (*freeBHat)(struct __BHatMatrix *B);
-	void (*multBHat)(BHatMatrix *B, double* vector ,double *result);
+	void (*multBHat)(struct __BHatMatrix *B, double* vector ,double *result);
 
 } BHatMatrix;
 

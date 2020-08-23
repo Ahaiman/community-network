@@ -28,8 +28,5 @@ void (*calcFirstThreeVecs)(BHatMatrix *B, double *eigenVector ,double *Ag_eigenV
 void (*subtractFirstThreeVecs)(int size, double *A_g_eigenVector, double *degVec, double *fbVec, double *result);
 
 
-
-
-
 #endif
 
