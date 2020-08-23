@@ -12,9 +12,11 @@
  * --------Functions Definition---------
  */
 
+spmat *spmat_allocate_list(int);
 void add_row_to_list(spmat *, const double *, int);
 void freeRow_list(linked_list_node *);
 void free_list(struct _spmat *, int);
+void multSpMat(spmat *, double *, double *);
 
 /*
  * --------Implementation With Linked List---------
@@ -35,9 +37,9 @@ spmat *spmat_allocate_list(int n) {
 		exit(0);
           }
 
-    matrix->private = rows_indices;
-    matrix->n = n;
-    matrix->add_row = add_row_to_list;
+    matrix-> private = rows_indices;
+    matrix-> n = n;
+    matrix-> add_row = add_row_to_list;
     matrix -> spmat_mult = multSpMat;
     matrix->spmat_free = free_list;
     return matrix;
@@ -76,7 +78,7 @@ void add_row_to_list(struct _spmat *A, const double *row, int row_size, int i) {
     (A->private)[i] -> value = i;
 }
 
-//change in h file!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 void multSpMat(spmat *A, double *v, double *result)
 {
 	linkedList *currRow, **rows;
@@ -101,33 +103,6 @@ void multSpMat(spmat *A, double *v, double *result)
         result++;
     }
 }
-
-
-void mult_list(spmat *A, const double *v, double *result) {
-    linkedList_node *currNode;
-    linkedList *currRow, **rows_indices = A->private;
-    int row, n = A -> n
-    double sum;
-
-    if(result == NULL){
-          	printf("resit ws not allocated");
-          	exit(0);
-          }
-
-    for (row = 0; row < n; row++) {
-        currRow = *rows;
-        currNode = currRow- > head;
-        sum = 0;
-        while (currNode != NULL) {
-            sum += (currNode->value)*(v[currNode->value]);
-            currNode = currNode->next;
-        }
-        rows++;
-        *result = sum;
-        result++;
-    }
-}
-
 
 /*
  * frees the linkedList implementation of the sparsMatrix
@@ -155,5 +130,33 @@ void freeRow_list(linked_list_node *rowHead) {
         free(rowHead);
     }
 }
+
+
+
+
+//void mult_list(spmat *A, const double *v, double *result) {
+//    linkedList_node *currNode;
+//    linkedList *currRow, **rows_indices = A->private;
+//    int row, n = A -> n
+//    double sum;
+//
+//    if(result == NULL){
+//		printf("result is not allocated");
+//		exit(0);
+//     }
+//
+//    for (row = 0; row < n; row++) {
+//        currRow = *rows;
+//        currNode = currRow- > head;
+//        sum = 0;
+//        while (currNode != NULL) {
+//            sum += (currNode->value)*(v[currNode->value]);
+//            currNode = currNode->next;
+//        }
+//        rows++;
+//        *result = sum;
+//        result++;
+//    }
+//}
 
 
