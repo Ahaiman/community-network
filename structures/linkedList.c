@@ -77,6 +77,9 @@ void delete_node(linkedList *list, int node_value){
 			curr = curr -> next;
 		}
 	}
+	if(list -> size == 0){
+		list -> head = NULL;
+	}
 }
 
 /*Return a new linkedList (which was allocated prior)

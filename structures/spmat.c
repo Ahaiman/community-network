@@ -72,10 +72,12 @@ void add_row_to_list(struct _spmat *A, const double *row, int row_size, int i) {
         row++;
     }
 
+    currRow -> value = i;
+    currRow -> size = row_size;
     A->private[i] = currRow;
 
-    /*the index of the node */
-    (A->private)[i] -> value = i;
+
+
 }
 
 

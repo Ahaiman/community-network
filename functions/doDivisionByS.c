@@ -57,12 +57,11 @@ void doDivisionByS(Graph *group, int *s, stack *divisionToTwo){
 	graph_nodes1 = (graph_node **) malloc(sizeof(graph_node *) * (n1));
 	graph_nodes2 = (graph_node **) malloc(sizeof(graph_node *) * (n2));
 
-	/*degree of node is CHANGEING?????? */
+
 
 	/*Allocating new relation matrix for each group*/
 	relate_matrix1 = spmat_allocate_list(n1)
 	relate_matrix2 = spmat_allocate_list(n2)
-
 
 	/*Updating the new lists of nodes for each group*/
 	for(i = 0; i < n; i++){
@@ -81,17 +80,19 @@ void doDivisionByS(Graph *group, int *s, stack *divisionToTwo){
 	graph_nodes1 -= n1;
 	graph_nodes2 -= n2;
 
+
 	/*Updating the relation matrix of each group */
-	createRelateMatrix(n, n1, graph_nodes1, relate_matrix1);
-	createRelateMatrix(n, n2, graph_nodes2, relate_matrix2);
+	createRelateMatrix(n, n1, graph_nodes1, relate_matrix1, s, 1);
+	createRelateMatrix(n, n2, graph_nodes2, relate_matrix2, s, -1);
+
 
 	/*Allocating new graph representing each new group */
 	group1 = allocate_graph(n1, **graph_nodes1, *relate_matrix1);
 	group2 = allocate_graph(n2, **graph_nodes2, *relate_matrix2);
 
-	/*Avital TODO: Create degrees vector for each new graph*/
-	group1 = degreesCalculate(n1, **graph_nodes1);
-	group1 = degreesCalculate(n1, **graph_nodes1);
+	/*Create degrees vector for each new graph */
+	group1 -> degrees = degreesCalculate(n1, **graph_nodes1);
+	group2 -> degrees = degreesCalculate(n2, **graph_nodes2);
 
 	/*Adding division (two graph) to the input stack */
 	divisionToTwo.push(group2);
@@ -110,24 +111,61 @@ void doDivisionByS(Graph *group, int *s, stack *divisionToTwo){
  	 The function creates the new relation matrix, according to input data.
  	 Avital TODO
  */
-void createRelateMatrix(int originalSize, int currentSize, graph_node **listOfNodes, spmat *matrix){
+void createRelateMatrix(int originalSize, int currentSize, graph_node **listOfNodes, spmat *matrix, int *s, int groupNum){
 	linkedList **rows;
+	linkedList *currList;
+	linkedList *node;
 	int i = 0, j = 0, curr_index;
 
 	rows = matrix -> private;
 	for(; i < currentSize; i++){
-		curr_index = *(listOfNodes) -> index;
+		curr_index = (*listOfNodes) -> index;
+
+		/*searching the matching node index */
 		for(; j < originalSize; j++){
-			if((*rows) -> node_index == curr_index){
-				*(matrix -> private) = *rows;
-				matrix -> private++;
+			currList = **rows;
+			/*match found*/
+			if(currList -> node_index == curr_index){
+				/*Updating the neighbors */
+				node = currList -> head;
+
+				while( node != NULL){
+					/*Now it's not a neighbore */
+					if(*(s + (node -> index)) != groupNum){
+						node = node -> next;
+						delete_node(currList, node -> value);
+						(currList -> size)--;
+					}
+					else {
+						node = node -> next;
+						}
+				}
+
+				*(matrix -> private) = currList;
+				(matrix -> private)++;
+				(*listOfNodes) -> degree = currList -> size;
+				rows++;
 				break;
 			}
-			rows++;
+			else{
+				rows++;
+			}
+
 		}
 		listOfNodes++;
 	}
 }
 
 
+int *degreesCalculate(int size, graph_node **listOfNodes){
+	int i = 0;
+	int *degrees = (int *) malloc(size * (sizeof(int)));
+	for(;i < size; i++){
+		(*degrees) = (**listOfNodes) -> degree;
+		degrees++;
+		listOfNodes++;
+	}
+	return degrees;
+}
 
+}
