@@ -14,6 +14,13 @@
 #include "./functions/functions.h"
 #include "./algorithm.h"
 
+
+/*AFTER 24/8 WITH MOSHE :
+ * Note we need to count iteration to recongince cases of infinity loops.
+ * do several tries on different sizes, and do maximum loops; if it more than that -> error
+ * inifint loop -> powet iteraion for exapmle -> do exit it's an error.
+ * put an counte for loops- > check what need to be the maximim limit
+ */
 void findCommunities(graph *G){
 	stack *P, *O, *divisionToTwo;
 	graph *group, *group1, *group2;
@@ -36,8 +43,8 @@ void findCommunities(graph *G){
 		dQ  = divisionGraphToTwo(group, s);
 
 
-		/*2) Together :
-		 * Implenet optimiztiom - */
+		/*2)Even if the division in trivial (one group full, and another empty)
+		 * Impemant optimization - */
 		 algorithm4(group, s, dQ);
 
 		 /*Creating the division*/
