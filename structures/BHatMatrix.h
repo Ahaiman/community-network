@@ -10,14 +10,15 @@
 typedef struct _BHatMatrix{
 
 	graph *G;
-	double *f_vector;
-	int matrixNorm;
+	double constM;
+	int originalSize;
+	double matrixNorm;
 
 	void (*freeBHat)(struct __BHatMatrix *B);
 	void (*multBHat)(struct __BHatMatrix *B, double* vector ,double *result);
 
 } BHatMatrix;
 
-BHatMatrix* createMatrixBHat (spmat *A_g, int *degrees, double *f_vector, double matrixNorm, int size, int *nodesIndices);
+BHatMatrix* createMatrixBHat (graph *G);
 
 #endif /* STRUCTURES_BHATMATRIX_H_ */

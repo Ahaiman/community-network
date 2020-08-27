@@ -19,32 +19,62 @@ double computeDQChange(double*, BHatMatrix*, int, int);
  * --------Implementation---------
  */
 
+
+
+int sumAd (graph *G, int *s,int index)
+{
+	spmat *relate_matrix = G -> relate_matrix;
+	int sum = 0;
+	linkedList* indexRow;
+	linkedList_node* currNode;
+
+	indexRow = *((relate_matrix -> private)+ index);
+	currNode = indexRow -> head;
+	while(currNode!=NULL)
+	{
+		if (currNode -> index == *(s + index)){
+			sum += *(s + (currNode -> value));
+		}
+		currNode = currNode -> next;
+	}
+	return sum;
+}
+
+double sumDd (BHatMatrix *B, int *s, int index)
+{
+	int i, sum=0, counter=0;
+	int *listNodes=B->G->nodesList, *degrees=B->G->degrees;
+	double d;
+	d=B->constM*(*(degrees+index));
+	for (i=0;i<B->originalSize;i++)
+	{
+		if (i==*nodesList)
+		{
+			sum+= *(degrees+i) * (*(s + i));
+			counter++;
+			nodesList++;
+		}
+		if (counter == (B->G)->n)
+			break;
+	}
+	return sum*d;
+}
+
+
 /*
  * Returns delta Q: (0.5) * s^T * Bhat * s
  */
 double computeDQ(double *s, BHatMatrix *B)
 {
 	double dq;
-	int size;
-	double *Ag_s, *degVec, *fsVec, *result;
+	int size = (B->G)->n;
+	double *result;
 
-	size=(B->G)->n;
-	Ag_s=(double*)malloc(sizeof(double)*size);
-	degVec=(double*)malloc(sizeof(double)*size);
-	fsVec=(double*)malloc(sizeof(double)*size);
 	result=(double*)malloc(sizeof(double)*size);
 
-	calcFirstThreeVecs(B, s, Ag_s, degVec, fsVec);
+	B->multBHat(B,s,result);
+	dq=calcDotProduct(size, s,result);
 
-	//calculating Bg_hat * s , and the output is in "result" vector
-	subtractFirstThreeVecs(size, Ag_s, degVec, fsVec, result);
-
-	//calculating s^T * result
-	dq=calcDotProduct(size, s, result);
-
-	free(Ag_s);
-	free(degVec);
-	free(fsVec);
 	free(result);
 	return dq*(0.5);
 }
@@ -52,47 +82,16 @@ double computeDQ(double *s, BHatMatrix *B)
 /*
  * Returns a new delta Q, after a change in a single index in the vector s.
  */
-//we need to provide M!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-double computeDQChange(double *s, BHatMatrix *B, int index, int dq)
+double computeDQChange(int *s ,BHatMatrix *B, int index)
 {
-	double dqChange, bjj, sub, sum=0;
-	linkedList_node *currNode;
-	int indexDegree;
 
-	indexDegree=(B->G)->degrees[index];
-	currNode=(((B->G)->relate_matrix)->private[index])->head;
+	int partA;
+	double partB, partC;
 
-	//calculating Bjj: we assume that Ajj=0. Therefore Bjj=0-((j_dgree)**2/M)
-	bjj=(pow(indexDegree,2)*(-1))/M;
+	partA = 4 * (*(s + index));
+	partC = 4 * pow(*(B -> G -> degrees) + index), 2) * (B -> constM);
+	partB = sumAd (B -> G, s, index) - sumDd (B, s, index);
 
-	//calculating the sum of column #index.
-	while (currNode!=NULL)
-	{
-		sum+=s[currNode->index];
-		//I use the original degree of currNode!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-		sub=indexDegree*(B->G)->degrees[currNode->value]/M;
-		sum-=sub;
-		currNode=currNode->next;
-	}
+	return partA * partB + partC;
 
-	dqChange=dq-4*(*(s+index))*sum+4*bjj;
-	return dqChange;
 }
-/*
-
-
-/*returns a double, multiplies a row vector and a column vector. */
-/*
-double RowVecMultColVec(int size, double *row, double *col)
-{
-	int i;
-	double res=0;
-	for (i=0;i<size;i++)
-	{
-		res+=((*row)*(*col));
-		row++;
-		col++;
-	}
-	return res;
-}
-*/

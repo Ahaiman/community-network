@@ -40,10 +40,10 @@
 			 curr = unmoved -> head;
 			 //6 : runining over the unmoved linked list
 			 while(curr != NULL){
-				 placeInS = curr -> index;
+				 placeInS = curr -> value;
 
 				 *(s + placeInS) *= -1;
-				 score[placeInS] =  computeDQChange(s, B, placeInS, dQ) - Q0;
+				 score[placeInS] =  computeDQChange(s , B, placeInS);
 				 *(s + placeInS) *= -1;
 
 				 if(score[placeInS] > max){

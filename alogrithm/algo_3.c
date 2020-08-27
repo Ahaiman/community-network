@@ -21,17 +21,19 @@
  * inifint loop -> powet iteraion for exapmle -> do exit it's an error.
  * put an counte for loops- > check what need to be the maximim limit
  */
+
 void findCommunities(graph *G){
 	stack *P, *O, *divisionToTwo;
 	graph *group, *group1, *group2;
 	int *s;
+	int n = G -> n;
 	double dQ;
 
 
 	initialize(O);
 	initialize(P);
 	initialize(divisionToTwo);
-	s = (int *) malloc (sizeof(int) * (G -> n));
+	s = (int *) malloc (sizeof(int) * n);
 
 	//	1.Start with a trivial division into one group: the all nodes in the graph
 	P -> push(G, P);

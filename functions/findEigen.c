@@ -47,8 +47,6 @@ double findEigenValue(BHatMatrix *B, int *eigenVector){
 	}
 	creatRandomVector(eigenVector, matrixSize);
 
-
-
 	/*Perform power iteration to obtain the eigenvector
 	 * Running the algorithm of power iteration
 	 */
@@ -57,8 +55,9 @@ double findEigenValue(BHatMatrix *B, int *eigenVector){
 
 		result = (double*) malloc(sizeof(double)*(matrixSize));
 
-		/*Calculating (result = ^B[g] * b_k) */
-		B -> BHatMult(B, eigenVector ,result);
+		/*Calculating (result = ^B[g] * b_k).
+		 *  The shifting of the matrix happens in multBHat*/
+		B -> multBHat(B, eigenVector ,result);
 
 		/*calculating the vector's magnitude*/
 		vector_norm = sqrt(calcDotProduct(result, result, matrixSize));
@@ -96,6 +95,8 @@ double findEigenValue(BHatMatrix *B, int *eigenVector){
 //	end = clock();
 //	printf("Prog  took: %f seconds\n", (double)(end - start) / CLOCKS_PER_SEC);
 
+
+	/*need to be eigen value - Bnorm */
 	return eigenValue;
 }
 

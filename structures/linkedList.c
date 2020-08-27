@@ -35,7 +35,7 @@ linkedList_node *createNode(int value) {
 	    }
 
     newNode -> value = value;
-    newNode -> index = value;
+    newNode -> partByS = 0;
     newNode -> next = NULL;
     return newNode;
 }

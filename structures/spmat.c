@@ -40,7 +40,7 @@ spmat *spmat_allocate_list(int n) {
     matrix-> private = rows_indices;
     matrix-> n = n;
     matrix-> add_row = add_row_to_list;
-    matrix -> spmat_mult = multSpMat;
+    matrix -> spmat_mult = mult_list;
     matrix->spmat_free = free_list;
     return matrix;
 }
@@ -81,31 +81,6 @@ void add_row_to_list(struct _spmat *A, const double *row, int row_size, int i) {
 }
 
 
-void multSpMat(spmat *A, double *v, double *result)
-{
-	linkedList *currRow, **rows;
-	linkedList_node *currNode;
-	int rowNum, size, sum;
-
-	rows=A->private;
-	size=A->n;
-
-    for (rowNum = 0; rowNum < size; rowNum++)
-    {
-        currRow = *rows;
-        currNode = currRow -> head;
-        sum = 0;
-        while (currNode != NULL)
-        {
-            sum += v[currNode->index];
-            currNode = currNode->next;
-        }
-        rows++;
-        *result = sum;
-        result++;
-    }
-}
-
 /*
  * frees the linkedList implementation of the sparsMatrix
  */
@@ -134,31 +109,29 @@ void freeRow_list(linked_list_node *rowHead) {
 }
 
 
+void mult_list(spmat *A, const double *v, double *result) {
+    linkedList_node *currNode;
+    linkedList *currList, **rows_indices = A->private;
+    int row, n = A -> n
+    double sum;
 
+    if(result == NULL){
+		printf("result is not allocated");
+		exit(0);
+     }
 
-//void mult_list(spmat *A, const double *v, double *result) {
-//    linkedList_node *currNode;
-//    linkedList *currRow, **rows_indices = A->private;
-//    int row, n = A -> n
-//    double sum;
-//
-//    if(result == NULL){
-//		printf("result is not allocated");
-//		exit(0);
-//     }
-//
-//    for (row = 0; row < n; row++) {
-//        currRow = *rows;
-//        currNode = currRow- > head;
-//        sum = 0;
-//        while (currNode != NULL) {
-//            sum += (currNode->value)*(v[currNode->value]);
-//            currNode = currNode->next;
-//        }
-//        rows++;
-//        *result = sum;
-//        result++;
-//    }
-//}
+    for (row = 0; row < n; row++) {
+    	currList = *rows_indices;
+        currNode = currList- > head;
+        sum = 0;
+        while (currNode != NULL) {
+            sum += *(v + (currNode -> value));
+            currNode = currNode->next;
+        }
+        rows_indices++;
+        *result = sum;
+        result++;
+    }
+}
 
 

@@ -9,7 +9,7 @@
 
 typedef struct linkedList_node {
     int value;
-    int index;
+    int partByS;
     struct linkedList_node  *next;
 
 } linkedList_node;

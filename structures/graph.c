@@ -37,6 +37,7 @@ graph* allocate_graph(int n, int m, graph_node **graph_nodes, spmat *relate_matr
 
     myGraph -> n = n;
     /*myGraph -> m = m;*/
+    myGraph -> divisionNumber = 0;
     myGraph -> degrees = NULL;
     myGraph -> relate_matrix = relate_matrix;
     myGraph -> graph_nodes = graph_nodes;
