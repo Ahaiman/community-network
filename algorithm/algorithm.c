@@ -74,7 +74,8 @@
 	 * put an counte for loops- > check what need to be the maximim limit
 	 */
 
-	void findCommunities(graph *G){
+	void findCommunities(graph *G, char *name_of_output_file){
+		FILE	*output_file;
 		stack *P, *O, *divisionToTwo;
 		graph *group, *group1, *group2;
 		int *s;
@@ -86,6 +87,7 @@
 		initialize(P);
 		initialize(divisionToTwo);
 		s = (int *) malloc (sizeof(int) * n);
+		output_file =  fopen(name_of_output_file, "wb");
 
 		//	1.Start with a trivial division into one group: the all nodes in the graph
 		P -> push(G, P);
@@ -133,6 +135,9 @@
 				P -> push(group2, P);
 			}
 		}
+
+
+		/*Wrtie to output file */
 
 /* ----------------------------------algo4---------------------------------------------------------------*/
 
