@@ -48,7 +48,7 @@
 		if(eigenValue <= 0)
 		{
 			printf("not possible");
-			return NULL;
+			return -1;
 		}
 
 		//compute s
@@ -60,7 +60,7 @@
 		 if( dQ <= 0)
 		 {
 			 printf("not possible");
-			 return NULL;
+			 return -1;
 		 }
 
 		 return dQ;
@@ -103,6 +103,10 @@
 			/* 1) Divide g into g1; g2 with Algorithm 2 */
 			dQ  = divisionGraphToTwo(group,divisionToTwo, s);
 
+			if(dQ == -1){
+				printf("No division possible");
+				exit(0);
+			}
 
 
 			/*2)Even if the division in trivial (one group full, and another empty)
@@ -150,6 +154,7 @@
 
 		 void algorithm4(graph *G, int *s, double dQ)
 		 {
+			 /*Q0 ??? */
 			 BHatMatrix *B;
 			 int i = 0, j, n = (B -> G) -> n;
 			 int max_place, max_i, placeInS;

@@ -1,9 +1,12 @@
 
-#include "./BHatMatrix.h"
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "./graph.h"
 #include "./spmat.h"
+#include "./BHatMatrix.h"
+#include "./linkedList.h"
 #include "../functions/functions.h"
 
 /*
@@ -20,7 +23,7 @@ void multNumVec(int, double, double*, double*);
 void substractTwoVecs(int, double*, double*, double*);
 double  calcMatrixNorm(BHatMatrix *);
 double calcM(graph *);
-void freeBHat(BHatMatrix*);
+void freeBHat(BHatMatrix *);
 
 /*
  * --------Implementation---------
@@ -57,6 +60,7 @@ void multBHat(BHatMatrix *B, double *vector ,double *result, int doShift)
 	//int *A_s;
 	double *A_s, *D_s, *AminusD;
 	spmat *relate_matrix  = B -> G -> relate_matrix;
+	int *degrees = (B-> G) ->degrees;
 	int m, n = B -> G -> n;
 	double K_s;
 
@@ -66,12 +70,12 @@ void multBHat(BHatMatrix *B, double *vector ,double *result, int doShift)
 	relate_matrix -> spmat_mult(relate_matrix, vector, A_s);
 
 	/*K * s */
-	K_s = calcDotProduct(B->G->degrees, vector, n) * (B -> constM);
+	K_s = calcDotProduct(degrees, vector, n) * (B -> constM);
 
 	/*D_s*/
 	D_s = (double *) malloc (sizeof(double) * n);
 
-	multNumVec(n, K_s, B->G->degrees, D_s);
+	multNumVec(n, K_s, degrees, D_s);
 
 	AminusD = (double *) malloc (sizeof(double) * n);
 	substractTwoVecs(n, A_s, D_s, AminusD);
@@ -95,11 +99,10 @@ void multBHat(BHatMatrix *B, double *vector ,double *result, int doShift)
 int sumRowsA(graph *G, int m)
 {
 	spmat *relate_matrix=G->relate_matrix;
-	int *nodesList=G->graph_nodes;
 	int counter=0;
 	linkedList* mrow;
 	linkedList_node* currNode;
-	mrow=*((relate_matrix->private)+m);
+	mrow=*((linkedList **)(relate_matrix->private) + m);
 	currNode=mrow->head;
 	while(currNode!=NULL)
 	{
@@ -138,7 +141,7 @@ double sumRowB (BHatMatrix *B, int i)
 
 	linkedList* mrow;
 	linkedList_node* currNode;
-	mrow = *((relate_matrix->private)+ i);
+	mrow = *((linkedList **)(relate_matrix->private)+ i);
 	currNode = mrow->head;
 
 	while(currNode!=NULL)
@@ -159,12 +162,16 @@ double sumRowB (BHatMatrix *B, int i)
  */
 double calcMatrixNorm(BHatMatrix *B)
 {
-	double max=0, i, sumRow;
+	double max=0, sumRow;
+	int *degrees = (B -> G) -> degrees;
+	int currDeg, i;
 
 	for(i = 0; i < B -> G -> n; i++)
 	{
-		sumRow = abs(pow(*(B -> G -> degrees + i), 2) * (B -> constM) * (-1) - sumRowsA(B-> G, i) + sumRowsD(B, i));
-		sumRow += sumRowB;
+		currDeg = *(degrees + i);
+		sumRow = (-1 * pow(currDeg , 2) * (B -> constM))- sumRowsA(B-> G, i) + sumRowsD(B, i);
+		sumRow = abs(sumRow);
+		sumRow += sumRowB(B, i);
 		if(max < sumRow)
 			max = sumRow;
 	}

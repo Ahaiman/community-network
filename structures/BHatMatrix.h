@@ -5,6 +5,7 @@
 #ifndef STRUCTURES_BHATMATRIX_H_
 #define STRUCTURES_BHATMATRIX_H_
 
+#include "./graph.h"
 
 typedef struct _BHatMatrix
 {
@@ -14,7 +15,7 @@ typedef struct _BHatMatrix
 	double matrixNorm;
 
 	void (*freeBHat)(struct _BHatMatrix *B);
-	void (*multBHat)(struct _BHatMatrix *B, double* vector ,double *result);
+	void (*multBHat)(struct _BHatMatrix *B, double* vector ,double *result, int doShift);
 
 } BHatMatrix;
 

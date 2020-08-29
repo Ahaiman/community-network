@@ -40,29 +40,3 @@ typedef struct _graph {
 graph* allocate_graph(int n, int *graph_node, spmat *relate_matrix);
 
 #endif
-
-
-
-
-
-
-//	/* Returns the size of the graph i.e the number of vertices */
-//	int	(*get_size)(struct _graph *G);
-//
-//	/* Returns the number of edges in the graph */
-//	int	(*get_num_edges)(struct _graph *G);
-//
-//	/* Returns the number of edges in the graph */
-//	int	(*get_relate_matrix)(struct _graph *G);
-//
-//	/* Sets the size of the graph i.e the number of vertices */
-//	void(*set_size)(int size);
-//
-//	/*  Sets the number of edges in the graph */
-//	void (*set_num_edges)(int m);
-//
-//	/*  Sets the number of edges in the graph */
-//	void (*set_relate_matrix)(spmat *matrix);
-//
-//	/*  Sets the number of edges in the graph */
-//	void (*set_nodes)(graph_node **graph_node);

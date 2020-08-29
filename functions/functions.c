@@ -22,21 +22,21 @@
 	double computeDQChange(int *s, BHatMatrix *B, int index);
 
 	/*findEigen.c*/
-	double findEigenValue(BHatMatrix *B, int *eigenVector);
+	double findEigenValue(BHatMatrix *B, double *eigenVector);
 	double* creatRandomVector(double* b0, int size);
 	int checkDifference(double *vector1, double *vector2, int size, double eps);
 	double calcDotProduct(double *vector1, double *vector2, int size);
-	void divide(double *vector1, double norm, int size);
+	void divideByNorm(double *vector1, double norm, int size);
 
 	/*doDivisionByS.c */
 	int doDivisionByS(graph *group, int *s, stack *divisionToTwo);
 	void updateNodesGroups(int originalSize, spmat *matrix, int *s);
 
 	/*createGraphFromFile.c*/
-	graph createGraph(char *name_of_input_file);
+	graph *createGraph(char *name_of_input_file);
 
 	/*computeS.c*/
-	int createSVector(double *eigenVector, int size);
+	int *computeS(double *eigenVector, int size);
 
 
 /*
@@ -48,12 +48,13 @@
 
 	int sumAd (graph *G, int *s,int index)
 	{
-		spmat *relate_matrix = G -> relate_matrix;
-		int sum = 0;
+		linkedList** private;
 		linkedList* indexRow;
 		linkedList_node* currNode;
+		int sum = 0;
 
-		indexRow = *((relate_matrix -> private)+ index);
+		private = (linkedList **)(G -> relate_matrix -> private);
+		indexRow = indexRow + index;
 		currNode = indexRow -> head;
 		while(currNode!=NULL)
 		{
@@ -98,8 +99,8 @@
 
 		result=(double*)malloc(sizeof(double)*size);
 
-		B->multBHat(B,s,result);
-		dq=calcDotProduct(size, s,result);
+		B -> multBHat(B,s,result,0);
+		dq = calcDotProduct(s,result, size);
 
 		free(result);
 		return dq*(0.5);
@@ -130,17 +131,13 @@
 	/*eigen vector is pre - initaliize
 	 * function returns eigenValue and sets value into eigenvector
 	 */
-	double findEigenValue(BHatMatrix *B, int *eigenVector)
+	double findEigenValue(BHatMatrix *B, double *eigenVector)
 	{
 
 		/*Variables Deceleration*/
-		int i = 0 , ifGreatThenEps = 1, matrixSize;
+		int ifGreatThenEps = 1, matrixSize;
 		double *tmp, *result;
 		double vector_norm, epsilon = 0.00001, eigenValue;
-		clock_t start, end;
-
-		srand(time(NULL));
-		start = clock();
 
 		matrixSize = (B -> G)-> n;
 
@@ -163,7 +160,7 @@
 
 			/*Calculating (result = ^B[g] * b_k).
 			 *  The shifting of the matrix happens in multBHat*/
-			B -> multBHat(B, eigenVector ,result);
+			B -> multBHat(B, eigenVector ,result, 1);
 
 			/*calculating the vector's magnitude*/
 			vector_norm = sqrt(calcDotProduct(result, result, matrixSize));
@@ -230,7 +227,7 @@
 	 * The function receives a vector,
 	 * and normalize it by dividing it in it's size
 	 */
-	void divide(double *vector1, double norm, int size)
+	void divideByNorm(double *vector1, double norm, int size)
 	{
 		double *p = vector1;
 		int i = 0;
@@ -309,7 +306,7 @@
 		if(n1 == 0 || n2 == 0)
 		{
 			group1 = group;
-			*group2 = NULL;
+			group2 = NULL;
 			divisionToTwo -> push(group1, divisionToTwo);
 			divisionToTwo -> push(group2, divisionToTwo);
 			return 0;
@@ -403,13 +400,15 @@
 		 * if not - exiting the program.*/
 		input_file =  fopen(name_of_input_file, 'rb');
 		if(input_file == NULL){
-			exit("The file is not valid");
+			printf("The file is not valid");
+			exit(EXIT_FAILURE);
 		}
 
 		/*Reading number of nodes in the graph*/
 		succ = fread(&n, sizeof(int), 1, input_file);
 		if(succ != 1){
-			exit("The file is empty");
+			printf("The file is empty");
+			exit(EXIT_FAILURE);
 		}
 
 		/*Initializing list size n, of pointers to the nodes of the graph*/
@@ -417,7 +416,8 @@
 
 		/*Assert allocation*/
 		if(nodes_list == NULL){
-				exit("Allocation of nodes list failed");
+			printf("Allocation of nodes list failed");
+			exit(EXIT_FAILURE);
 		}
 
 		/*Initialize Nodes list*/
@@ -433,7 +433,8 @@
 
 		degrees = (int *) malloc(sizeof(int) * (n));
 		if(degrees == NULL){
-			exit("Allocation of degrees vector failed");
+			printf("Allocation of degrees vector failed");
+			exit(EXIT_FAILURE);
 		}
 
 		/*Reading File:
@@ -446,7 +447,8 @@
 			 /*Read file row : k1 and the indices */
 			 succ = fread(&degree, sizeof(int), 1, input_file);
 			 if(succ != 1){
-			 	exit("Failed degree reading");
+			 	printf("Failed degree reading");
+			 	exit(EXIT_FAILURE);
 			 }
 			 *degrees = degree;
 			 degrees++;
@@ -454,12 +456,14 @@
 			 /*Read the neighbors indices into row*/
 			 matrix_row =  (int*) malloc(sizeof(int)*(degree));
 			 if(matrix_row == NULL){
-			 		exit("Allocation failed");
+			 		printf("Allocation failed");
+			 		exit(EXIT_FAILURE);
 			 }
 
 			 succ =  fread(matrix_row, sizeof(int), degree, input_file);
 			 if(succ != degree){
-				exit("Failed file read");
+				printf("Failed file read");
+				exit(EXIT_FAILURE);
 			}
 
 			 relate_matrix -> add_row(relate_matrix, matrix_row, degree, i);
@@ -484,7 +488,7 @@
 /* ----------------------------------computeS---------------------------------------------------------------*/
 
 
-	int *createSVector(double *eigenVector, int size){
+	int *computeS(double *eigenVector, int size){
 		int *s;
 		int i = 0;
 
