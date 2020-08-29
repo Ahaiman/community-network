@@ -8,11 +8,18 @@
 #include <stdlib.h>
 #include "stack.h"
 
+void            initialize(stack *stk);
+void            push(graph *group, stack *stk);
+graph*     	    pop(stack *stk);
+boolean         empty(const stack *stk);
 
 void initialize(stack *stk)
 {
    stk -> cnt = 0;
    stk -> top = NULL;
+   stk -> push = push;
+   stk -> pop = pop;
+   stk -> empty = empty;
 }
 
 void push(graph *group, stack *stk)

@@ -6,6 +6,8 @@
 #include "../structures/graph.h"
 #include "../structures/spmat.h"
 #include "../structures/BHatMatrix.h"
+#include "../structures/linkedList.h"
+#include "../structures/stack.h"
 #include "./functions.h"
 
 
@@ -26,8 +28,8 @@
 	void divide(double *vector1, double norm, int size);
 
 	/*doDivisionByS.c */
-	void doDivisionByS(graph *group, int *s, stack *divisionToTwo);
-	void updateNodesGroups(int originalSize, spmat *matrix, int *s)
+	int doDivisionByS(graph *group, int *s, stack *divisionToTwo);
+	void updateNodesGroups(int originalSize, spmat *matrix, int *s);
 
 	/*createGraphFromFile.c*/
 	graph createGraph(char *name_of_input_file);
@@ -53,7 +55,7 @@
 		currNode = indexRow -> head;
 		while(currNode!=NULL)
 		{
-			if (currNode -> index == *(s + index)){
+			if (currNode -> partByS == *(s + index)){
 				sum += *(s + (currNode -> value));
 			}
 			currNode = currNode -> next;
@@ -64,16 +66,16 @@
 	double sumDd (BHatMatrix *B, int *s, int index)
 	{
 		int i, sum=0, counter=0;
-		int *listNodes=B->G->nodesList, *degrees=B->G->degrees;
+		int *listNodes= B->G->graph_nodes, *degrees=B->G->degrees;
 		double d;
 		d=B->constM*(*(degrees+index));
 		for (i=0;i<B->originalSize;i++)
 		{
-			if (i==*nodesList)
+			if (i==*listNodes)
 			{
 				sum+= *(degrees+i) * (*(s + i));
 				counter++;
-				nodesList++;
+				listNodes++;
 			}
 			if (counter == (B->G)->n)
 				break;
@@ -110,7 +112,7 @@
 		double partB, partC;
 
 		partA = 4 * (*(s + index));
-		partC = 4 * pow(*(B -> G -> degrees) + index), 2) * (B -> constM);
+		partC = 4 * pow(*(B -> G -> degrees) + index, 2) * (B -> constM);
 		partB = sumAd (B -> G, s, index) - sumDd (B, s, index);
 
 		return partA * partB + partC;
@@ -269,8 +271,8 @@
 /* ----------------------------------doDivisionByS---------------------------------------------------------------*/
 
 
-	void doDivisionByS(Graph *group, int *s, stack *divisionToTwo){
-		Graph *group1, *group2;
+	int doDivisionByS(graph *group, int *s, stack *divisionToTwo){
+		graph *group1, *group2;
 		int *curr_nodes = group -> graph_nodes;
 		int  *graph_nodes1, *graph_nodes2;
 		int n = group -> n, n1 = 0, n2 = 0, i = 0;
@@ -290,8 +292,10 @@
 
 		/* Checking sizes before building the groups*/
 		if(n1 == 0 || n2 == 0){
-			divisionToTwo.push(group);
-			divisionToTwo.push(NULL);
+			group1 = group;
+			*group2 = NULL;
+			divisionToTwo -> push(group1, divisionToTwo);
+			divisionToTwo -> push(group2, divisionToTwo);
 			return 0;
 		}
 
@@ -308,7 +312,7 @@
 			}
 			else{
 				*graph_nodes2 = *curr_nodes;
-				graph_nodes2++
+				graph_nodes2++;
 			}
 			s++;
 			curr_nodes++;
@@ -322,14 +326,14 @@
 		updateNodesGroups(n, group->relate_matrix, s);
 
 		/*Allocating new graph representing each new group */
-		group1 = allocate_graph(n1, graph_nodes1, relate_matrix);
+		group1 = allocate_graph(n1, graph_nodes1, group->relate_matrix);
 		group1 -> divisionNumber = 1;
-		group2 = allocate_graph(n2, graph_nodes2, relate_matrix);
+		group2 = allocate_graph(n2, graph_nodes2, group->relate_matrix);
 		group2 -> divisionNumber = -1;
 
 		/*Adding division (two graph) to the input stack */
-		divisionToTwo.push(group2);
-		divisionToTwo.push(group1);
+		divisionToTwo -> push(group1, divisionToTwo);
+		divisionToTwo -> push(group2, divisionToTwo);
 
 		/*Free only original graph without the nodes, and without the related matrix inside lists */
 		free_graph(group, 0);
@@ -347,23 +351,23 @@
 	{
 		linkedList **rows;
 		linkedList *currList;
-		linkedList *currNode;
+		linkedList_node *currNode;
 		int i = 0, j = 0, curr_index;
 
 		rows = matrix -> private;
-		for(; i < currentSize; i++){
+		for(; i < originalSize; i++){
 			currList = **rows;
 			currNode=currList->head;
 			while (currNode!=NULL)
 			{
-				currNode->index=*(s+(currNode->value));
+				currNode->partByS =*(s+(currNode->value));
 				currNode=currNode->next;
 			}
 			rows++;
 		}
 	}
 
-	}
+
 
 /* ----------------------------------createGraphFromFile---------------------------------------------------------------*/
 
@@ -373,7 +377,6 @@
 		/*Variables deceleration*/
 		FILE	*input_file;
 		graph *input_graph;
-		graph_node *curr_node;
 		int *nodes_list;
 		int *curr_neighbors, *matrix_row, *degrees;
 		spmat *relate_matrix;
