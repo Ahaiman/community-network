@@ -20,7 +20,7 @@
 	double divisionGraphToTwo(graph *group, stack *division, int *s);
 
 	/*algo_4.c*/
-	void algorithm4(BHatMatrix *B, int *s, int dQ);
+	void algorithm4(graph *G, int *s, double dQ);
 
 	/*algo_3.c*/
 	void findCommunities(graph *G, char *name_of_output_file);
@@ -31,7 +31,8 @@
 
 /* ----------------------------------algo2---------------------------------------------------------------*/
 
-	double divisionGraphToTwo(graph *group, stack *division, int *s){
+	double divisionGraphToTwo(graph *group, stack *division, int *s)
+	{
 
 		BHatMatrix *B_g;
 		double eigenValue, dQ;
@@ -76,7 +77,8 @@
 	 * put an counte for loops- > check what need to be the maximim limit
 	 */
 
-	void findCommunities(graph *G, char *name_of_output_file){
+	void findCommunities(graph *G, char *name_of_output_file)
+	{
 		FILE	*output_file;
 		stack *P, *O, *divisionToTwo;
 		graph *group, *group1, *group2;
@@ -138,15 +140,15 @@
 				P -> push(group2, P);
 			}
 		}
+	}
 
-
-		/*Wrtie to output file */
+		/*Write to output file */
 
 /* ----------------------------------algo4---------------------------------------------------------------*/
 
 
 
-		 void algorithm4(graph *G, int *s, int dQ)
+		 void algorithm4(graph *G, int *s, double dQ)
 		 {
 			 BHatMatrix *B;
 			 int i = 0, j, n = (B -> G) -> n;
@@ -181,7 +183,7 @@
 					 }
 
 					 curr = unmoved -> head;
-					 //6 : runining over the unmoved linked list
+					 //6 : running over the unmoved linked list
 					 while(curr != NULL)
 					 {
 						 placeInS = curr -> value;

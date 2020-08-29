@@ -15,7 +15,7 @@ typedef struct _spmat
 	void	(*spmat_free)(struct _spmat *A, int freeInnerLists);
 
 	/* Multiplies matrix A by vector v, into result (result is pre-allocated) */
-	void	(*spmat_mult)(const struct _spmat *A, const double *v, double *result);
+	void	(*spmat_mult)(struct _spmat *A, const double *v, double *result);
 
 	/* Private field for inner implementation.
 	 * Should not be read or modified externally */

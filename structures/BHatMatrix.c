@@ -18,7 +18,7 @@ double sumRowsD(BHatMatrix *, int);
 double sumRowB (BHatMatrix *, int);
 void multNumVec(int, double, double*, double*);
 void substractTwoVecs(int, double*, double*, double*);
-int  calcMatrixNorm(BHatMatrix *);
+double  calcMatrixNorm(BHatMatrix *);
 double calcM(graph *);
 void freeBHat(BHatMatrix*);
 

@@ -13,8 +13,8 @@ typedef struct _BHatMatrix
 	int originalSize;
 	double matrixNorm;
 
-	void (*freeBHat)(struct __BHatMatrix *B);
-	void (*multBHat)(struct __BHatMatrix *B, double* vector ,double *result);
+	void (*freeBHat)(struct _BHatMatrix *B);
+	void (*multBHat)(struct _BHatMatrix *B, double* vector ,double *result);
 
 } BHatMatrix;
 

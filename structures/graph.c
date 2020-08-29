@@ -14,15 +14,8 @@
 /*
  * --------Functions Definition---------
  */
-
-<<<<<<< HEAD
-	void free_graph(graph *, int , int);
 	graph* allocate_graph(int, int *, spmat *);
-=======
 	void free_graph(graph *, int);
-	graph* allocate_graph(int, int *,spmat *);
->>>>>>> 935968199e2b86594c4527def0d6dc0e98732f79
-
 
 /*
  * --------Functions Implementation---------

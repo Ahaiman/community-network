@@ -12,7 +12,7 @@
  */
 
 spmat *spmat_allocate_list(int);
-void add_row_to_list(spmat *, const double *, int, int);
+void add_row_to_list(spmat *, const int *, int, int);
 void free_list(struct _spmat *, int);
 void freeRow_list(linkedList_node*);
 void mult_list(spmat *, const double *, double *);
@@ -39,11 +39,11 @@ spmat *spmat_allocate_list(int n)
 		exit(0);
     }
 
-    matrix-> private = rows_indices;
-    matrix-> n = n;
-    matrix-> add_row = add_row_to_list;
+    matrix -> private = rows_indices;
+    matrix -> n = n;
+    matrix -> add_row = add_row_to_list;
     matrix -> spmat_mult = mult_list;
-    matrix->spmat_free = free_list;
+    matrix-> spmat_free = free_list;
     return matrix;
 }
 
@@ -79,7 +79,7 @@ void add_row_to_list(struct _spmat *A, const int *row, int row_size, int i)
 
     currRow -> node_index = i;
     currRow -> size = row_size;
-    (A -> private) + i = currRow;
+    *((linkedList**)(A -> private) + i) = currRow;
 //    *(*linkedList)(A->private) + i) = currRow;
 }
 
