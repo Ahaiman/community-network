@@ -109,22 +109,22 @@
 
 			/* 3) if either g1 or g2 is of size 0: Add g to O*/
 			if(group1  == NULL || group2 == NULL ){
-				O.push(group);
+				O -> push(group, O);
 			}
 
 			/*4) Add to O: any group (g1 and/or g2) of size 1*/
 			if(group1 -> n == 1){
-				O.push(group1);
+				O -> push(group1, O);
 			}
 			else{
-				P.push(group1);
+				P -> push(group1, P);
 			}
 
 			if(group2 -> n == 1){
-				O.push(group2);
+				O -> push(group2, O);
 			}
 			else{
-				P.push(group2);
+				P -> push(group2, P);
 			}
 		}
 
@@ -132,7 +132,7 @@
 
 
 
-		 void algorithm4(Graph *G, int *s, int dQ){
+		 void algorithm4(graph *G, int *s, int dQ){
 			 BHatMatrix *B;
 			 int i = 0, j, n = (B -> G) -> n;
 			 int max_place, max_i, placeInS;
@@ -144,7 +144,7 @@
 
 			 B = createMatrixBHat(G);
 
-			 unmoved - > allocateWithNodes(unmoved, n); // == 0 -> 1 -> 2 -> ,,, -> ng
+			 unmoved = allocateListWithNodes(n); // == 0 -> 1 -> 2 -> ,,, -> ng
 
 			 score = (double *)malloc(n * sizeof(double));
 			 indices = (int *)malloc(n * sizeof(int));
@@ -195,7 +195,7 @@
 						 maxImprove = improve[i];
 						 max_i = i;
 					 }
-					 unmoved -> delete_node(unmoved, max_place);
+					 delete_node(unmoved, max_place);
 				 }
 
 				 //22
