@@ -33,7 +33,7 @@
 	void updateNodesGroups(int originalSize, spmat *matrix, int *s);
 
 	/*createGraphFromFile.c*/
-	graph *createGraph(char *name_of_input_file);
+	graph *createGraph(FILE *);
 
 	/*computeS.c*/
 	int *computeS(double *eigenVector, int size);
@@ -385,24 +385,22 @@
 /* ----------------------------------createGraphFromFile---------------------------------------------------------------*/
 
 
-	graph *createGraph(char *name_of_input_file){
+	graph *createGraph(FILE *input_file){
 
 		/*Variables deceleration*/
-		FILE	*input_file;
+
 		graph *input_graph;
 		int *nodes_list;
 		int *matrix_row, *degrees;
 		spmat *relate_matrix;
-		int n, degree, j,i = 0;
-		int succ;
+		int n, degree, j,i = 0, succ;
+//		char *s = "../";
+//		char* input_name = strcat(s , name_of_input_file);
+//		printf("%s", input_name);
 
 		/*File Reading into variable, and asserting the process was successful.
 		 * if not - exiting the program.*/
-		input_file =  fopen(name_of_input_file, 'rb');
-		if(input_file == NULL){
-			printf("The file is not valid");
-			exit(EXIT_FAILURE);
-		}
+
 
 		/*Reading number of nodes in the graph*/
 		succ = fread(&n, sizeof(int), 1, input_file);

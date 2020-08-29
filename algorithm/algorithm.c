@@ -81,9 +81,10 @@
 	{
 		FILE	*output_file;
 		stack *P, *O, *divisionToTwo;
-		graph *group, *group1, *group2;
+		graph *group, *group1, *group2, *output;
+		int *outputNodes;
 		int *s;
-		int n = G -> n;
+		int n = G -> n, i = 0;
 		double dQ;
 
 
@@ -91,7 +92,11 @@
 		initialize(P);
 		initialize(divisionToTwo);
 		s = (int *) malloc (sizeof(int) * n);
-		output_file =  fopen(name_of_output_file, "wb");
+		output_file =  fopen(name_of_output_file, 'wb');
+		if(output_file == NULL){
+			printf("out pur file failed");
+			exit(EXIT_FAILURE);
+		}
 
 		//	1.Start with a trivial division into one group: the all nodes in the graph
 		P -> push(G, P);
@@ -105,7 +110,7 @@
 
 			if(dQ == -1){
 				printf("No division possible");
-				exit(0);
+				exit(EXIT_FAILURE);
 			}
 
 
@@ -144,9 +149,21 @@
 				P -> push(group2, P);
 			}
 		}
+		/*Write to output file */
+		while(!empty(O)){
+			output = O -> pop(O);
+			outputNodes = output ->graph_nodes;
+			for(; i < output -> n; i++){
+				n = fwrite(*outputNodes, sizeof(int), 1, output_file);
+				if(n != 1){
+					printf("error in writing into file");
+					exit(EXIT_FAILURE);
+				}
+				outputNodes++;
+			}
+		}
 	}
 
-		/*Write to output file */
 
 /* ----------------------------------algo4---------------------------------------------------------------*/
 

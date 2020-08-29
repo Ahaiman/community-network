@@ -23,6 +23,7 @@ int main(int argc, char* argv[]){
 	/*Variables deceleration*/
 	graph *input_graph;
 	clock_t start, end;
+	FILE	*input_file;
 
 	/*Time measurement */
 	srand(time(NULL));
@@ -30,7 +31,13 @@ int main(int argc, char* argv[]){
 	(void)argc;
 
 	/*Create Graph */
-	input_graph = createGraph(argv[1]);
+	input_file =  fopen(argv[1], 'rb');
+	if(input_file == NULL){
+		printf("The file is not valid");
+		exit(EXIT_FAILURE);
+	}
+
+	input_graph = createGraph(input_file);
 
 	/*Send to Algorithm 3 */
 	findCommunities(input_graph, argv[2]);

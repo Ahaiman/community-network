@@ -24,7 +24,7 @@ int doDivisionByS(graph *group, int *s, stack *divisionToTwo);
 void updateNodesGroup(int originalSize, spmat *matrix, int *s);
 
 /*createGraphFromFile.c*/
-graph *createGraph(char *name_of_input_file);
+graph *createGraph(FILE *);
 
 /*computeS.c*/
 int *computeS(double *eigenVector, int size);
