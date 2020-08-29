@@ -15,6 +15,7 @@
  * --------Functions Deceleration---------
  */
 	/*computeDQ.c*/
+
 	int sumAd (graph *G, int *s,int index);
 	double sumDd (BHatMatrix *B, int *s, int index);
 	double computeDQ(double *s, BHatMatrix *B);
@@ -36,6 +37,7 @@
 
 	/*computeS.c*/
 	int createSVector(double *eigenVector, int size);
+
 
 /*
  * --------Functions Implementation---------
@@ -372,7 +374,7 @@
 		rows = matrix -> private;
 		for(; i < originalSize; i++)
 		{
-			currList = **rows;
+			currList = *rows;
 			currNode=currList->head;
 			while (currNode!=NULL)
 			{
@@ -392,9 +394,9 @@
 		FILE	*input_file;
 		graph *input_graph;
 		int *nodes_list;
-		int *curr_neighbors, *matrix_row, *degrees;
+		int *matrix_row, *degrees;
 		spmat *relate_matrix;
-		int n, m = 0, degree, j, neighboor_index, i = 0;
+		int n, degree, j,i = 0;
 		int succ;
 
 		/*File Reading into variable, and asserting the process was successful.

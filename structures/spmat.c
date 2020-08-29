@@ -79,7 +79,7 @@ void add_row_to_list(struct _spmat *A, const double *row, int row_size, int i)
 
     currRow -> node_index = i;
     currRow -> size = row_size;
-    A->private[i] = currRow;
+    *((A->private) + i) = currRow;
 }
 
 

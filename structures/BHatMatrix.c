@@ -221,6 +221,6 @@ double calcM(graph *G)
  */
 void freeBHat(BHatMatrix *B)
 {
-	free_graph(B->G, 1, 1);
+	free_graph(B->G, 1);
 }
 

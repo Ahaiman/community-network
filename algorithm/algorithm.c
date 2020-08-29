@@ -16,21 +16,23 @@
  * --------Functions Deceleration---------
  */
 	/*algo_2.c*/
-	double divisionGraphToTwo(graph *group, int *s);
+
+	double divisionGraphToTwo(graph *group, stack *division, int *s);
 
 	/*algo_4.c*/
 	void algorithm4(BHatMatrix *B, int *s, int dQ);
 
 	/*algo_3.c*/
-	void findCommunities(graph *G);
+	void findCommunities(graph *G, char *name_of_output_file);
 
 /*
  * --------Functions Implementation---------
  */
 
 /* ----------------------------------algo2---------------------------------------------------------------*/
-	double divisionGraphToTwo(graph *group, int *s)
-	{
+
+	double *divisionGraphToTwo(graph *group, stack *division, int *s){
+
 
 		BHatMatrix *B_g;
 		double eigenValue, dQ;
@@ -99,12 +101,13 @@
 			group = P -> pop(P);
 
 			/* 1) Divide g into g1; g2 with Algorithm 2 */
-			dQ  = divisionGraphToTwo(group, s);
+			dQ  = divisionGraphToTwo(group,divisionToTwo, s);
+
 
 
 			/*2)Even if the division in trivial (one group full, and another empty)
 			 * Impemant optimization - */
-			 algorithm4(group, s, dQ);
+			algorithm4(group, s, dQ);
 
 			 /*Creating the division*/
 			 doDivisionByS(group, divisionToTwo, s);
@@ -186,7 +189,7 @@
 						 placeInS = curr -> value;
 
 						 *(s + placeInS) *= -1;
-						 score[placeInS] =  computeDQChange(s , B, placeInS);
+						 score[placeInS] =  computeDQChange(s , B, placeInS, Q0);
 						 *(s + placeInS) *= -1;
 
 						 if(score[placeInS] > max)
@@ -234,4 +237,4 @@
 					dQ = improve[max_i];
 				}
 		 }
-	}
+
