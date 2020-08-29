@@ -30,7 +30,7 @@ int main(int argc, char* argv[]){
 	(void)argc;
 
 	/*Create Graph */
-	input_graph = createGraphFromFile(argv[1]);
+	input_graph = createGraph(argv[1]);
 
 	/*Send to Algorithm 3 */
 	findCommunities(input_graph);

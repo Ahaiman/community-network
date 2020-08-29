@@ -6,8 +6,8 @@
 #define STRUCTURES_BHATMATRIX_H_
 
 
-typedef struct _BHatMatrix{
-
+typedef struct _BHatMatrix
+{
 	graph *G;
 	double constM;
 	int originalSize;

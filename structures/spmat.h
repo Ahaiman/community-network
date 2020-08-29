@@ -2,7 +2,8 @@
 #define _SPMAT_H
 
 
-typedef struct _spmat {
+typedef struct _spmat
+{
 	/* Matrix size (n*n) */
 	int		n;
 

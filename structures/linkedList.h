@@ -7,7 +7,8 @@
 
 
 
-typedef struct linkedList_node {
+typedef struct linkedList_node
+{
     int value;
     int partByS;
     struct linkedList_node  *next;
@@ -15,7 +16,8 @@ typedef struct linkedList_node {
 } linkedList_node;
 
 
-typedef struct linkedList {
+typedef struct linkedList
+{
 	linkedList_node   *head;
 	int size;
 	int node_index;

@@ -21,19 +21,22 @@ void free_list(struct _spmat *, int);
  */
 
 
-spmat *spmat_allocate_list(int n) {
+spmat *spmat_allocate_list(int n)
+{
     spmat *matrix;
     linkedList **rows_indices;
     matrix = (spmat *)malloc(sizeof(spmat));
-    if(matrix == NULL){
+    if(matrix == NULL)
+    {
        	printf("Allocation of matrix Failed");
        	exit(0);
-       }
+    }
     rows_indices = (linkedList **)malloc(n*sizeof(linkedList *));
-    if(rows_indices == NULL){
+    if(rows_indices == NULL)
+    {
 		printf("Allocation of rows Failed");
 		exit(0);
-          }
+    }
 
     matrix-> private = rows_indices;
     matrix-> n = n;
@@ -48,21 +51,24 @@ spmat *spmat_allocate_list(int n) {
 /*
  * adds a the i'th row in the linkedList implementation
  */
-void add_row_to_list(struct _spmat *A, const double *row, int row_size, int i) {
-
+void add_row_to_list(struct _spmat *A, const double *row, int row_size, int i)
+{
     linkedList *currRow = createLinkedList();
     linkedList_node *curr, *tmp;
     bool headUpdated = 0;
     int col;
 
-    for (col = 0; col < row_size; col++) {
+    for (col = 0; col < row_size; col++)
+    {
             tmp = createNode(*row);   /* tmp->index = *row*/
-            if (headUpdated == 0) {
+            if (headUpdated == 0)
+            {
                 currRow -> head = tmp;
                 curr = tmp;
                 headUpdated = 1;
             }
-            else {
+            else
+            {
                 curr -> next = tmp;
                 curr = curr-> next;
                 curr -> next = NULL;
@@ -73,24 +79,25 @@ void add_row_to_list(struct _spmat *A, const double *row, int row_size, int i) {
     currRow -> node_index = i;
     currRow -> size = row_size;
     A->private[i] = currRow;
-
-
-
 }
 
 
 /*
  * frees the linkedList implementation of the sparsMatrix
  */
-void free_list(struct _spmat *A, freeInnerLists) {
+void free_list(struct _spmat *A, freeInnerLists)
+{
 	linkedList **rows =  ((linkedList **) A->private), **rowsStart = rows, *currRow;
 	int row;
-	if(freeInnerLists){
-		for (row = 0; row < A->n; row++) {
+	if(freeInnerLists)
+	{
+		for (row = 0; row < A->n; row++)
+		{
 			currRow = *rows;
 			freeRow_list((currRow)->head);
 			free(currRow);
 			rows++;
+		}
     }
     free(rowsStart);
     free(A);
@@ -99,30 +106,36 @@ void free_list(struct _spmat *A, freeInnerLists) {
 /*
  * frees every row in the linkedList implementation using recursion
  */
-void freeRow_list(linkedList_node *rowHead) {
-    if (rowHead != NULL) {
+void freeRow_list(linkedList_node *rowHead)
+{
+    if (rowHead != NULL)
+    {
         freeRow_list(rowHead->next);
         free(rowHead);
     }
 }
 
 
-void mult_list(spmat *A, const double *v, double *result) {
+void mult_list(spmat *A, const double *v, double *result)
+{
     linkedList_node *currNode;
     linkedList *currList, **rows_indices = A->private;
     int row, n = A -> n;
     double sum;
 
-    if(result == NULL){
+    if(result == NULL)
+    {
 		printf("result is not allocated");
 		exit(0);
-     }
+    }
 
-    for (row = 0; row < n; row++) {
+    for (row = 0; row < n; row++)
+    {
     	currList = *rows_indices;
         currNode = currList -> head;
         sum = 0;
-        while (currNode != NULL) {
+        while (currNode != NULL)
+        {
             sum += *(v + (currNode -> value));
             currNode = currNode->next;
         }
@@ -131,5 +144,3 @@ void mult_list(spmat *A, const double *v, double *result) {
         result++;
     }
 }
-
-

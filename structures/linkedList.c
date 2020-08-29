@@ -25,14 +25,16 @@
  */
 
 /*constructor for node*/
-linkedList_node *createNode(int value) {
+linkedList_node *createNode(int value)
+{
 	linkedList_node *newNode;
 	newNode = (linkedList_node *)malloc(sizeof(linkedList_node));
 
-	if(newNode == NULL){
+	if(newNode == NULL)
+	{
 	    	printf("Allocation of newNode Failed");
 	    	exit(0);
-	    }
+	}
 
     newNode -> value = value;
     newNode -> partByS = 0;
@@ -41,10 +43,12 @@ linkedList_node *createNode(int value) {
 }
 
 /* constructor for linkedList*/
-linkedList *createLinkedList() {
+linkedList *createLinkedList()
+{
     linkedList *list = (linkedList *)malloc(sizeof(linkedList));
 
-    if(list == NULL){
+    if(list == NULL)
+    {
     	printf("Allocation of Linked List Failed");
     	exit(0);
     }
@@ -60,15 +64,19 @@ void delete_node(linkedList *list, int node_value){
 	linkedList_node *curr = list -> head, *tmp = list -> head;
 
 	//Case 1: First node in the list
-	if(curr -> value == node_value){
+	if(curr -> value == node_value)
+	{
 		list -> head = curr -> next;
 		free(curr);
 	}
-	else{
+	else
+	{
 		//Case 2 : Not the First. Iterating over the list.
 		curr = curr -> next;
-		while(curr != NULL){
-			if(curr -> value == node_value){
+		while(curr != NULL)
+		{
+			if(curr -> value == node_value)
+			{
 				tmp -> next = curr -> next;
 				free(curr);
 				break;
@@ -77,35 +85,36 @@ void delete_node(linkedList *list, int node_value){
 			curr = curr -> next;
 		}
 	}
-	if(list -> size == 0){
+	if(list -> size == 0)
 		list -> head = NULL;
-	}
 }
 
 /*Return a new linkedList (which was allocated prior)
  * with the nodes: 0,..., n -1
  */
 
-linkedList *allocateListWithNodes(int n){
+linkedList *allocateListWithNodes(int n)
+{
 	int i=0;
 	linkedList *newList;
 	linkedList_node *newNode, *curr;
 
 	newList = createLinkedList();
 
-	for(; i < n; i++){
+	for(; i < n; i++)
+	{
 		newNode = createNode(i);
-		if(i == 0){
+		if(i == 0)
+		{
 			newList -> head = newNode;
 			curr = newNode;
 		}
-		else{
+		else
+		{
 			curr -> next = newNode;
 			curr = newNode;
 		}
 		(newList -> size) ++;
 	}
-
 	return newList;
 }
-

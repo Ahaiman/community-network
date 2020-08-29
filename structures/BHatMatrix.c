@@ -19,7 +19,7 @@ double sumRowB (BHatMatrix *, int);
 void multNumVec(int, double, double*, double*);
 void substractTwoVecs(int, double*, double*);
 int  calcMatrixNorm(BHatMatrix *);
-double calcM(graph *)
+double calcM(graph *);
 void freeBHat(BHatMatrix*);
 
 /*
@@ -48,8 +48,6 @@ BHatMatrix *createMatrixBHat (graph *G)
 	return B;
 }
 
-
-
 /*
  * Multiplies a shifted Bhat matrix by a vector.
  * The output is in "result" vector.
@@ -62,11 +60,11 @@ void multBHat(BHatMatrix *B, double *vector ,double *result, int doShift)
 	int m, n = B -> G -> n, K_s;
 
 	/*A * s */
-	A_s = (int *) malloc (sizeof(int) * n)
+	A_s = (int *) malloc (sizeof(int) * n);
 	relate_matrix -> spmat_mult(relate_matrix, vector, A_s);
 
 	/*K * s */
-	K_s = calcDotProduct(B->G->degrees, s, n) * (B -> constM);
+	K_s = calcDotProduct(B->G->degrees, vector, n) * (B -> constM);
 
 	/*D_s*/
 	D_s = (int *) malloc (sizeof(int) * n);
@@ -76,11 +74,13 @@ void multBHat(BHatMatrix *B, double *vector ,double *result, int doShift)
 	AminusD = (int *) malloc (sizeof(int) * n);
 	substractTwoVecs(n, A_s, D_s, AminusD);
 
-	for(m = 0; m < n; m ++){
+	for(m = 0; m < n; m ++)
+	{
 		*result = *AminusD - (*vector) * (sumRowsD(B, m) - sumRowsA(G, m));
-		if(doShift){
+
+		if(doShift)
 			*result += (*vector) * (B -> matrixNorm);
-		}
+
 		result++;
 		AminusD++;
 		vector++;
@@ -128,7 +128,8 @@ double sumRowsD(BHatMatrix *B, int m)
 	return sum*d;
 }
 
-double sumRowB (BHatMatrix *B, int i){
+double sumRowB (BHatMatrix *B, int i)
+{
 	int k = 0, sum = 0;
 	spmat *relate_matrix=B->G->relate_matrix;
 	int *degrees=B->G->degrees;
@@ -141,7 +142,8 @@ double sumRowB (BHatMatrix *B, int i){
 	while(currNode!=NULL)
 	{
 		k = currNode -> value;
-		if(k != i){
+		if(k != i)
+		{
 			if (currNode -> partByS == B -> G -> divisionNumber)
 				sum += abs((1 - *(degrees + k) * *(degrees + i) * (B -> constM)));
 		}
@@ -157,7 +159,8 @@ int calcMatrixNorm(BHatMatrix *B)
 {
 	int max=0, i, sumRow, currNodeValue;
 
-	for(i = 0; i < B -> G -> n; i++){
+	for(i = 0; i < B -> G -> n; i++)
+	{
 		sumRow = abs(pow(*(B -> G -> degrees + i), 2) * (B -> constM) * (-1) - sumRowsA(B-> G, i) + sumRowsD(B, i));
 		sumRow += sumRowB;
 		if(max < sumRow)
@@ -165,7 +168,6 @@ int calcMatrixNorm(BHatMatrix *B)
 	}
 	return max;
 }
-
 
 /*
  * Multiplies a vector by a number.
@@ -181,7 +183,6 @@ void multNumVec(int size, double num, double *vec, double *result)
 		vec++;
 	}
 }
-
 
 /*
  * Subtracts two column vectors according to this scheme: result[i]=vec1[i]-vec2[i].
