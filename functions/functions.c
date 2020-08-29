@@ -18,7 +18,7 @@
 	int sumAd (graph *G, int *s,int index);
 	double sumDd (BHatMatrix *B, int *s, int index);
 	double computeDQ(double *s, BHatMatrix *B);
-	double computeDQChange(double *s, BHatMatrix *B, int index, int dq);
+	double computeDQChange(double *s, BHatMatrix *B, int index);
 
 	/*findEigen.c*/
 	double findEigenValue(BHatMatrix *B, int *eigenVector);

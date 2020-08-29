@@ -27,16 +27,16 @@ struct elem {                   /* an element on the stack */
 
 typedef   struct elem   elem;
 
-struct stack {
+typedef struct stack {
    int    cnt;                  /* a count of the elements */
    elem   *top;                 /* ptr to the top element */
-   void            (*initialize)(stack *stk);
-   void            (*push)(graph *group, stack *stk);
-   graph*     	    (*pop)(stack *stk);
-   boolean         (*empty)(const stack *stk);
-};
+   void            (*initialize)(struct __stack *stk);
+   void            (*push)(graph *group, struct __stack *stk);
+   graph*     	    (*pop)(struct __stack *stk);
+   boolean         (*empty)(const struct __stack *stk);
+} stack;
 
-typedef   struct stack   stack;
+//typedef   struct stack   stack;
 
 
 
