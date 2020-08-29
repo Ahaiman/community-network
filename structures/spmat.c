@@ -12,7 +12,7 @@
  */
 
 spmat *spmat_allocate_list(int);
-void add_row_to_list(spmat *, const double *, int);
+void add_row_to_list(spmat *, const double *, int, int);
 void free_list(struct _spmat *, int);
 void freeRow_list(linkedList_node*);
 void mult_list(spmat *, const double *, double *);

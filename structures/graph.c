@@ -16,7 +16,7 @@
  */
 
 	void free_graph(graph *, int , int);
-	graph* allocate_graph(int, int, int *, spmat *);
+	graph* allocate_graph(int, int *, spmat *);
 
 
 /*

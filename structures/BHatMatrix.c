@@ -12,12 +12,12 @@
 
 
 BHatMatrix* createMatrixBHat (graph*);
-void multBHat(BHatMatrix*, double*, double*);
+void multBHat(BHatMatrix*, double*, double*, int);
 int sumRowsA(graph *, int );
 double sumRowsD(BHatMatrix *, int);
 double sumRowB (BHatMatrix *, int);
 void multNumVec(int, double, double*, double*);
-void substractTwoVecs(int, double*, double*);
+void substractTwoVecs(int, double*, double*, double*);
 int  calcMatrixNorm(BHatMatrix *);
 double calcM(graph *);
 void freeBHat(BHatMatrix*);
@@ -159,7 +159,7 @@ double sumRowB (BHatMatrix *B, int i)
  */
 double calcMatrixNorm(BHatMatrix *B)
 {
-	int max=0, i, sumRow, currNodeValue;
+	double max=0, i, sumRow;
 
 	for(i = 0; i < B -> G -> n; i++)
 	{
