@@ -101,7 +101,7 @@ int sumRowsA(graph *G, int m)
 	currNode=mrow->head;
 	while(currNode!=NULL)
 	{
-		if (currNode->index==G->divisionNumber)
+		if (currNode->partByS==G->divisionNumber)
 			counter ++;
 		currNode = currNode -> next;
 	}
@@ -111,16 +111,16 @@ int sumRowsA(graph *G, int m)
 double sumRowsD(BHatMatrix *B, int m)
 {
 	int i, sum=0, counter=0;
-	int *listNodes=B->G->nodesList, *degrees=B->G->degrees;
+	int *listNodes=B->G->graph_nodes, *degrees=B->G->degrees;
 	double d;
 	d=B->constM*(*(degrees+m));
 	for (i=0;i<B->originalSize;i++)
 	{
-		if (i==*nodesList)
+		if (i==*listNodes)
 		{
 			sum+=*(degrees+i);
 			counter++;
-			nodesList++;
+			listNodes++;
 		}
 		if (counter == (B->G)->n)
 			break;
@@ -130,7 +130,7 @@ double sumRowsD(BHatMatrix *B, int m)
 
 double sumRowB (BHatMatrix *B, int i){
 	int k = 0, sum = 0;
-	spmat *relate_matrix=G->relate_matrix;
+	spmat *relate_matrix=B->G->relate_matrix;
 	int *degrees=B->G->degrees;
 
 	linkedList* mrow;
@@ -140,17 +140,14 @@ double sumRowB (BHatMatrix *B, int i){
 
 	while(currNode!=NULL)
 	{
-		k = curNode -> value;
+		k = currNode -> value;
 		if(k != i){
-			if (currNode -> index == G -> divisionNumber)
+			if (currNode -> partByS == B -> G -> divisionNumber)
 				sum += abs((1 - *(degrees + k) * *(degrees + i) * (B -> constM)));
 		}
 		currNode = currNode -> next;
 	}
-
 	return sum;
-
-
 }
 
 /*
@@ -161,7 +158,7 @@ int calcMatrixNorm(BHatMatrix *B)
 	int max=0, i, sumRow, currNodeValue;
 
 	for(i = 0; i < B -> G -> n; i++){
-		sumRow = abs(pow(*(B -> G -> degrees) + i), 2) * (B -> constM) * (-1) - sumRowsA(G, i) + sumRowsD(B, i));
+		sumRow = abs(pow(*(B -> G -> degrees + i), 2) * (B -> constM) * (-1) - sumRowsA(B-> G, i) + sumRowsD(B, i));
 		sumRow += sumRowB;
 		if(max < sumRow)
 			max = sumRow;
@@ -222,6 +219,5 @@ double calcM(graph *G)
 void freeBHat(BHatMatrix *B)
 {
 	free_graph(B->G, 1, 1);
-	free(B->f_vector);
 }
 
