@@ -16,6 +16,7 @@
  * --------Functions Deceleration---------
  */
 	/*algo_2.c*/
+
 	double divisionGraphToTwo(graph *group, stack *division, int *s);
 
 	/*algo_4.c*/
@@ -29,11 +30,17 @@
  */
 
 /* ----------------------------------algo2---------------------------------------------------------------*/
+<<<<<<< HEAD
 	double *divisionGraphToTwo(graph *group, stack *division, int *s){
+=======
+	double divisionGraphToTwo(graph *group, int *s)
+	{
+>>>>>>> d1d45258ebea2d02516730a5bc9deed588321d22
 
 		BHatMatrix *B_g;
 		double eigenValue, dQ;
 		double *eigenVector;
+		double dQ;
 
 		B_g = createMatrixBHat(group);
 

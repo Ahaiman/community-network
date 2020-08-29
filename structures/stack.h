@@ -27,7 +27,7 @@ struct elem {                   /* an element on the stack */
 
 typedef   struct elem   elem;
 
-struct stack {
+typedef struct stack {
    int    cnt;                  /* a count of the elements */
    elem   *top;                 /* ptr to the top element */
    void            (*initialize)(struct stack *stk);
@@ -36,7 +36,8 @@ struct stack {
    boolean         (*empty)(const struct stack *stk);
 };
 
-typedef   struct stack   stack;
+
+//typedef   struct stack   stack;
 
 
 
