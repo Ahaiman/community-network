@@ -31,19 +31,17 @@
 
 /* ----------------------------------algo2---------------------------------------------------------------*/
 
-	double *divisionGraphToTwo(graph *group, stack *division, int *s){
-
+	double divisionGraphToTwo(graph *group, stack *division, int *s){
 
 		BHatMatrix *B_g;
 		double eigenValue, dQ;
 		double *eigenVector;
-		double dQ;
 
 		B_g = createMatrixBHat(group);
 
 		/*Compute leading eigenpair u1 and b1 of the modularity matrix b B[g] */
 		eigenVector = (double *) malloc (sizeof(double) * (group -> n));
-		eigenValue = findEigen(B_g, eigenVector);
+		eigenValue = findEigenValue(B_g, eigenVector);
 
 		//if (b1 <= 0): The network is indivisible
 		if(eigenValue <= 0)
@@ -189,7 +187,7 @@
 						 placeInS = curr -> value;
 
 						 *(s + placeInS) *= -1;
-						 score[placeInS] =  computeDQChange(s , B, placeInS, Q0);
+						 score[placeInS] =  computeDQChange(s , B, placeInS);
 						 *(s + placeInS) *= -1;
 
 						 if(score[placeInS] > max)
@@ -236,5 +234,5 @@
 				{
 					dQ = improve[max_i];
 				}
+			 }
 		 }
-

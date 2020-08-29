@@ -148,7 +148,7 @@
 		if(eigenVector == NULL)
 		{
 			printf("Initial vector allocation failed");
-			exit(0);
+			exit(EXIT_FAILURE);
 		}
 		creatRandomVector(eigenVector, matrixSize);
 

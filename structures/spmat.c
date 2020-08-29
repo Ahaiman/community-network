@@ -52,7 +52,7 @@ spmat *spmat_allocate_list(int n)
 /*
  * adds a the i'th row in the linkedList implementation
  */
-void add_row_to_list(struct _spmat *A, const double *row, int row_size, int i)
+void add_row_to_list(struct _spmat *A, const int *row, int row_size, int i)
 {
     linkedList *currRow = createLinkedList();
     linkedList_node *curr, *tmp;
@@ -79,7 +79,8 @@ void add_row_to_list(struct _spmat *A, const double *row, int row_size, int i)
 
     currRow -> node_index = i;
     currRow -> size = row_size;
-    *((A->private) + i) = currRow;
+    (A -> private) + i = currRow;
+//    *(*linkedList)(A->private) + i) = currRow;
 }
 
 
