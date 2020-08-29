@@ -42,7 +42,8 @@
 		eigenValue = findEigen(B_g, eigenVector);
 
 		//if (b1 <= 0): The network is indivisible
-		if(eigenValue <= 0){
+		if(eigenValue <= 0)
+		{
 			printf("not possible");
 			return NULL;
 		}
@@ -53,14 +54,13 @@
 		 dQ = computeDQ(s, B_g);
 
 		 //if (s^T b B[g]s <= 0): The network is indivisible
-		 if( dQ <= 0){
+		 if( dQ <= 0)
+		 {
 			 printf("not possible");
 			 return NULL;
 		 }
 
 		 return dQ;
-
-
 	}
 
 
@@ -90,7 +90,8 @@
 		//	1.Start with a trivial division into one group: the all nodes in the graph
 		P -> push(G, P);
 
-		while(!empty(P)){
+		while(!empty(P))
+		{
 			group = P -> pop(P);
 
 			/* 1) Divide g into g1; g2 with Algorithm 2 */
@@ -108,22 +109,27 @@
 			 group2 = divisionToTwo -> pop(divisionToTwo);
 
 			/* 3) if either g1 or g2 is of size 0: Add g to O*/
-			if(group1  == NULL || group2 == NULL ){
+			if(group1  == NULL || group2 == NULL )
+			{
 				O -> push(group, O);
 			}
 
 			/*4) Add to O: any group (g1 and/or g2) of size 1*/
-			if(group1 -> n == 1){
+			if(group1 -> n == 1)
+			{
 				O -> push(group1, O);
 			}
-			else{
+			else
+			{
 				P -> push(group1, P);
 			}
 
-			if(group2 -> n == 1){
+			if(group2 -> n == 1)
+			{
 				O -> push(group2, O);
 			}
-			else{
+			else
+			{
 				P -> push(group2, P);
 			}
 		}
@@ -132,7 +138,8 @@
 
 
 
-		 void algorithm4(graph *G, int *s, int dQ){
+		 void algorithm4(graph *G, int *s, int dQ)
+		 {
 			 BHatMatrix *B;
 			 int i = 0, j, n = (B -> G) -> n;
 			 int max_place, max_i, placeInS;
@@ -140,7 +147,6 @@
 			 linkedList *unmoved;
 			 linkedList_node *curr;
 			 int *indices, *improve;
-
 
 			 B = createMatrixBHat(G);
 
@@ -150,48 +156,54 @@
 			 indices = (int *)malloc(n * sizeof(int));
 			 improve = (int *)malloc(n * sizeof(int));
 
-
-
 			//1 : Repeat
-			 while(dQ > 0) {
+			 while(dQ > 0)
+			 {
 
 				 //3
 				 for(; i < n; i++)
 				 {
-					 if(i == 0){
+					 if(i == 0)
+					 {
 						 Q0 = dQ;
 					 }
-					 else{
+					 else
+					 {
 						 Q0 = computeDQ(s, B);
 					 }
 
 					 curr = unmoved -> head;
 					 //6 : runining over the unmoved linked list
-					 while(curr != NULL){
+					 while(curr != NULL)
+					 {
 						 placeInS = curr -> value;
 
 						 *(s + placeInS) *= -1;
 						 score[placeInS] =  computeDQChange(s , B, placeInS);
 						 *(s + placeInS) *= -1;
 
-						 if(score[placeInS] > max){
+						 if(score[placeInS] > max)
+						 {
 							 max = score[placeInS];
 							 max_place = placeInS; //k = curr -> index
-						 	 }
+						 }
 						 curr ++;
 					 }
 					 //11
 					 *(s + max_place) *= -1;
 					 indices[i] = max_place;
-					 if(i == 0){
+					 if(i == 0)
+					 {
 						 /*improve[i] = score[max_place]*/
 						 improve[i] = max;
 					 }
-					 else{
+					 else
+					 {
 						 /*improve[i] = improve[i-1] - score[max_place]*/
 						 improve[i] = improve[i-1] + max;
-					 	 }
-					 if(improve[i] > maxImprove){
+					 }
+					 if(improve[i] > maxImprove)
+					 {
 						 maxImprove = improve[i];
 						 max_i = i;
 					 }
@@ -199,18 +211,19 @@
 				 }
 
 				 //22
-				for(i = n - 1; i > max_i + 1; i--){
+				for(i = n - 1; i > max_i + 1; i--)
+				{
 					j = indices[i];
 					*(s + j) *= -1;
 				}
 
 				//26
-				if(max_i == n - 1){
+				if(max_i == n - 1)
+				{
 					dQ = 0;
 				}
-				else{
+				else
+				{
 					dQ = improve[max_i];
 				}
-
 		 }
-

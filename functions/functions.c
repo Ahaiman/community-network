@@ -55,7 +55,8 @@
 		currNode = indexRow -> head;
 		while(currNode!=NULL)
 		{
-			if (currNode -> partByS == *(s + index)){
+			if (currNode -> partByS == *(s + index))
+			{
 				sum += *(s + (currNode -> value));
 			}
 			currNode = currNode -> next;
@@ -112,7 +113,7 @@
 		double partB, partC;
 
 		partA = 4 * (*(s + index));
-		partC = 4 * pow(*(B -> G -> degrees) + index, 2) * (B -> constM);
+		partC = 4 * pow(*(B -> G -> degrees + index), 2) * (B -> constM);
 		partB = sumAd (B -> G, s, index) - sumDd (B, s, index);
 
 		return partA * partB + partC;
@@ -127,7 +128,8 @@
 	/*eigen vector is pre - initaliize
 	 * function returns eigenValue and sets value into eigenvector
 	 */
-	double findEigenValue(BHatMatrix *B, int *eigenVector){
+	double findEigenValue(BHatMatrix *B, int *eigenVector)
+	{
 
 		/*Variables Deceleration*/
 		int i = 0 , ifGreatThenEps = 1, matrixSize;
@@ -138,11 +140,12 @@
 		srand(time(NULL));
 		start = clock();
 
-		matrixSize = (B -> G)->n;
+		matrixSize = (B -> G)-> n;
 
 		/*Creating Initial Random Vector*/
-		if(eigenVector == NULL){
-			printf("Intial Vector Allocation Failed");
+		if(eigenVector == NULL)
+		{
+			printf("Initial vector allocation failed");
 			exit(0);
 		}
 		creatRandomVector(eigenVector, matrixSize);
@@ -151,7 +154,8 @@
 		 * Running the algorithm of power iteration
 		 */
 
-		while(ifGreatThenEps){
+		while(ifGreatThenEps)
+		{
 
 			result = (double*) malloc(sizeof(double)*(matrixSize));
 
@@ -174,7 +178,8 @@
 
 
 			/*normalizing the vector*/
-			if(vector_norm != 0.0) {
+			if(vector_norm != 0.0)
+			{
 				divideByNorm(result, vector_norm, matrixSize);
 			}
 
@@ -188,7 +193,6 @@
 			tmp = eigenVector;
 			eigenVector = result;
 			result = tmp;
-
 		}
 
 		free(tmp);
@@ -197,12 +201,11 @@
 		return eigenValue - (B->matrixNorm);
 	}
 
-
-
-
-	double* creatRandomVector(double* b0, int size){
+	double* creatRandomVector(double* b0, int size)
+	{
 		int i;
-		for(i = 0; i < size; i++){
+		for(i = 0; i < size; i++)
+		{
 			*b0 = rand();
 			b0++;
 		}
@@ -225,10 +228,12 @@
 	 * The function receives a vector,
 	 * and normalize it by dividing it in it's size
 	 */
-	void divide(double *vector1, double norm, int size){
+	void divide(double *vector1, double norm, int size)
+	{
 		double *p = vector1;
 		int i = 0;
-		for(; i < size; i++){
+		for(; i < size; i++)
+		{
 			*p = (double) (*p) / norm;
 			p += 1;
 		}
@@ -237,11 +242,13 @@
 	/*calcDotProduct
 	 * The function calculated product between two vectors
 	 */
-	double calcDotProduct(double *vector1, double *vector2, int size){
+	double calcDotProduct(double *vector1, double *vector2, int size)
+	{
 		double *firstPointer = vector1, *secondPointer = vector2;
 		double product = 0.0;
 		int i = 0;
-		for(; i < size; i++){
+		for(; i < size; i++)
+		{
 			product += (*firstPointer) * (*secondPointer);
 			firstPointer = firstPointer + 1;
 			secondPointer = secondPointer + 1;
@@ -253,11 +260,13 @@
 	 * The function return "true" if the difference between to vectors
 	 * is greater then epsilon. "false" otherwise.
 	 */
-	int checkDifference(double *vector1, double *vector2, int size, double eps){
+	int checkDifference(double *vector1, double *vector2, int size, double eps)
+	{
 		double *p1 = vector1, *p2 = vector2;
 		int i;
 		double diff;
-		for(i = 0; i < size; i++){
+		for(i = 0; i < size; i++)
+		{
 			diff = *p1 - *p2;
 			if(fabs(diff) >= eps)
 				return 1;
@@ -271,7 +280,8 @@
 /* ----------------------------------doDivisionByS---------------------------------------------------------------*/
 
 
-	int doDivisionByS(graph *group, int *s, stack *divisionToTwo){
+	int doDivisionByS(graph *group, int *s, stack *divisionToTwo)
+	{
 		graph *group1, *group2;
 		int *curr_nodes = group -> graph_nodes;
 		int  *graph_nodes1, *graph_nodes2;
@@ -279,11 +289,14 @@
 
 
 		/*Finding the sizes of the two new groups */
-		for(; i < n; i++){
-			if(*s == 1){
+		for(; i < n; i++)
+		{
+			if(*s == 1)
+			{
 				n1++;
 			}
-			else{
+			else
+			{
 				n2++;
 			}
 			s++;
@@ -291,7 +304,8 @@
 		s -= n;
 
 		/* Checking sizes before building the groups*/
-		if(n1 == 0 || n2 == 0){
+		if(n1 == 0 || n2 == 0)
+		{
 			group1 = group;
 			*group2 = NULL;
 			divisionToTwo -> push(group1, divisionToTwo);
@@ -305,12 +319,15 @@
 		graph_nodes2 = (int*) malloc(sizeof(int) * (n2));
 
 		/*Updating the new lists of nodes for each group*/
-		for(i = 0; i < n; i++){
-			if(*s == 1){
+		for(i = 0; i < n; i++)
+		{
+			if(*s == 1)
+			{
 				*graph_nodes1 = *curr_nodes;
 				graph_nodes1++;
 			}
-			else{
+			else
+			{
 				*graph_nodes2 = *curr_nodes;
 				graph_nodes2++;
 			}
@@ -339,8 +356,6 @@
 		free_graph(group, 0);
 
 		return 0;
-
-
 	}
 
 
@@ -355,7 +370,8 @@
 		int i = 0, j = 0, curr_index;
 
 		rows = matrix -> private;
-		for(; i < originalSize; i++){
+		for(; i < originalSize; i++)
+		{
 			currList = **rows;
 			currNode=currList->head;
 			while (currNode!=NULL)
@@ -366,8 +382,6 @@
 			rows++;
 		}
 	}
-
-
 
 /* ----------------------------------createGraphFromFile---------------------------------------------------------------*/
 
@@ -385,7 +399,7 @@
 
 		/*File Reading into variable, and asserting the process was successful.
 		 * if not - exiting the program.*/
-		input_file =  fopen(name_of_input_file, "rb");
+		input_file =  fopen(name_of_input_file, 'rb');
 		if(input_file == NULL){
 			exit("The file is not valid");
 		}
