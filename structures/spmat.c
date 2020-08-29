@@ -13,8 +13,9 @@
 
 spmat *spmat_allocate_list(int);
 void add_row_to_list(spmat *, const double *, int);
-void freeRow_list(linkedList_node*);
 void free_list(struct _spmat *, int);
+void freeRow_list(linkedList_node*);
+void mult_list(spmat *, const double *, double *);
 
 /*
  * --------Implementation With Linked List---------
@@ -85,7 +86,7 @@ void add_row_to_list(struct _spmat *A, const double *row, int row_size, int i)
 /*
  * frees the linkedList implementation of the sparsMatrix
  */
-void free_list(struct _spmat *A, freeInnerLists)
+void free_list(struct _spmat *A, int freeInnerLists)
 {
 	linkedList **rows =  ((linkedList **) A->private), **rowsStart = rows, *currRow;
 	int row;

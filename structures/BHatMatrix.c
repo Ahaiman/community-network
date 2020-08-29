@@ -42,7 +42,7 @@ BHatMatrix *createMatrixBHat (graph *G)
 	B -> G = G;
 	B -> constM = calcM(G);
 	B -> originalSize = G -> n;
-	B -> matrixNorm = calcMatrixNorm;
+	B -> matrixNorm = calcMatrixNorm(B);
 	B -> freeBHat = freeBHat;
 	B -> multBHat = multBHat;
 	return B;
@@ -54,29 +54,31 @@ BHatMatrix *createMatrixBHat (graph *G)
  */
 void multBHat(BHatMatrix *B, double *vector ,double *result, int doShift)
 {
-	int *A_s;
-	double *D_s, *AminusD;
+	//int *A_s;
+	double *A_s, *D_s, *AminusD;
 	spmat *relate_matrix  = B -> G -> relate_matrix;
-	int m, n = B -> G -> n, K_s;
+	int m, n = B -> G -> n;
+	double K_s;
 
 	/*A * s */
-	A_s = (int *) malloc (sizeof(int) * n);
+	//A_s = (int *) malloc (sizeof(int) * n);
+	A_s = (double *) malloc (sizeof(double) * n);
 	relate_matrix -> spmat_mult(relate_matrix, vector, A_s);
 
 	/*K * s */
 	K_s = calcDotProduct(B->G->degrees, vector, n) * (B -> constM);
 
 	/*D_s*/
-	D_s = (int *) malloc (sizeof(int) * n);
+	D_s = (double *) malloc (sizeof(double) * n);
 
-	multNumVec(n, K_s, B->G->degrees , D_s);
+	multNumVec(n, K_s, B->G->degrees, D_s);
 
-	AminusD = (int *) malloc (sizeof(int) * n);
+	AminusD = (double *) malloc (sizeof(double) * n);
 	substractTwoVecs(n, A_s, D_s, AminusD);
 
 	for(m = 0; m < n; m ++)
 	{
-		*result = *AminusD - (*vector) * (sumRowsD(B, m) - sumRowsA(G, m));
+		*result = *AminusD - (*vector) * (sumRowsD(B, m) - sumRowsA(B -> G, m));
 
 		if(doShift)
 			*result += (*vector) * (B -> matrixNorm);
@@ -122,7 +124,7 @@ double sumRowsD(BHatMatrix *B, int m)
 			counter++;
 			listNodes++;
 		}
-		if (counter == (B->G)->n)
+		if(counter == (B->G)->n)
 			break;
 	}
 	return sum*d;
@@ -155,7 +157,7 @@ double sumRowB (BHatMatrix *B, int i)
 /*
  * Calculates a matrix's norm.
  */
-int calcMatrixNorm(BHatMatrix *B)
+double calcMatrixNorm(BHatMatrix *B)
 {
 	int max=0, i, sumRow, currNodeValue;
 
