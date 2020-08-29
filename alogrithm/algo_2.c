@@ -7,7 +7,7 @@
 
 #include "./structures/BHatMatrix.h"
 #include "./structures/stack.h"
-#include "./functions/functions/h"
+#include "./functions/functions.h"
 
 stack *divisionGraphToTwo(graph *group, stack *division, int *s){
 

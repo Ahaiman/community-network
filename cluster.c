@@ -16,6 +16,7 @@
 #include "./structures/graph.h"
 #include "./functions/functions.h"
 #include "./algorithm/algorithm.h"
+#inclide "./test/cluster.h"
 
 
 int main(int argc, char* argv[]){
@@ -36,7 +37,7 @@ int main(int argc, char* argv[]){
 	findCommunities(input_graph);
 
 	end = clock();
-	printf("Prog  took: %f seconds\n", (double)(end - start) / CLOCKS_PER_SEC);
+//	printf("Prog  took: %f seconds\n", (double)(end - start) / CLOCKS_PER_SEC);
 	return 0;
 }
 
