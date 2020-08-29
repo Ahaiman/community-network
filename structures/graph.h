@@ -10,8 +10,8 @@
 #ifndef GRAPH_H_
 #define GRAPH_H_
 
-#include "spmat.h"
-#include "graph_node.h"
+#include "./spmat.h"
+
 
 typedef struct _graph {
 	/* Number of vertices in the graph : |V| = n */

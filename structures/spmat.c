@@ -4,9 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "spmat.h"
-#include "linkedList.h"
-#include "graph_node.h"
+#include "./spmat.h"
+#include "./linkedList.h"
 
 /*
  * --------Functions Definition---------

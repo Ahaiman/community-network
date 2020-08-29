@@ -1,8 +1,7 @@
 /*
  * its shifted in the calculation
  */
-#include "spmat.h"
-#include "graph.h"
+
 #ifndef STRUCTURES_BHATMATRIX_H_
 #define STRUCTURES_BHATMATRIX_H_
 

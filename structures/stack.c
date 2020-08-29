@@ -4,9 +4,10 @@
  * Implementation of the functions declared in the Header file.
   */
 
+#include <stdio.h>
+#include <stdlib.h>
 #include "stack.h"
-#include "graph.h"
-#include <stdbool.h>
+
 
 void initialize(stack *stk)
 {

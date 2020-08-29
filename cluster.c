@@ -12,11 +12,10 @@
 #include <time.h>
 #include <string.h>
 
-
 #include "./structures/graph.h"
 #include "./functions/functions.h"
 #include "./algorithm/algorithm.h"
-#inclide "./test/cluster.h"
+//#include "./test/cluster.h"
 
 
 int main(int argc, char* argv[]){

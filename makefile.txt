@@ -5,14 +5,32 @@ all: cluster
 clean:
 	rm -rf *.o cluster
 
-cluster: /*all the c files to write like: algo_2.o */
-	gcc /*cov.o eigen.o*/ -o cluster $(LIBS)
+cluster: ./structures/stack.o ./structures/spmat.o ./structures/linkedList.o ./structures/graph.o ./structures/BHatMatrix.o ./functions/functions.o ./algorithm/algorithm.o cluster.o
+	gcc ./structures/stack.o ./structures/spmat.o ./structures/linkedList.o ./structures/graph.o ./structures/BHatMatrix.o ./functions/functions.o ./algorithm/algorithm.o cluster.o -o cluster $(LIBS)
 
-algo_2.o: algo_2.c BHatMatrix.h stack.h functions.h
-	gcc $(FLAGS) -c algo_2.c
+./structures/stack.o: ./structures/stack.c ./structures/stack.h ./structures/graph.h
+	gcc $(FLAGS) -c stack.c
 
-stack.o: stack.c stack.h
-	gcc $(FLAGS) -c stack.c 
+./structures/spmat.o: ./structures/spmat.c ./structures/spmat.h ./structures/linkedList.h
+	gcc $(FLAGS) -c spmat.c
 	
+./structures/linkedList.o: ./structures/linkedList.c ./structures/linkedList.h
+	gcc $(FLAGS) -c linkedList.c
+
+./structures/graph.o: ./structures/graph.c ./structures/graph.h ./structures/spmat.h
+	gcc $(FLAGS) -c graph.c
+
+./structures/BHatMatrix.o: ./structures/BHatMatrix.c ./structures/BHatMatrix.h ./structures/graph.h ./structures/spmat.h ./functions/functions.h
+	gcc $(FLAGS) -c BHatMatrix.c
+
+./functions/functions.o: ./functions/functions.c ./functions/functions.h ./structures/graph.h ./structures/spmat.h ./structures/BHatMatrix.h
+	gcc $(FLAGS) -c ./functions/functions.c
+
+./algorithm/algorithm.o: ./algorithm/algorithm.c ./algorithm/algorithm.h ./functions/functions.h ./structures/graph.h ./structures/spmat.h ./structures/BHatMatrix.h ./structures/linkedList.h ./structures/stack.h
+	gcc $(FLAGS) -c ./algorithm/algorithm.c
+
+
+cluster.o: cluster.c ./algorithm/algorithm.h ./functions/functions.h ./structures/graph.h
+	gcc $(FLAGS) -c cluster.c
 
 

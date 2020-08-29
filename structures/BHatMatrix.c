@@ -1,9 +1,10 @@
-#include "BHatMatrix.h"
+
+#include "./BHatMatrix.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "graph.h"
-#include "spmat.h"
-#include "./functions/functions.h" /*necessary for calcDorProduct in multBHat*/
+#include "./graph.h"
+#include "./spmat.h"
+#include "../functions/functions.h"
 
 /*
  * --------Functions Definition---------

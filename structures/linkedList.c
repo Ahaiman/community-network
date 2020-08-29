@@ -7,8 +7,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "linkedList.h"
-#include "graph_node.h"
+#include "./linkedList.h"
+
 
 
 /*
