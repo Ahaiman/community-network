@@ -37,7 +37,7 @@ typedef struct stack {
 };
 
 
-//typedef   struct stack   stack;
+typedef   struct stack   stack;
 
 
 
