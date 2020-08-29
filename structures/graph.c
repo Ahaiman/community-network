@@ -5,10 +5,11 @@
  *      Author: Avital
  */
 
-#include "graph.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include "graph_node.h"
+#include "./graph.h"
+#include "./spmat.h"
 
 
 
