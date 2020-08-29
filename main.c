@@ -33,10 +33,10 @@ int main(int argc, char* argv[]){
 	input_graph = createGraph(argv[1]);
 
 	/*Send to Algorithm 3 */
-	findCommunities(input_graph);
+	findCommunities(input_graph, argv[2]);
 
 	end = clock();
-//	printf("Prog  took: %f seconds\n", (double)(end - start) / CLOCKS_PER_SEC);
+	printf("Prog  took: %f seconds\n", (double)(end - start) / CLOCKS_PER_SEC);
 	return 0;
 }
 
