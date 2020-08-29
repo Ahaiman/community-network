@@ -17,9 +17,6 @@ typedef struct _graph {
 	/* Number of vertices in the graph : |V| = n */
 	int		n;
 
-	/* Number of edges in the graph : |E| = m */
-//	int     m;
-
 	/* The number of the group in S vector*/
 	int divisionNumber;
 
@@ -34,7 +31,6 @@ typedef struct _graph {
 	int *degrees;
 
 	/* Frees all resources used by G , freeNode - represents whether nodes should be free to*/
-//	void (*free_graph)(struct _graph *G, int freeNode, int freeLists);
 	void (*free_graph)(struct _graph *G, int freeLists);
 
 } graph;
@@ -42,6 +38,7 @@ typedef struct _graph {
 /* Allocates a new linked-lists sparse matrix of size n */
 
 graph* allocate_graph(int n, int *graph_node, spmat *relate_matrix);
+
 #endif
 
 

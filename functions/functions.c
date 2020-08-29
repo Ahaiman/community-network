@@ -15,27 +15,27 @@
  * --------Functions Deceleration---------
  */
 	/*computeDQ.c*/
-	int sumAd (graph *G, int *s,int index);
-	double sumDd (BHatMatrix *B, int *s, int index);
-	double computeDQ(double *s, BHatMatrix *B);
-	double computeDQChange(double *s, BHatMatrix *B, int index, int dq);
-
-	/*findEigen.c*/
-	double findEigenValue(BHatMatrix *B, int *eigenVector);
-	double* creatRandomVector(double* b0, int size);
-	int checkDifference(double *vector1, double *vector2, int size, double eps);
-	double calcDotProduct(double *vector1, double *vector2, int size);
-	void divide(double *vector1, double norm, int size);
-
-	/*doDivisionByS.c */
-	int doDivisionByS(graph *group, int *s, stack *divisionToTwo);
-	void updateNodesGroups(int originalSize, spmat *matrix, int *s);
-
-	/*createGraphFromFile.c*/
-	graph createGraph(char *name_of_input_file);
-
-	/*computeS.c*/
-	int createSVector(double *eigenVector, int size);
+//	int sumAd (graph *G, int *s,int index);
+//	double sumDd (BHatMatrix *B, int *s, int index);
+//	double computeDQ(double *s, BHatMatrix *B);
+//	double computeDQChange(double *s, BHatMatrix *B, int index, int dq);
+//
+//	/*findEigen.c*/
+//	double findEigenValue(BHatMatrix *B, int *eigenVector);
+//	double* creatRandomVector(double* b0, int size);
+//	int checkDifference(double *vector1, double *vector2, int size, double eps);
+//	double calcDotProduct(double *vector1, double *vector2, int size);
+//	void divide(double *vector1, double norm, int size);
+//
+//	/*doDivisionByS.c */
+//	int doDivisionByS(graph *group, int *s, stack *divisionToTwo);
+//	void updateNodesGroups(int originalSize, spmat *matrix, int *s);
+//
+//	/*createGraphFromFile.c*/
+//	graph createGraph(char *name_of_input_file);
+//
+//	/*computeS.c*/
+//	int createSVector(double *eigenVector, int size);
 
 /*
  * --------Functions Implementation---------
@@ -372,7 +372,7 @@
 		rows = matrix -> private;
 		for(; i < originalSize; i++)
 		{
-			currList = **rows;
+			currList = *rows;
 			currNode=currList->head;
 			while (currNode!=NULL)
 			{
@@ -392,9 +392,9 @@
 		FILE	*input_file;
 		graph *input_graph;
 		int *nodes_list;
-		int *curr_neighbors, *matrix_row, *degrees;
+		int *matrix_row, *degrees;
 		spmat *relate_matrix;
-		int n, m = 0, degree, j, neighboor_index, i = 0;
+		int n, degree, j,i = 0;
 		int succ;
 
 		/*File Reading into variable, and asserting the process was successful.
