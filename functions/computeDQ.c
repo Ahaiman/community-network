@@ -32,7 +32,7 @@ int sumAd (graph *G, int *s,int index)
 	currNode = indexRow -> head;
 	while(currNode!=NULL)
 	{
-		if (currNode -> index == *(s + index)){
+		if (currNode -> partByS == *(s + index)){
 			sum += *(s + (currNode -> value));
 		}
 		currNode = currNode -> next;
@@ -43,16 +43,16 @@ int sumAd (graph *G, int *s,int index)
 double sumDd (BHatMatrix *B, int *s, int index)
 {
 	int i, sum=0, counter=0;
-	int *listNodes=B->G->nodesList, *degrees=B->G->degrees;
+	int *listNodes=B->G->graph_nodes, *degrees=B->G->degrees;
 	double d;
 	d=B->constM*(*(degrees+index));
 	for (i=0;i<B->originalSize;i++)
 	{
-		if (i==*nodesList)
+		if (i==*listNodes)
 		{
 			sum+= *(degrees+i) * (*(s + i));
 			counter++;
-			nodesList++;
+			listNodes++;
 		}
 		if (counter == (B->G)->n)
 			break;
@@ -89,7 +89,7 @@ double computeDQChange(int *s ,BHatMatrix *B, int index)
 	double partB, partC;
 
 	partA = 4 * (*(s + index));
-	partC = 4 * pow(*(B -> G -> degrees) + index), 2) * (B -> constM);
+	partC = 4 * pow(*(B -> G -> degrees + index), 2) * (B -> constM);
 	partB = sumAd (B -> G, s, index) - sumDd (B, s, index);
 
 	return partA * partB + partC;

@@ -87,6 +87,7 @@ void delete_node(linkedList *list, int node_value){
  */
 
 linkedList *allocateListWithNodes(int n){
+	int i=0;
 	linkedList *newList;
 	linkedList_node *newNode, *curr;
 

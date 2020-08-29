@@ -9,7 +9,7 @@
  * --------Functions Declaration---------
  */
 void createRelateMatrix(int, int, graph_node **, spmat *);
-void doDivisionByS(Graph *group, int *s, stack *divisionToTwo){
+void doDivisionByS(graph *group, int *s, stack *divisionToTwo){
 
 /*
  * --------Functions Implementation---------
@@ -21,8 +21,8 @@ void doDivisionByS(Graph *group, int *s, stack *divisionToTwo){
  	 * Output: Stack containing two graphs according to the division
  */
 
-void doDivisionByS(Graph *group, int *s, stack *divisionToTwo){
-	Graph *group1, *group2;
+int doDivisionByS(graph *group, int *s, stack *divisionToTwo){
+	graph *group1, *group2;
 	int *curr_nodes = group -> graph_nodes;
 	int  *graph_nodes1, *graph_nodes2;
 	int n = group -> n, n1 = 0, n2 = 0, i = 0;
@@ -42,8 +42,8 @@ void doDivisionByS(Graph *group, int *s, stack *divisionToTwo){
 
 	/* Checking sizes before building the groups*/
 	if(n1 == 0 || n2 == 0){
-		divisionToTwo.push(group);
-		divisionToTwo.push(NULL);
+		divisionToTwo.push(group, divisionToTwo);
+		divisionToTwo.push(NULL, divisionToTwo);
 		return 0;
 	}
 
@@ -60,7 +60,7 @@ void doDivisionByS(Graph *group, int *s, stack *divisionToTwo){
 		}
 		else{
 			*graph_nodes2 = *curr_nodes;
-			graph_nodes2++
+			graph_nodes2++;
 		}
 		s++;
 		curr_nodes++;

@@ -14,9 +14,8 @@
 
 spmat *spmat_allocate_list(int);
 void add_row_to_list(spmat *, const double *, int);
-void freeRow_list(linked_list_node *);
+void freeRow_list(linkedList_node*);
 void free_list(struct _spmat *, int);
-void multSpMat(spmat *, double *, double *);
 
 /*
  * --------Implementation With Linked List---------
@@ -72,7 +71,7 @@ void add_row_to_list(struct _spmat *A, const double *row, int row_size, int i) {
         row++;
     }
 
-    currRow -> value = i;
+    currRow -> node_index = i;
     currRow -> size = row_size;
     A->private[i] = currRow;
 
@@ -101,7 +100,7 @@ void free_list(struct _spmat *A, freeInnerLists) {
 /*
  * frees every row in the linkedList implementation using recursion
  */
-void freeRow_list(linked_list_node *rowHead) {
+void freeRow_list(linkedList_node *rowHead) {
     if (rowHead != NULL) {
         freeRow_list(rowHead->next);
         free(rowHead);
@@ -112,7 +111,7 @@ void freeRow_list(linked_list_node *rowHead) {
 void mult_list(spmat *A, const double *v, double *result) {
     linkedList_node *currNode;
     linkedList *currList, **rows_indices = A->private;
-    int row, n = A -> n
+    int row, n = A -> n;
     double sum;
 
     if(result == NULL){
@@ -122,7 +121,7 @@ void mult_list(spmat *A, const double *v, double *result) {
 
     for (row = 0; row < n; row++) {
     	currList = *rows_indices;
-        currNode = currList- > head;
+        currNode = currList -> head;
         sum = 0;
         while (currNode != NULL) {
             sum += *(v + (currNode -> value));
