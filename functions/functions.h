@@ -20,7 +20,7 @@ int checkDifference(double *vector1, double *vector2, int size, double eps);
 void divide(double *vector1, double norm, int size);
 
 /*doDivisionByS.c */
-int doDivisionByS(graph *group, int *s, stack *divisionToTwo);
+void doDivisionByS(graph *group, int *s, stack *divisionToTwo);
 void updateNodesGroup(int originalSize, spmat *matrix, int *s);
 
 /*createGraphFromFile.c*/

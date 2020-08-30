@@ -29,7 +29,7 @@
 	void divideByNorm(double *vector1, double norm, int size);
 
 	/*doDivisionByS.c */
-	int doDivisionByS(graph *group, int *s, stack *divisionToTwo);
+	void doDivisionByS(graph *group, int *s, stack *divisionToTwo);
 	void updateNodesGroups(int originalSize, spmat *matrix, int *s);
 
 	/*createGraphFromFile.c*/
@@ -212,15 +212,15 @@
 	}
 
 	/*To Delete */
-//	void print(int size, double *row){
-//		int i;
-//		double k;
-//		for(i= 0; i < size; i++){
-//			k = *(row +i);
-//			printf("curent row is : %f\n", k);
-//		}
-//
-//	}
+	void print(int size, int *row){
+		int i;
+		int k;
+		for(i= 0; i < size; i++){
+			k = *(row +i);
+			printf("curent row is : %d\n", k);
+		}
+
+	}
 
 
 	/*Divide
@@ -279,7 +279,7 @@
 /* ----------------------------------doDivisionByS---------------------------------------------------------------*/
 
 
-	int doDivisionByS(graph *group, int *s, stack *divisionToTwo)
+	void doDivisionByS(graph *group, int *s, stack *divisionToTwo)
 	{
 		graph *group1, *group2;
 		int *curr_nodes = group -> graph_nodes;
@@ -307,9 +307,8 @@
 		{
 			group1 = group;
 			group2 = NULL;
-			divisionToTwo -> push(group1, divisionToTwo);
-			divisionToTwo -> push(group2, divisionToTwo);
-			return 0;
+			push(group1, divisionToTwo);
+			push(group2, divisionToTwo);
 		}
 
 
@@ -348,13 +347,12 @@
 		group2 -> divisionNumber = -1;
 
 		/*Adding division (two graph) to the input stack */
-		divisionToTwo -> push(group1, divisionToTwo);
-		divisionToTwo -> push(group2, divisionToTwo);
+		push(group1, divisionToTwo);
+		push(group2, divisionToTwo);
 
 		/*Free only original graph without the nodes, and without the related matrix inside lists */
 		free_graph(group, 0);
 
-		return 0;
 	}
 
 
@@ -366,7 +364,7 @@
 		linkedList **rows;
 		linkedList *currList;
 		linkedList_node *currNode;
-		int i = 0, j = 0, curr_index;
+		int i = 0, curr_index;
 
 		rows = matrix -> private;
 		for(; i < originalSize; i++)
@@ -394,12 +392,7 @@
 		int *matrix_row, *degrees;
 		spmat *relate_matrix;
 		int n, degree, j,i = 0, succ;
-//		char *s = "../";
-//		char* input_name = strcat(s , name_of_input_file);
-//		printf("%s", input_name);
 
-		/*File Reading into variable, and asserting the process was successful.
-		 * if not - exiting the program.*/
 
 
 		/*Reading number of nodes in the graph*/
@@ -408,6 +401,7 @@
 			printf("The file is empty");
 			exit(EXIT_FAILURE);
 		}
+		printf("n is %d\n", n);
 
 		/*Initializing list size n, of pointers to the nodes of the graph*/
 		nodes_list = (int *) malloc(sizeof(int) * (n));
@@ -440,7 +434,7 @@
 		 *      For each row, adding it to the sparse matrix
 		 */
 
-		 while( !feof(input_file) ) {
+		 while( i < n && !feof(input_file) ) {
 
 			 /*Read file row : k1 and the indices */
 			 succ = fread(&degree, sizeof(int), 1, input_file);
@@ -459,6 +453,9 @@
 			 }
 
 			 succ =  fread(matrix_row, sizeof(int), degree, input_file);
+			 printf("index is %d and degree is %d\n", i, degree);
+			print(degree, matrix_row);
+
 			 if(succ != degree){
 				printf("Failed file read");
 				exit(EXIT_FAILURE);
@@ -467,6 +464,7 @@
 			 relate_matrix -> add_row(relate_matrix, matrix_row, degree, i);
 			 free(matrix_row);
 			 i++;
+
 
 
 		 }
@@ -490,6 +488,7 @@
 		int *s;
 		int i = 0;
 
+		s = (int *)malloc(sizeof(int)* size);
 
 		for(; i < size; i++){
 			if(*eigenVector > 0){
@@ -501,6 +500,7 @@
 			eigenVector++;
 			s++;
 		}
+		s -= size;
 		return s;
 
 	}
