@@ -117,7 +117,7 @@
 			algorithm4(group, s, dQ);
 
 			 /*Creating the division*/
-			 doDivisionByS(group, divisionToTwo, s);
+			 doDivisionByS(group, s, divisionToTwo);
 
 			 group1 = pop(divisionToTwo);
 			 group2 = pop(divisionToTwo);
@@ -152,7 +152,7 @@
 			output = pop(O);
 			outputNodes = output ->graph_nodes;
 			for(; i < output -> n; i++){
-				n = fwrite(*outputNodes, sizeof(int), 1, output_file);
+				n = fwrite(outputNodes, sizeof(int), 1, output_file);
 				if(n != 1){
 					printf("error in writing into file");
 					exit(EXIT_FAILURE);

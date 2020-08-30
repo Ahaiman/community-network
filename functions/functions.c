@@ -18,7 +18,8 @@
 
 	int sumAd (graph *G, int *s,int index);
 	double sumDd (BHatMatrix *B, int *s, int index);
-	double computeDQ(int *s, BHatMatrix *B);
+	/*double computeDQ(int *s, BHatMatrix *B);*/
+	double computeDQ(double *s, BHatMatrix *B);
 	double computeDQChange(int *s, BHatMatrix *B, int index);
 
 	/*findEigen.c*/
@@ -54,7 +55,11 @@
 		int sum = 0;
 
 		private = (linkedList **)(G -> relate_matrix -> private);
-		indexRow = indexRow + index;
+		//indexRow = indexRow + index;
+
+		//which row we multiply with s- this is the "i" in muhammad's Aij
+		indexRow=*(private+index);
+
 		currNode = indexRow -> head;
 		while(currNode!=NULL)
 		{
@@ -91,7 +96,7 @@
 	/*
 	 * Returns delta Q: (0.5) * s^T * Bhat * s
 	 */
-	double computeDQ(int *s, BHatMatrix *B)
+	double computeDQ(double *s, BHatMatrix *B)
 	{
 		double dq;
 		int size = (B->G)->n;
@@ -212,14 +217,15 @@
 	}
 
 	/*To Delete */
-	void print(int size, int *row){
+	void print(int size, int *row)
+	{
 		int i;
 		int k;
-		for(i= 0; i < size; i++){
+		for(i= 0; i < size; i++)
+		{
 			k = *(row +i);
-			printf("curent row is : %d\n", k);
+			printf("current row is : %d\n", k);
 		}
-
 	}
 
 
@@ -352,7 +358,7 @@
 		push(group2, divisionToTwo);
 
 		/*Free only original graph without the nodes, and without the related matrix inside lists */
-		free_graph(group, 0);
+		group ->free_graph(group, 0);
 
 	}
 
@@ -365,7 +371,7 @@
 		linkedList **rows;
 		linkedList *currList;
 		linkedList_node *currNode;
-		int i = 0, curr_index;
+		int i = 0;//, curr_index;
 
 		rows = matrix -> private;
 		for(; i < originalSize; i++)
@@ -384,7 +390,8 @@
 /* ----------------------------------createGraphFromFile---------------------------------------------------------------*/
 
 
-	graph *createGraph(FILE *input_file){
+	graph *createGraph(FILE *input_file)
+	{
 
 		/*Variables deceleration*/
 
@@ -398,7 +405,8 @@
 
 		/*Reading number of nodes in the graph*/
 		succ = fread(&n, sizeof(int), 1, input_file);
-		if(succ != 1){
+		if(succ != 1)
+		{
 			printf("The file is empty");
 			exit(EXIT_FAILURE);
 		}
@@ -408,13 +416,15 @@
 		nodes_list = (int *) malloc(sizeof(int) * (n));
 
 		/*Assert allocation*/
-		if(nodes_list == NULL){
+		if(nodes_list == NULL)
+		{
 			printf("Allocation of nodes list failed");
 			exit(EXIT_FAILURE);
 		}
 
 		/*Initialize Nodes list*/
-		for(j = 0; j < n; j++ ){
+		for(j = 0; j < n; j++ )
+		{
 			/*Allocate returns node*/
 			*nodes_list = j;
 			nodes_list++;
@@ -425,7 +435,8 @@
 		relate_matrix = spmat_allocate_list(n);
 
 		degrees = (int *) malloc(sizeof(int) * (n));
-		if(degrees == NULL){
+		if(degrees == NULL)
+		{
 			printf("Allocation of degrees vector failed");
 			exit(EXIT_FAILURE);
 		}
@@ -435,7 +446,8 @@
 		 *      For each row, adding it to the sparse matrix
 		 */
 
-		 while( i < n && !feof(input_file) ) {
+		 while( i < n && !feof(input_file) )
+		 {
 			 /*Read file row : k1 and the indices */
 			 succ = fread(&degree, sizeof(int), 1, input_file);
 			 if(succ != 1)
@@ -455,28 +467,18 @@
 			 }
 
 			 succ =  fread(matrix_row, sizeof(int), degree, input_file);
-<<<<<<< HEAD
-			 if(succ != degree)
-			 {
-=======
 			 printf("index is %d and degree is %d\n", i, degree);
 			print(degree, matrix_row);
 
-			 if(succ != degree){
->>>>>>> c51d69dd56d1e0f632345f34352219e381723d57
+			 if(succ != degree)
+			 {
 				printf("Failed file read");
 				exit(EXIT_FAILURE);
-			}
+			 }
 
 			 relate_matrix -> add_row(relate_matrix, matrix_row, degree, i);
 			 free(matrix_row);
 			 i++;
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> c51d69dd56d1e0f632345f34352219e381723d57
 		 }
 		fclose(input_file);
 
@@ -492,17 +494,21 @@
 /* ----------------------------------computeS---------------------------------------------------------------*/
 
 
-	int *computeS(double *eigenVector, int size){
+	int* computeS(double *eigenVector, int size)
+	{
 		int *s;
 		int i = 0;
 
 		s = (int *)malloc(sizeof(int)* size);
 
-		for(; i < size; i++){
-			if(*eigenVector > 0){
+		for(; i < size; i++)
+		{
+			if(*eigenVector > 0)
+			{
 				*s = 1;
 			}
-			else {
+			else
+			{
 				*s = -1;
 			}
 			eigenVector++;
@@ -510,7 +516,7 @@
 		}
 		s -= size;
 		return s;
-
 	}
+
 
 

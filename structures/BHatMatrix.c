@@ -70,12 +70,12 @@ void multBHat(BHatMatrix *B, double *vector ,double *result, int doShift)
 	relate_matrix -> spmat_mult(relate_matrix, vector, A_s);
 
 	/*K * s */
-	K_s = calcDotProduct(degrees, vector, n) * (B -> constM);
+	K_s = calcDotProduct((double*)degrees, vector, n) * (B -> constM);
 
 	/*D_s*/
 	D_s = (double *) malloc (sizeof(double) * n);
 
-	multNumVec(n, K_s, degrees, D_s);
+	multNumVec(n, K_s, (double*)degrees, D_s);
 
 	AminusD = (double *) malloc (sizeof(double) * n);
 	substractTwoVecs(n, A_s, D_s, AminusD);
@@ -228,6 +228,6 @@ double calcM(graph *G)
  */
 void freeBHat(BHatMatrix *B)
 {
-	free_graph(B->G, 1);
+	B->G->free_graph(B->G, 1);
 }
 
