@@ -309,6 +309,7 @@
 			group2 = NULL;
 			push(group1, divisionToTwo);
 			push(group2, divisionToTwo);
+			return;
 		}
 
 

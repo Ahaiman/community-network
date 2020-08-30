@@ -1,3 +1,5 @@
+#define POSITIVE(X) ((X) > 0.00001)
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -185,7 +187,7 @@
 			 improve = (int *)malloc(n * sizeof(int));
 
 			//1 : Repeat
-			 while(dQ > 0)
+			 while(POSITIVE(dQ))
 			 {
 
 				 //3
