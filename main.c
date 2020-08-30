@@ -31,8 +31,9 @@ int main(int argc, char* argv[]){
 	(void)argc;
 
 	/*Create Graph */
-	input_file =  fopen(argv[1], 'rb');
-	if(input_file == NULL){
+	input_file =  fopen(argv[1], "rb");
+	if(input_file == NULL)
+	{
 		printf("The file is not valid");
 		exit(EXIT_FAILURE);
 	}

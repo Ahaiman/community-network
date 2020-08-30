@@ -440,11 +440,12 @@
 		 *      For each row, adding it to the sparse matrix
 		 */
 
-		 while( !feof(input_file) ) {
-
+		 while( !feof(input_file) )
+		 {
 			 /*Read file row : k1 and the indices */
 			 succ = fread(&degree, sizeof(int), 1, input_file);
-			 if(succ != 1){
+			 if(succ != 1)
+			 {
 			 	printf("Failed degree reading");
 			 	exit(EXIT_FAILURE);
 			 }
@@ -453,13 +454,15 @@
 
 			 /*Read the neighbors indices into row*/
 			 matrix_row =  (int*) malloc(sizeof(int)*(degree));
-			 if(matrix_row == NULL){
+			 if(matrix_row == NULL)
+			 {
 			 		printf("Allocation failed");
 			 		exit(EXIT_FAILURE);
 			 }
 
 			 succ =  fread(matrix_row, sizeof(int), degree, input_file);
-			 if(succ != degree){
+			 if(succ != degree)
+			 {
 				printf("Failed file read");
 				exit(EXIT_FAILURE);
 			}
@@ -467,11 +470,7 @@
 			 relate_matrix -> add_row(relate_matrix, matrix_row, degree, i);
 			 free(matrix_row);
 			 i++;
-
-
 		 }
-
-
 		fclose(input_file);
 
 
