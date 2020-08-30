@@ -35,7 +35,7 @@ void push(graph *group, stack *stk)
 
 graph* pop(stack *stk)
 { 
-   graph*   group;
+   graph   *group;
    elem   *p;
 
    group = (stk -> top) -> group;
