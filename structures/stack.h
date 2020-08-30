@@ -16,32 +16,31 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "graph.h"
+#include "./graph.h"
 
 #define   EMPTY      0
 #define   FULL       5000000 // five million
 
 
-typedef   enum {false, true}   boolean;
+
+typedef enum boolean {flase, true}   boolean;
+
+
 
 typedef struct elem {                   /* an element on the stack */
 	graph          *group;
     struct elem   *next;
 } elem;
 
-//typedef   struct elem   elem;
-
 typedef struct stack{
    int    cnt;                  /* a count of the elements */
    elem   *top;                 /* ptr to the top element */
-   void            (*initialize)(struct stack *stk);
-   void            (*push)(graph *group, struct stack *stk);
-   graph*     	    (*pop)(struct stack *stk);
-   boolean         (*empty)(const struct stack *stk);
 } stack;
 
-
-//typedef   struct stack   stack;
+void            push(graph *group, stack *stk);
+graph*     	    pop(stack *stk);
+boolean         empty(const stack *stk);
+stack            *initialize();
 
 
 #endif

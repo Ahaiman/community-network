@@ -6,27 +6,27 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "stack.h"
+#include "./stack.h"
+#include "./graph.h"
 
-void            initialize(stack *stk);
 void            push(graph *group, stack *stk);
 graph*     	    pop(stack *stk);
 boolean         empty(const stack *stk);
+stack            *initialize();
 
-void initialize(stack *stk)
+stack *initialize()
 {
+   stack *stk = (stack *)malloc(sizeof(stack));
    stk -> cnt = 0;
    stk -> top = NULL;
-   stk -> push = push;
-   stk -> pop = pop;
-   stk -> empty = empty;
+   return stk;
 }
 
 void push(graph *group, stack *stk)
 { 
    elem   *p;
 
-   p = malloc(sizeof(elem));
+   p = (elem *)malloc(sizeof(elem));
    p -> group = group;
    p -> next = stk -> top;
    stk -> top = p;

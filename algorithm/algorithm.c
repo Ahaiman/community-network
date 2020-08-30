@@ -23,7 +23,7 @@
 	void algorithm4(graph *G, int *s, double dQ);
 
 	/*algo_3.c*/
-	void findCommunities(graph *G, char *name_of_output_file);
+	void findCommunities(graph *G, FILE *output_file);
 
 /*
  * --------Functions Implementation---------
@@ -77,9 +77,8 @@
 	 * put an counte for loops- > check what need to be the maximim limit
 	 */
 
-	void findCommunities(graph *G, char *name_of_output_file)
+	void findCommunities(graph *G, FILE *output_file)
 	{
-		FILE	*output_file;
 		stack *P, *O, *divisionToTwo;
 		graph *group, *group1, *group2, *output;
 		int *outputNodes;
@@ -88,22 +87,19 @@
 		double dQ;
 
 
-		initialize(O);
-		initialize(P);
-		initialize(divisionToTwo);
+		O = initialize();
+		P = initialize();
+		divisionToTwo = initialize();
 		s = (int *) malloc (sizeof(int) * n);
-		output_file =  fopen(name_of_output_file, 'wb');
-		if(output_file == NULL){
-			printf("out pur file failed");
-			exit(EXIT_FAILURE);
-		}
+
 
 		//	1.Start with a trivial division into one group: the all nodes in the graph
-		P -> push(G, P);
+		push(G, P);
+
 
 		while(!empty(P))
 		{
-			group = P -> pop(P);
+			group = pop(P);
 
 			/* 1) Divide g into g1; g2 with Algorithm 2 */
 			dQ  = divisionGraphToTwo(group,divisionToTwo, s);
@@ -121,37 +117,37 @@
 			 /*Creating the division*/
 			 doDivisionByS(group, divisionToTwo, s);
 
-			 group1 = divisionToTwo -> pop(divisionToTwo);
-			 group2 = divisionToTwo -> pop(divisionToTwo);
+			 group1 = pop(divisionToTwo);
+			 group2 = pop(divisionToTwo);
 
 			/* 3) if either g1 or g2 is of size 0: Add g to O*/
 			if(group1  == NULL || group2 == NULL )
 			{
-				O -> push(group, O);
+				push(group, O);
 			}
 
 			/*4) Add to O: any group (g1 and/or g2) of size 1*/
 			if(group1 -> n == 1)
 			{
-				O -> push(group1, O);
+				push(group1, O);
 			}
 			else
 			{
-				P -> push(group1, P);
+				push(group1, P);
 			}
 
 			if(group2 -> n == 1)
 			{
-				O -> push(group2, O);
+				push(group2, O);
 			}
 			else
 			{
-				P -> push(group2, P);
+				push(group2, P);
 			}
 		}
 		/*Write to output file */
 		while(!empty(O)){
-			output = O -> pop(O);
+			output = pop(O);
 			outputNodes = output ->graph_nodes;
 			for(; i < output -> n; i++){
 				n = fwrite(*outputNodes, sizeof(int), 1, output_file);
@@ -173,7 +169,7 @@
 		 {
 			 /*Q0 ??? */
 			 BHatMatrix *B;
-			 int i = 0, j, n = (B -> G) -> n;
+			 int i = 0, j, n = G -> n;
 			 int max_place, max_i, placeInS;
 			 double Q0, max = 0, maxImprove = 0, *score;
 			 linkedList *unmoved;

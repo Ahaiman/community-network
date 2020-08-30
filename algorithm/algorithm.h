@@ -15,7 +15,7 @@ double divisionGraphToTwo(graph *group, stack *division, int *s);
 void algorithm4(graph *G, int *s, double dQ);
 
 /*algo_3.c*/
-void findCommunities(graph *G, char *name_of_output_file);
+void findCommunities(graph *G, FILE *output_file);
 
 
 #endif
