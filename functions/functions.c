@@ -434,13 +434,7 @@
 		 *      For each row, adding it to the sparse matrix
 		 */
 
-<<<<<<< HEAD
-		 while( !feof(input_file) )
-		 {
-=======
 		 while( i < n && !feof(input_file) ) {
-
->>>>>>> c51d69dd56d1e0f632345f34352219e381723d57
 			 /*Read file row : k1 and the indices */
 			 succ = fread(&degree, sizeof(int), 1, input_file);
 			 if(succ != 1)

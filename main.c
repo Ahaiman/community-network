@@ -30,20 +30,11 @@ int main(int argc, char* argv[]){
 	start = clock();
 	(void)argc;
 
-<<<<<<< HEAD
-	/*Create Graph */
-	input_file =  fopen(argv[1], "rb");
-	if(input_file == NULL)
-	{
-		printf("The file is not valid");
-=======
-
 	/*File Reading into variable, and asserting the process was successful.
 	 * if not - exiting the program.*/
 	input_file =  fopen(argv[1], "rb");
 	if(input_file == NULL){
 		printf("The file is not valid2");
->>>>>>> c51d69dd56d1e0f632345f34352219e381723d57
 		exit(EXIT_FAILURE);
 	}
 
