@@ -19,21 +19,23 @@ modularities, is close to maximal.
 --------
 The Mathematical Basis
 -------------
->We represent a network by a graph G = (V,E), and let A be the adjacency matrix of G.
+> we represent a network by a graph G = (V,E), and let A be the adjacency matrix of G.
 ![](examples/1.png)
 
 > A given group of vertices in a network is considered a **community** if the number of edges
 within the group is significantly more than expected (by chance). We define the **modularity
 of a group** as the number of edges within the group minus the **expected** number of edges in
 a random graph with the same degrees.
-![](examples/2.png)
+
+
+> ![](examples/2.png)
 
 --------
 Design
 -------------
-> ![](examples/3.png)
+> ![Click](examples/3.png)
 
-> ![](examples/4.png)
+> ![Click](examples/4.png)
 
 
 
