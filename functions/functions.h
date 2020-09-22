@@ -2,33 +2,39 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
+#include <math.h>
 #include "../structures/graph.h"
 #include "../structures/BHatMatrix.h"
 #include "../structures/stack.h"
 
 /*computeDQ.c*/
-int sumAd (graph *G, int *s,int index);
-double sumDd (BHatMatrix *B, int *s, int index);
-double computeDQ(int *s, BHatMatrix *B);
-double computeDQChange(int *s ,BHatMatrix *B, int index);
+int sumAd (BHatMatrix *B, graph *group, double *s,int index);
+double sumDd (BHatMatrix *B, graph *group, double *s, int index);
+double computeDQ(double *s,graph *group, BHatMatrix *B);
+double computeDQChange(BHatMatrix *B, graph *group,double *s, int placeInS);
+
 
 /*findEigen.c*/
-double calcDotProduct(double *vector1, double *vector2, int size);
-double findEigenValue(BHatMatrix *B, double *eigenVector);
-double* creatRandomVector(double* b0, int size);
-int checkDifference(double *vector1, double *vector2, int size, double eps);
-void divide(double *vector1, double norm, int size);
+double calcDotProduct(graph *g, double *vector1, double *vector2);
+double calcDotProductInt(graph *g, int *vector1, double *vector2);
+double* findEigenValue(BHatMatrix *B, graph *group, double *eigenValue);
+void creatRandomVector(double* b0, int size);
+int checkDifference(graph *g, double *vector1, double *vector2, double eps);
+void divideByNorm(graph *group, double *vector1, double norm);
+
+/* Multiplies matrix A by vector v, into result (result is pre-allocated) */
+void spmat_mult(BHatMatrix *B, graph *group, const double *v, double *result);
 
 /*doDivisionByS.c */
-void doDivisionByS(graph *group, int *s, stack *divisionToTwo);
-void updateNodesGroup(int originalSize, spmat *matrix, int *s);
+void divisionByS(spmat *relate_matrix, graph *group, double *s, stack *divisionToTwo, int first);
 
 /*createGraphFromFile.c*/
-graph *createGraph(FILE *);
+int *createGraph(FILE *, graph *,spmat *);
 
 /*computeS.c*/
-int *computeS(double *eigenVector, int size);
+void computeS(double *eigenVector, graph *group, double *s);
 
+void calcFVector(BHatMatrix *B, graph *group);
 
 #endif
 

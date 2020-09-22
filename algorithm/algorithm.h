@@ -9,13 +9,12 @@
 
 
 /*algo_2.c*/
-double divisionGraphToTwo(graph *group, stack *division, int *s);
-
+double divisionGraphToTwo(BHatMatrix *B, graph *group, stack *division, double *s);
 /*algo_4.c*/
-void algorithm4(graph *G, int *s, double dQ);
+void algorithm4(BHatMatrix *B,graph *G, double *s);
 
 /*algo_3.c*/
-void findCommunities(graph *G, FILE *output_file);
+void findCommunities(graph *G, spmat *matrix, int * degrees, char *output_name);
 
 
 #endif

@@ -5,12 +5,12 @@
  *      Author: Avital
  */
 
-
+#include "./graph.h"
 
 typedef struct linkedList_node
 {
     int value;
-    int partByS;
+    double partByS;
     struct linkedList_node  *next;
 
 } linkedList_node;
@@ -25,6 +25,6 @@ typedef struct linkedList
 } linkedList;
 
 linkedList_node *createNode(int value);
-void delete_node(linkedList *list, int node_value);
+void delete_node(linkedList *list, linkedList_node* prev);
 linkedList *createLinkedList();
-linkedList *allocateListWithNodes(int n);
+linkedList *allocateListWithNodes(graph *g, int n);

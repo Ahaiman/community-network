@@ -18,14 +18,14 @@
  * --------Functions Deceleration---------
  */
 	/*algo_2.c*/
-
-	double divisionGraphToTwo(graph *group, stack *division, int *s);
+	double divisionGraphToTwo(BHatMatrix *B, graph *group, stack *division, double *s);
 
 	/*algo_4.c*/
-	void algorithm4(graph *G, int *s, double dQ);
+	void algorithm4(BHatMatrix *B,graph *G, double *s);
 
 	/*algo_3.c*/
-	void findCommunities(graph *G, FILE *output_file);
+	void findCommunities(graph *G, spmat *matrix, int * degrees, char *output_name);
+
 
 /*
  * --------Functions Implementation---------
@@ -33,39 +33,33 @@
 
 /* ----------------------------------algo2---------------------------------------------------------------*/
 
-	double divisionGraphToTwo(graph *group, stack *division, int *s)
+	double divisionGraphToTwo(BHatMatrix *B, graph *group, stack *division, double *s)
+
 	{
 
-		BHatMatrix *B_g;
 		double eigenValue, dQ;
 		double *eigenVector;
+		int i = 0;
 
-		B_g = createMatrixBHat(group);
+
+		calcFVector(B, group);
 
 		/*Compute leading eigenpair u1 and b1 of the modularity matrix b B[g] */
-		eigenVector = (double *) malloc (sizeof(double) * (group -> n));
-		eigenValue = findEigenValue(B_g, eigenVector);
+		eigenVector = findEigenValue(B, group, &eigenValue);
 
-		//if (b1 <= 0): The network is indivisible
-		if(eigenValue <= 0)
+
+		if(!POSITIVE(eigenValue))
 		{
-			printf("not possible");
-			return -1;
+			printf("%s eigen is %f", "not possible", eigenValue);
+			exit(EXIT_FAILURE);
 		}
 
-		//compute s
-		 s = computeS(eigenVector,group -> n);
 
-		 dQ = computeDQ(s, B_g);
+		computeS(eigenVector, group, s);
 
-		 //if (s^T b B[g]s <= 0): The network is indivisible
-		 if( dQ <= 0)
-		 {
-			 printf("not possible");
-			 return -1;
-		 }
+		dQ = computeDQ(s,group, B);
 
-		 return dQ;
+		return dQ;
 	}
 
 
@@ -79,45 +73,95 @@
 	 * put an counte for loops- > check what need to be the maximim limit
 	 */
 
-	void findCommunities(graph *G, FILE *output_file)
+	void findCommunities(graph *G, spmat *matrix, int * degrees, char *output_name)
+
 	{
+		FILE *output_file;
 		stack *P, *O, *divisionToTwo;
 		graph *group, *group1, *group2, *output;
-		int *outputNodes;
-		int *s;
-		int n = G -> n, i = 0;
+		BHatMatrix *B;
+		int *outputNodes, currNode;
+		double *s = (double *)malloc(sizeof(double) * G -> n);
+		int i = 0, first = 1, succ;
 		double dQ;
+		int second=1;
 
+		//delete
+		double b;
+		int k, t;
+		int bbb = -1;
+		 double b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b19;
 
 		O = initialize();
 		P = initialize();
 		divisionToTwo = initialize();
-		s = (int *) malloc (sizeof(int) * n);
 
 
 		//	1.Start with a trivial division into one group: the all nodes in the graph
 		push(G, P);
 
+		B = createMatrixBHat(G, matrix, degrees);
+//		constM = B -> constM;
+
 
 		while(!empty(P))
 		{
 			group = pop(P);
-
-			/* 1) Divide g into g1; g2 with Algorithm 2 */
-			dQ  = divisionGraphToTwo(group,divisionToTwo, s);
-
-			if(dQ == -1){
-				printf("No division possible");
-				exit(EXIT_FAILURE);
-			}
+			 for(i = 0; i < group -> n ; i++)
+				t = *(group -> graph_nodes + i);
 
 
-			/*2)Even if the division in trivial (one group full, and another empty)
-			 * Impemant optimization - */
-			algorithm4(group, s, dQ);
+			dQ = divisionGraphToTwo(B, group, divisionToTwo, s);
+
+			b0=*(s);
+			b1=*(s+1);
+			b2=*(s+2);
+			b3=*(s+3);
+			b4=*(s+4);
+			b5=*(s+5);
+			b6=*(s+6);
+			b7=*(s+7);
+			b8=*(s+8);
+			b9=*(s+9);
+			b10=*(s+10);
+			b11=*(s+11);
+			b12=*(s+12);
+			b13=*(s+13);
+			b14=*(s+14);
+			b15=*(s+15);
+			b16=*(s+16);
+			b17=*(s+17);
+			b18=*(s+18);
+			b19=*(s+19);
+
+			algorithm4(B, group, s);
+
+			b0=*(s);
+			b1=*(s+1);
+			b2=*(s+2);
+			b3=*(s+3);
+			b4=*(s+4);
+			b5=*(s+5);
+			b6=*(s+6);
+			b7=*(s+7);
+			b8=*(s+8);
+			b9=*(s+9);
+			b10=*(s+10);
+			b11=*(s+11);
+			b12=*(s+12);
+			b13=*(s+13);
+			b14=*(s+14);
+			b15=*(s+15);
+			b16=*(s+16);
+			b17=*(s+17);
+			b18=*(s+18);
+			b19=*(s+19);
+
 
 			 /*Creating the division*/
-			 doDivisionByS(group, s, divisionToTwo);
+			 divisionByS(B->relate_matrix, group, s, divisionToTwo, first);
+
+			 first = 0;
 
 			 group1 = pop(divisionToTwo);
 			 group2 = pop(divisionToTwo);
@@ -129,37 +173,36 @@
 			}
 
 			/*4) Add to O: any group (g1 and/or g2) of size 1*/
-			if(group1 -> n == 1)
-			{
-				push(group1, O);
-			}
-			else
-			{
-				push(group1, P);
-			}
-
-			if(group2 -> n == 1)
-			{
-				push(group2, O);
-			}
-			else
-			{
-				push(group2, P);
+			else{
+				if(group1 != NULL){
+					if(group1 -> n == 1)
+						push(group1, O);
+					else
+						push(group1, P);
+				}
+				if(group2 != NULL){
+					if(group2 -> n == 1)
+						push(group2, O);
+					else
+						push(group2, P);
+				}
 			}
 		}
-		/*Write to output file */
+		output_file = fopen(output_name, "wb");
+
+		/*Output the division given by O : Write to output file */
 		while(!empty(O)){
 			output = pop(O);
-			outputNodes = output ->graph_nodes;
-			for(; i < output -> n; i++){
-				n = fwrite(outputNodes, sizeof(int), 1, output_file);
-				if(n != 1){
-					printf("error in writing into file");
-					exit(EXIT_FAILURE);
-				}
-				outputNodes++;
+			outputNodes = output -> graph_nodes;
+			succ = fwrite(outputNodes, sizeof(int), output -> n, output_file);
+			if(succ !=  output -> n ){
+				printf("error in writing into file");
+				exit(EXIT_FAILURE);
 			}
+			//to delete
+			fwrite(&bbb, sizeof(int), 1, output_file);
 		}
+		fclose(output_file);
 	}
 
 
@@ -167,83 +210,102 @@
 
 
 
-		 void algorithm4(graph *G, int *s, double dQ)
+		 void algorithm4(BHatMatrix *B,graph *G, double *s)
 		 {
 			 /*Q0 ??? */
-			 BHatMatrix *B;
-			 int i = 0, j, n = G -> n;
+//			 BHatMatrix *B;
+
+
+			 int i = 0, j, n = G -> n, originalSize = B -> originalSize;
 			 int max_place, max_i, placeInS;
-			 double Q0, max = 0, maxImprove = 0, *score;
+			 double max = 0, maxImprove, currdQChange, dQ = 0;
+			 double *score, *improve, *improve_i;
 			 linkedList *unmoved;
-			 linkedList_node *curr;
-			 int *indices, *improve;
+			 linkedList_node *curr, *prev, *keepMax;
+			 int *indices;
+			 int first = 1;
 
-			 B = createMatrixBHat(G);
+			 double Q0;
+			 //todelete
+			 double b, m, t;
+			 int mone=0;
 
-			 unmoved = allocateListWithNodes(n); // == 0 -> 1 -> 2 -> ,,, -> ng
 
-			 score = (double *)malloc(n * sizeof(double));
-			 indices = (int *)malloc(n * sizeof(int));
-			 improve = (int *)malloc(n * sizeof(int));
+			 //delte
+			 for(i = 0; i < n ; i++)
+				 t = *(G -> graph_nodes + i);
+//			 unmoved = allocateListWithNodes(G, n); // == -1 - > 0 -> 1 -> 2 -> ,,, -> ng
+
+			 score = (double *)malloc(originalSize * sizeof(double));
+			 indices = (int *)malloc(originalSize * sizeof(int));
+			 improve = (double *)malloc(originalSize * sizeof(double));
 
 			//1 : Repeat
-			 while(POSITIVE(dQ))
-			 {
+			 do{
 
-				 //3
-				 for(; i < n; i++)
+				 mone++;
+				 unmoved = allocateListWithNodes(G, n);
+
+				 for(i = 0; i < n; i++)
 				 {
-					 if(i == 0)
-					 {
-						 Q0 = dQ;
-					 }
-					 else
-					 {
-						 Q0 = computeDQ(s, B);
-					 }
-
-					 curr = unmoved -> head;
+					 //Q0=computeDQ(s,G,B);
+					 prev = unmoved -> head;
+					 curr = unmoved -> head -> next;
 					 //6 : running over the unmoved linked list
 					 while(curr != NULL)
 					 {
+
 						 placeInS = curr -> value;
 
 						 *(s + placeInS) *= -1;
-						 score[placeInS] =  computeDQChange(s , B, placeInS);
+						 currdQChange =  computeDQChange(B, G, s, placeInS);
+						 //currdQChange=computeDQ(s, G, B)-Q0;
+						 //
+						 *(score + placeInS) = currdQChange;
 						 *(s + placeInS) *= -1;
 
-						 if(score[placeInS] > max)
+						 if(first || currdQChange > max)
 						 {
-							 max = score[placeInS];
+							 max = currdQChange;
 							 max_place = placeInS; //k = curr -> index
+							 keepMax = prev;
+							 first = 0;
 						 }
-						 curr ++;
+						 prev = curr;
+						 curr = curr -> next;
 					 }
 					 //11
 					 *(s + max_place) *= -1;
-					 indices[i] = max_place;
+					 *(indices + i) = max_place;
+					 improve_i = improve + i;
+
 					 if(i == 0)
 					 {
 						 /*improve[i] = score[max_place]*/
-						 improve[i] = max;
+						 *(improve_i) = max;
 					 }
 					 else
 					 {
 						 /*improve[i] = improve[i-1] - score[max_place]*/
-						 improve[i] = improve[i-1] + max;
+						 *(improve_i) =  *(improve_i - 1)+ max;
 					 }
-					 if(improve[i] > maxImprove)
+					 if(i == 0 || *(improve_i) > maxImprove)
 					 {
-						 maxImprove = improve[i];
+						 maxImprove =  *(improve_i);
 						 max_i = i;
 					 }
-					 delete_node(unmoved, max_place);
+					 delete_node(unmoved, keepMax);
+					 first = 1;
+					 if(unmoved -> size == 0){
+						 free(unmoved -> head);
+//						 free(unmoved);
+					 }
 				 }
 
 				 //22
-				for(i = n - 1; i > max_i + 1; i--)
+				for(i = n - 1; i > max_i; i--)
 				{
-					j = indices[i];
+					j = *(indices + i);
 					*(s + j) *= -1;
 				}
 
@@ -254,7 +316,16 @@
 				}
 				else
 				{
-					dQ = improve[max_i];
+					dQ = *(improve + max_i);
 				}
+//				delete_node(unmoved, unmoved -> head);
+			 } while(POSITIVE(dQ) && mone<10000);
+
+			 //todelte
+			 for(i = 0; i < 20; i++){
+				 b= *(s+i);
 			 }
+			free(score);
+			free(indices);
+			free(improve);
 		 }

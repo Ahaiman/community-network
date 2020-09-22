@@ -14,8 +14,8 @@
 /*
  * --------Functions Definition---------
  */
-	graph* allocate_graph(int, int *, spmat *);
-	void free_graph(graph *, int);
+	void allocate_graph(graph *, int, int *);
+	void free_graph(graph *);
 
 /*
  * --------Functions Implementation---------
@@ -23,9 +23,9 @@
 
 /*constructor for graph*/
 
-graph* allocate_graph(int n, int *graph_nodes, spmat *relate_matrix){
-	graph* myGraph;
-	myGraph	= (graph *) malloc (sizeof(myGraph));
+void allocate_graph(graph *myGraph, int n, int *graph_nodes){
+//	graph* myGraph;
+//	myGraph	= (graph *) malloc (sizeof(myGraph));
 
     if(myGraph == NULL)
     {
@@ -36,20 +36,20 @@ graph* allocate_graph(int n, int *graph_nodes, spmat *relate_matrix){
     myGraph -> n = n;
     /*myGraph -> m = m;*/
     myGraph -> divisionNumber = 0;
-    myGraph -> relate_matrix = relate_matrix;
+//    myGraph -> relate_matrix = relate_matrix;
     myGraph -> graph_nodes = graph_nodes;
-    myGraph -> degrees = NULL;
+//    myGraph -> degrees = NULL;
+
     myGraph -> free_graph = free_graph;
 
-    return myGraph;
+//    return myGraph;
 }
 
-
-void free_graph(graph *G, int doFreeLists)
+void free_graph(graph *G)
 {
 
 	/*(1) free relate matrix*/
-	G -> relate_matrix -> spmat_free(G -> relate_matrix, doFreeLists);
+//	G -> relate_matrix -> spmat_free(G -> relate_matrix, doFreeLists);
 
 	/*(2) free the list itself */
 	free(G -> graph_nodes);

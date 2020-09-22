@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "./linkedList.h"
+#include "./graph.h"
 
 
 
@@ -16,9 +17,9 @@
  */
 
 	linkedList_node *createNode(int);
-	void delete_node(linkedList *, int);
+	void delete_node(linkedList *, linkedList_node *);
 	linkedList *createLinkedList();
-	linkedList *allocateListWithNodes(int);
+	linkedList *allocateListWithNodes(graph *, int);
 
 /*
  * --------Functions Implementation---------
@@ -60,61 +61,76 @@ linkedList *createLinkedList()
 }
 
 
-void delete_node(linkedList *list, int node_value){
-	linkedList_node *curr = list -> head, *tmp = list -> head;
+void delete_node(linkedList *list, linkedList_node* prev){
+	linkedList_node *deleteNode = prev -> next;
 
-	//Case 1: First node in the list
-	if(curr -> value == node_value)
-	{
-		list -> head = curr -> next;
-		free(curr);
+	//prev == -1;
+	if(deleteNode == NULL){
+		free(prev);
+		return;
 	}
-	else
-	{
-		//Case 2 : Not the First. Iterating over the list.
-		curr = curr -> next;
-		while(curr != NULL)
-		{
-			if(curr -> value == node_value)
-			{
-				tmp -> next = curr -> next;
-				free(curr);
-				break;
-			}
-			tmp = curr;
-			curr = curr -> next;
-		}
-	}
-	if(list -> size == 0)
-		list -> head = NULL;
+	prev -> next = deleteNode -> next;
+	list -> size = (list -> size) - 1;
+	free(deleteNode);
 }
+
+linkedList *allocateListWithNodes(graph *group, int n)
+{
+	int i = 0, currIndex;
+	int *nodes = group -> graph_nodes;
+	linkedList *newList;
+	linkedList_node *newNode, *curr;
+
+	newList = createLinkedList();
+	newNode = createNode(-1);
+	newList -> head = newNode;
+
+	curr = newNode;
+
+	for(i = 0; i < n; i++)
+	{
+		currIndex = *(nodes + i);
+		newNode = createNode(currIndex);
+		curr -> next = newNode;
+		curr = newNode;
+		(newList -> size) ++;
+	}
+
+	return newList;
+}
+
+//
+//void delete_node(linkedList *list, linkedList_node* deleteNode){
+//	linkedList_node *curr = list -> head, *tmp = list -> head;
+//
+//	//Case 1: First node in the list
+//	if(curr -> value == node_value)
+//	{
+//		list -> head = curr -> next;
+//		free(curr);
+//	}
+//	else
+//	{
+//		//Case 2 : Not the First. Iterating over the list.
+//		curr = curr -> next;
+//		while(curr != NULL)
+//		{
+//			if(curr -> value == node_value)
+//			{
+//				tmp -> next = curr -> next;
+//				free(curr);
+//				break;
+//			}
+//			tmp = curr;
+//			curr = curr -> next;
+//		}
+//	}
+//	if(list -> size == 0)
+//		list -> head = NULL;
+//}
 
 /*Return a new linkedList (which was allocated prior)
  * with the nodes: 0,..., n -1
  */
 
-linkedList *allocateListWithNodes(int n)
-{
-	int i=0;
-	linkedList *newList;
-	linkedList_node *newNode, *curr;
 
-	newList = createLinkedList();
-
-	for(; i < n; i++)
-	{
-		newNode = createNode(i);
-		if(i == 0)
-		{
-			newList -> head = newNode;
-			curr = newNode;
-		}
-		else
-		{
-			curr -> next = newNode;
-			curr = newNode;
-		}
-		(newList -> size) ++;
-	}
-	return newList;
-}

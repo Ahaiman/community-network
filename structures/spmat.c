@@ -5,28 +5,30 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "./spmat.h"
+#include "./graph.h"
 #include "./linkedList.h"
 
 /*
  * --------Functions Definition---------
  */
 
-spmat *spmat_allocate_list(int);
+void spmat_allocate_list(spmat *,int);
 void add_row_to_list(spmat *, const int *, int, int);
 void free_list(struct _spmat *, int);
 void freeRow_list(linkedList_node*);
-void mult_list(spmat *, const double *, double *);
+//void mult_list(graph *, const double *, double *);
+//void mult_spmat_s(spmat *A, const int *s, double *result);
 
 /*
  * --------Implementation With Linked List---------
  */
 
 
-spmat *spmat_allocate_list(int n)
+void spmat_allocate_list(spmat *matrix, int n)
 {
-    spmat *matrix;
+
     linkedList **rows_indices;
-    matrix = (spmat *)malloc(sizeof(spmat));
+
     if(matrix == NULL)
     {
        	printf("Allocation of matrix Failed");
@@ -42,9 +44,8 @@ spmat *spmat_allocate_list(int n)
     matrix -> private = rows_indices;
     matrix -> n = n;
     matrix -> add_row = add_row_to_list;
-    matrix -> spmat_mult = mult_list;
+//    matrix -> spmat_mult = mult_list;
     matrix-> spmat_free = free_list;
-    return matrix;
 }
 
 
@@ -80,7 +81,6 @@ void add_row_to_list(struct _spmat *A, const int *row, int row_size, int i)
     currRow -> node_index = i;
     currRow -> size = row_size;
     *((linkedList**)(A -> private) + i) = currRow;
-//    *(*linkedList)(A->private) + i) = currRow;
 }
 
 
@@ -117,32 +117,3 @@ void freeRow_list(linkedList_node *rowHead)
     }
 }
 
-
-void mult_list(spmat *A, const double *v, double *result)
-{
-    linkedList_node *currNode;
-    linkedList *currList, **rows_indices = A->private;
-    int row, n = A -> n;
-    double sum;
-
-    if(result == NULL)
-    {
-		printf("result is not allocated");
-		exit(0);
-    }
-
-    for (row = 0; row < n; row++)
-    {
-    	currList = *rows_indices;
-        currNode = currList -> head;
-        sum = 0;
-        while (currNode != NULL)
-        {
-            sum += *(v + (currNode -> value));
-            currNode = currNode->next;
-        }
-        rows_indices++;
-        *result = sum;
-        result++;
-    }
-}

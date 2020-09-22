@@ -1,3 +1,4 @@
+#define EPSILON 0.00001
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,29 +16,41 @@
  * --------Functions Deceleration---------
  */
 	/*computeDQ.c*/
+	double sumDd (BHatMatrix *B, graph *group, double *s, int index);
+	//int sumAd (BHatMatrix *B, double *s,int index);
+	int sumAd (BHatMatrix *B, graph *group, double *s,int index);
 
-	int sumAd (graph *G, int *s,int index);
-	double sumDd (BHatMatrix *B, int *s, int index);
+
 	/*double computeDQ(int *s, BHatMatrix *B);*/
-	double computeDQ(double *s, BHatMatrix *B);
-	double computeDQChange(int *s, BHatMatrix *B, int index);
+	double computeDQ(double *s,graph *group, BHatMatrix *B);
+	double computeDQChange(BHatMatrix *B, graph *group,double *s, int placeInS);
+
 
 	/*findEigen.c*/
-	double findEigenValue(BHatMatrix *B, double *eigenVector);
-	double* creatRandomVector(double* b0, int size);
-	int checkDifference(double *vector1, double *vector2, int size, double eps);
-	double calcDotProduct(double *vector1, double *vector2, int size);
-	void divideByNorm(double *vector1, double norm, int size);
+	double* findEigenValue(BHatMatrix *B, graph *group, double *eigenValue);
+	void creatRandomVector(double* b0, int size);
+	int checkDifference(graph *g, double *vector1, double *vector2, double eps);
+	double calcDotProduct(graph *g, double *vector1, double *vector2);
+	double calcDotProductInt(graph *g, int *vector1, double *vector2);
+	void divideByNorm(graph *group, double *vector1, double norm);
+	void spmat_mult(BHatMatrix *B, graph *group, const double *v, double *result);
+
 
 	/*doDivisionByS.c */
-	void doDivisionByS(graph *group, int *s, stack *divisionToTwo);
-	void updateNodesGroups(int originalSize, spmat *matrix, int *s);
+	void divisionByS(spmat *relate_matrix, graph *group, double *s, stack *divisionToTwo, int first);
+//	void updateNodesGroups(int originalSize, spmat *matrix, double *s);
 
 	/*createGraphFromFile.c*/
-	graph *createGraph(FILE *);
+	int *createGraph(FILE *, graph *,spmat *);
 
 	/*computeS.c*/
-	int *computeS(double *eigenVector, int size);
+	void computeS(double *eigenVector, graph *group, double *s);
+
+	void calcFVector(BHatMatrix *B, graph *group);
+
+
+	/*To delte*/
+	double* creatRandomVector1(double* b0, int size);
 
 
 /*
@@ -46,85 +59,98 @@
 
 /* ----------------------------------computeDQ---------------------------------------------------------------*/
 
-
-	int sumAd (graph *G, int *s,int index)
+	int sumAd (BHatMatrix *B, graph *group, double *s,int index)
 	{
 		linkedList** private;
 		linkedList* indexRow;
 		linkedList_node* currNode;
-		int sum = 0;
+		int *nodes=group->graph_nodes;
+		int graphNode;
+		int sum = 0, counter=0;
 
-		private = (linkedList **)(G -> relate_matrix -> private);
-		//indexRow = indexRow + index;
 
-		//which row we multiply with s- this is the "i" in muhammad's Aij
-		indexRow=*(private+index);
+
+		private = (linkedList **)((B -> relate_matrix) -> private);
+		indexRow=*(private + index);
+
 
 		currNode = indexRow -> head;
-		while(currNode!=NULL)
+		while(currNode!=NULL && counter < group->n)
 		{
-			if (currNode -> partByS == *(s + index))
+			graphNode=*nodes;
+			if (currNode->value==graphNode)
 			{
+
 				sum += *(s + (currNode -> value));
+				currNode = currNode -> next;
+				nodes++;
+				counter++;
 			}
-			currNode = currNode -> next;
+			else
+			{
+				if(currNode->value > graphNode)
+				{
+					nodes++;
+					counter++;
+				}
+				else
+					currNode = currNode -> next;
+			}
 		}
 		return sum;
 	}
 
-	double sumDd (BHatMatrix *B, int *s, int index)
+
+	double sumDd (BHatMatrix *B, graph *group, double *s, int index)
 	{
-		int i, sum=0, counter=0;
-		int *listNodes= B->G->graph_nodes, *degrees=B->G->degrees;
+		int i, sum=0, graphNode;
+		int *listNodes= group->graph_nodes, *degrees= B->degrees;
 		double d;
-		d=B->constM*(*(degrees+index));
-		for (i=0;i<B->originalSize;i++)
+		int currGroup;
+
+		d = (B -> constM) *(*(degrees+index)); //k_i
+		currGroup = *(s + index);
+
+		for (i=0; i < group->n ;i++)
 		{
-			if (i==*listNodes)
-			{
-				sum+= *(degrees+i) * (*(s + i));
-				counter++;
-				listNodes++;
-			}
-			if (counter == (B->G)->n)
-				break;
+			graphNode=*(listNodes+i);
+			sum += *(degrees + graphNode) * (*(s + graphNode));
 		}
-		return sum*d;
+		return sum * d;
 	}
-
-
 	/*
 	 * Returns delta Q: (0.5) * s^T * Bhat * s
 	 */
-	double computeDQ(double *s, BHatMatrix *B)
+	double computeDQ(double *s,graph *group, BHatMatrix *B)
 	{
 		double dq;
-		int size = (B->G)->n;
+		int size = B -> originalSize;
 		double *result;
 
-		result=(double*)malloc(sizeof(double)*size);
+		result=(double*)calloc(size, sizeof(double));
 
-		B -> multBHat(B,s,result,0);
-		dq = calcDotProduct(s,result, size);
+		B -> multBHat(B, group,s, result,0);
+		dq = calcDotProduct(group, s,result);
 
 		free(result);
-		return dq*(0.5);
+		return dq;
 	}
 
 	/*
 	 * Returns a new delta Q, after a change in a single index in the vector s.
 	 */
-	double computeDQChange(int *s ,BHatMatrix *B, int index)
+	double computeDQChange(BHatMatrix *B, graph *group,double *s, int index)
+
 	{
 
-		int partA;
-		double partB, partC;
+		double partA, partB, partC, result;
 
 		partA = 4 * (*(s + index));
-		partC = 4 * pow(*(B -> G -> degrees + index), 2) * (B -> constM);
-		partB = sumAd (B -> G, s, index) - sumDd (B, s, index);
+		partC = 4 * pow(*(B -> degrees + index), 2) * B -> constM;
+		partB = sumAd (B, group, s, index) - sumDd (B, group, s, index);
 
-		return partA * partB + partC;
+		result =  partA * partB + partC;
+		return result;
 
 	}
 
@@ -136,76 +162,81 @@
 	/*eigen vector is pre - initaliize
 	 * function returns eigenValue and sets value into eigenvector
 	 */
-	double findEigenValue(BHatMatrix *B, double *eigenVector)
+	double* findEigenValue(BHatMatrix *B,graph *group, double *eigenValue)
 	{
 
 		/*Variables Deceleration*/
 		int ifGreatThenEps = 1, matrixSize;
-		double *tmp, *result;
-		double vector_norm, epsilon = 0.00001, eigenValue;
+		double *eigenVector, *tmp, *result;
 
-		matrixSize = (B -> G)-> n;
 
+		//delete
+		int i, k;
+		double l, t;
+		double b;
+
+
+		double vector_norm, epsilon = 0.00001;
+
+		matrixSize = B -> originalSize;
+
+		eigenVector = (double *) calloc(matrixSize , sizeof(double));
 		/*Creating Initial Random Vector*/
 		if(eigenVector == NULL)
 		{
 			printf("Initial vector allocation failed");
 			exit(EXIT_FAILURE);
 		}
+
 		creatRandomVector(eigenVector, matrixSize);
 
 		/*Perform power iteration to obtain the eigenvector
 		 * Running the algorithm of power iteration
 		 */
 
+		result = (double *) calloc(matrixSize, sizeof(double));
+
 		while(ifGreatThenEps)
 		{
+			B -> multBHat(B, group, eigenVector ,result, 1);
 
-			result = (double*) malloc(sizeof(double)*(matrixSize));
-
-			/*Calculating (result = ^B[g] * b_k).
-			 *  The shifting of the matrix happens in multBHat*/
-			B -> multBHat(B, eigenVector ,result, 1);
+//			*eigenValue = calcDotProduct(group, result, eigenVector);
 
 			/*calculating the vector's magnitude*/
-			vector_norm = sqrt(calcDotProduct(result, result, matrixSize));
+			b = calcDotProduct(group, result, result);
+			vector_norm = sqrt(b);
 
-			/*Calculating the corresponding dominant eigenvalue
-			 *
-			 *     (Ab_k)*(b_k)
-			 * â = --------------
-			 *     b_k * b_ k
-			 *
-			 */
-			eigenValue = (calcDotProduct(result, eigenVector, matrixSize) /
-					calcDotProduct(eigenVector,eigenVector, matrixSize));
+			if(vector_norm <= EPSILON)
+			{
+				exit(EXIT_FAILURE);
+			}
 
 
 			/*normalizing the vector*/
-			if(vector_norm != 0.0)
-			{
-				divideByNorm(result, vector_norm, matrixSize);
-			}
+			divideByNorm(group, result, vector_norm);
 
 			/*Checking if the difference between vectors is smaller then epsilon*/
-			ifGreatThenEps = checkDifference(eigenVector, result, matrixSize, epsilon);
+			ifGreatThenEps = checkDifference(group, eigenVector, result, epsilon);
 
 			/*Swapping information between variables to continue the algorithm
 			 * b_k = b_k1*/
 
-			free(tmp);
 			tmp = eigenVector;
 			eigenVector = result;
 			result = tmp;
 		}
 
+		B -> multBHat(B, group, eigenVector ,result, 1);
+
+
+		*eigenValue -= (B -> matrixNorm);
+
 		free(tmp);
 
-		/*need to be eigen value - Bnorm */
-		return eigenValue - (B->matrixNorm);
+		return eigenVector;
 	}
 
-	double* creatRandomVector(double* b0, int size)
+	void creatRandomVector(double* b0, int size)
 	{
 		int i;
 		for(i = 0; i < size; i++)
@@ -213,8 +244,19 @@
 			*b0 = rand();
 			b0++;
 		}
-		return b0;
 	}
+
+	/*To delete*/
+	double* creatRandomVector1(double* b0, int size)
+		{
+			int i;
+			for(i = 1; i < size + 1 ; i++)
+			{
+				*b0 = i ;
+				b0++;
+			}
+			return b0;
+		}
 
 	/*To Delete */
 	void print(int size, int *row)
@@ -233,30 +275,51 @@
 	 * The function receives a vector,
 	 * and normalize it by dividing it in it's size
 	 */
-	void divideByNorm(double *vector1, double norm, int size)
+	void divideByNorm(graph *group, double *vector1, double norm)
 	{
-		double *p = vector1;
 		int i = 0;
-		for(; i < size; i++)
+		int *nodes = group -> graph_nodes;
+
+		double b;
+
+		for(; i < group -> n; i++)
 		{
-			*p = (double) (*p) / norm;
-			p += 1;
+			b = *(vector1 + *nodes) / norm;
+			*(vector1 + *nodes) = b;
+			nodes++;
 		}
 	}
 
 	/*calcDotProduct
 	 * The function calculated product between two vectors
 	 */
-	double calcDotProduct(double *vector1, double *vector2, int size)
+	double calcDotProduct(graph *group, double *vector1, double *vector2)
 	{
-		double *firstPointer = vector1, *secondPointer = vector2;
 		double product = 0.0;
+		int *nodes = group -> graph_nodes;
 		int i = 0;
-		for(; i < size; i++)
+
+		for(; i < group -> n; i++)
 		{
-			product += (*firstPointer) * (*secondPointer);
-			firstPointer = firstPointer + 1;
-			secondPointer = secondPointer + 1;
+			product += (*(vector1 + *nodes)) * (*(vector2 + *nodes));
+			nodes++;
+		}
+		return product;
+	}
+
+
+
+	double calcDotProductInt(graph *group, int *degrees, double *vector)
+	{
+
+		double product = 0.0;
+		int *nodes = group -> graph_nodes;
+		int i = 0, currDeg;
+		for(; i < group -> n; i++)
+		{
+			currDeg = *(degrees + *nodes);
+			product += currDeg * (*(vector + *nodes));
+			nodes++;
 		}
 		return product;
 	}
@@ -265,38 +328,39 @@
 	 * The function return "true" if the difference between to vectors
 	 * is greater then epsilon. "false" otherwise.
 	 */
-	int checkDifference(double *vector1, double *vector2, int size, double eps)
+	int checkDifference(graph *group, double *vector1, double *vector2, double eps)
 	{
-		double *p1 = vector1, *p2 = vector2;
+		int *nodes = group -> graph_nodes;
 		int i;
 		double diff;
-		for(i = 0; i < size; i++)
+		for(i = 0; i < group -> n; i++)
 		{
-			diff = *p1 - *p2;
-			if(fabs(diff) >= eps)
+			diff = *(vector1 + *nodes) - *(vector2 + *nodes);
+			if(abs(diff) >= eps)
 				return 1;
-			p1 += 1;
-			p2 += 1;
+			nodes++;
 		}
 		return 0;
 	}
 
 
-/* ----------------------------------doDivisionByS---------------------------------------------------------------*/
+/* ----------------------------------divisionByS---------------------------------------------------------------*/
 
 
-	void doDivisionByS(graph *group, int *s, stack *divisionToTwo)
+	void divisionByS(spmat *relate_matrix, graph *group, double *s, stack *divisionToTwo, int first)
 	{
 		graph *group1, *group2;
 		int *curr_nodes = group -> graph_nodes;
 		int  *graph_nodes1, *graph_nodes2;
-		int n = group -> n, n1 = 0, n2 = 0, i = 0;
+		int n = group -> n, n1 = 0, n2 = 0, i = 0, currPlace;
+		double currNode;
 
 
 		/*Finding the sizes of the two new groups */
 		for(; i < n; i++)
 		{
-			if(*s == 1)
+			currPlace = *(s + *curr_nodes);
+			if(currPlace == 1)
 			{
 				n1++;
 			}
@@ -304,9 +368,9 @@
 			{
 				n2++;
 			}
-			s++;
+			curr_nodes++;
 		}
-		s -= n;
+		curr_nodes-= n;
 
 		/* Checking sizes before building the groups*/
 		if(n1 == 0 || n2 == 0)
@@ -323,10 +387,16 @@
 		graph_nodes1 = (int*) malloc(sizeof(int) * (n1));
 		graph_nodes2 = (int*) malloc(sizeof(int) * (n2));
 
+		/*Allocating new graphs for each group*/
+		group1 = (graph*) malloc(sizeof(graph));
+		group2 = (graph*) malloc(sizeof(graph));
+
 		/*Updating the new lists of nodes for each group*/
 		for(i = 0; i < n; i++)
 		{
-			if(*s == 1)
+			currPlace = *curr_nodes;
+			currNode = *(s + currPlace);
+			if(currNode == 1)
 			{
 				*graph_nodes1 = *curr_nodes;
 				graph_nodes1++;
@@ -336,29 +406,35 @@
 				*graph_nodes2 = *curr_nodes;
 				graph_nodes2++;
 			}
-			s++;
+
 			curr_nodes++;
 		}
 
+//		s-= n;
+		curr_nodes -= n;
 		graph_nodes1 -= n1;
 		graph_nodes2 -= n2;
 
 
 		/*Updating the relation matrix of each group */
-		updateNodesGroups(n, group->relate_matrix, s);
+//		updateNodesGroups(n, relate_matrix, s);
 
 		/*Allocating new graph representing each new group */
-		group1 = allocate_graph(n1, graph_nodes1, group->relate_matrix);
+		allocate_graph(group1, n1, graph_nodes1);
 		group1 -> divisionNumber = 1;
-		group2 = allocate_graph(n2, graph_nodes2, group->relate_matrix);
+//		group1 -> degrees = (group -> degrees);
+		allocate_graph(group2, n2, graph_nodes2);
 		group2 -> divisionNumber = -1;
+//		group2 -> degrees = (group -> degrees);
 
 		/*Adding division (two graph) to the input stack */
 		push(group1, divisionToTwo);
 		push(group2, divisionToTwo);
 
 		/*Free only original graph without the nodes, and without the related matrix inside lists */
-		group ->free_graph(group, 0);
+//		//ToDo: free only after the first time
+		if(!first)
+			group -> free_graph(group);
 
 	}
 
@@ -366,40 +442,43 @@
 	/* The function "createRelateMatrix"
 	 	 The function creates the new relation matrix, according to input data.
 	 */
-	void updateNodesGroups(int originalSize, spmat *matrix, int *s)
-	{
-		linkedList **rows;
-		linkedList *currList;
-		linkedList_node *currNode;
-		int i = 0;//, curr_index;
-
-		rows = matrix -> private;
-		for(; i < originalSize; i++)
-		{
-			currList = *rows;
-			currNode=currList->head;
-			while (currNode!=NULL)
-			{
-				currNode->partByS =*(s+(currNode->value));
-				currNode=currNode->next;
-			}
-			rows++;
-		}
-	}
+//	void updateNodesGroups(int originalSize, spmat *matrix, double *s)
+//	{
+//		linkedList **rows;
+//		linkedList *currList;
+//		linkedList_node *currNode;
+//		int i = 0;//, curr_index;
+//
+//		rows = matrix -> private;
+//		for(; i < originalSize; i++)
+//		{
+//			currList = *rows;
+//			currNode=currList->head;
+//			while (currNode!=NULL)
+//			{
+//				currNode->partByS =*(s+(currNode->value));
+//				currNode=currNode->next;
+//			}
+//			rows++;
+//		}
+//	}
 
 /* ----------------------------------createGraphFromFile---------------------------------------------------------------*/
 
 
-	graph *createGraph(FILE *input_file)
+	int *createGraph(FILE *input_file, graph *input_graph, spmat *relate_matrix)
 	{
 
 		/*Variables deceleration*/
 
-		graph *input_graph;
+
 		int *nodes_list;
 		int *matrix_row, *degrees;
-		spmat *relate_matrix;
+//		spmat *relate_matrix;
 		int n, degree, j,i = 0, succ;
+
+		//deelte
+		int a;
 
 
 
@@ -410,10 +489,12 @@
 			printf("The file is empty");
 			exit(EXIT_FAILURE);
 		}
-		printf("n is %d\n", n);
 
 		/*Initializing list size n, of pointers to the nodes of the graph*/
 		nodes_list = (int *) malloc(sizeof(int) * (n));
+
+		/*Initializing list size n, of pointers to the degrees of the graph*/
+		degrees = (int *) malloc(sizeof(int) * (n));
 
 		/*Assert allocation*/
 		if(nodes_list == NULL)
@@ -432,9 +513,10 @@
 		nodes_list -= n;
 
 		/*Allocating space to sparse matrix */
-		relate_matrix = spmat_allocate_list(n);
 
-		degrees = (int *) malloc(sizeof(int) * (n));
+		spmat_allocate_list(relate_matrix , n);
+
+		degrees = (int *)malloc (sizeof(int) * (n));
 		if(degrees == NULL)
 		{
 			printf("Allocation of degrees vector failed");
@@ -467,8 +549,8 @@
 			 }
 
 			 succ =  fread(matrix_row, sizeof(int), degree, input_file);
-			 printf("index is %d and degree is %d\n", i, degree);
-			print(degree, matrix_row);
+//			 printf("index is %d and degree is %d\n", i, degree);
+//			print(degree, matrix_row);
 
 			 if(succ != degree)
 			 {
@@ -482,41 +564,111 @@
 		 }
 		fclose(input_file);
 
+		degrees -= n;
+//		for(i = 0; i < n; i++){
+//			a = *(degrees + i);
+//		}
 
 		/*Graph building*/
-		input_graph = allocate_graph(n, nodes_list, relate_matrix);
-		input_graph -> degrees = degrees;
+		allocate_graph(input_graph, n, nodes_list);
+//		degrees = createDegrees;
+//		matrix = relate_matrix;
 
-		return input_graph;
+		return degrees;
 
 	}
 
 /* ----------------------------------computeS---------------------------------------------------------------*/
 
-
-	int* computeS(double *eigenVector, int size)
+	void computeS(double *eigenVector,  graph *group, double *s)
 	{
-		int *s;
+
 		int i = 0;
-
-		s = (int *)malloc(sizeof(int)* size);
-
-		for(; i < size; i++)
+		int *nodes = group -> graph_nodes;
+		for(; i < group -> n; i++)
 		{
-			if(*eigenVector > 0)
-			{
-				*s = 1;
-			}
+
+			if(*(eigenVector + *nodes) > 0)
+				*(s + *nodes) = 1;
 			else
-			{
-				*s = -1;
-			}
-			eigenVector++;
-			s++;
+				*(s + *nodes) = -1;
+			nodes++;
 		}
-		s -= size;
-		return s;
+
 	}
 
 
+/* ----------------------------------mult_list---------------------------------------------------------------*/
 
+	void spmat_mult(BHatMatrix *B, graph *group, const double *v, double *result)
+	{
+		/*must get original size - vector = resukt */
+	    linkedList_node *currNode;
+	    spmat *A = B -> relate_matrix;
+	    int *nodes = group -> graph_nodes, *run = nodes;
+	    int originalSize = B -> originalSize;
+	    linkedList *currList, **rows_indices = A->private;
+
+
+	    int row, counter = 0, keepRow;
+	    double sum;
+
+
+	    if(result == NULL)
+	    {
+			printf("result is not allocated");
+			exit(0);
+	    }
+
+
+	    for(row = 0; row < group -> n; row++)
+	    {
+	    	currList = *(rows_indices + *nodes);
+	        currNode = currList -> head;
+	        sum = 0;
+	        counter = 0;
+	        while (currNode != NULL && counter < group -> n)
+	        {
+	        	if(currNode -> value == *run){
+	        		sum += *(v + currNode -> value);
+	        		currNode = currNode->next;
+	        		counter++;
+	        		run++;
+	        	}
+	        	else{
+	        		if(currNode -> value < *run )
+	        			currNode = currNode->next;
+	        		else{
+	        			counter++;
+	        			run++;
+	        		}
+	        	}
+	        }
+	        run -= counter;
+	        *(result + *nodes) = sum;
+	        nodes++;
+
+	    }
+	}
+	/* ----------------------------------calcFVector---------------------------------------------------------------*/
+
+
+	void calcFVector(BHatMatrix *B, graph *group){
+		double *f_vector = B -> f_vector;
+		int *nodes = group -> graph_nodes;
+		int i = 0, currIndex;
+
+		//dele
+		double a, b,c;
+		//
+		for(;i < group -> n; i++){
+			currIndex = *(nodes + i);
+			a = sumRowsA(B-> relate_matrix, group, currIndex);
+			b = sumRowsD(group,B, currIndex);
+			c = a-b;
+			if(c < EPSILON && c > 0)
+				c = 0;
+
+			*(f_vector + currIndex)  = a-b;
+		}
+	}
