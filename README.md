@@ -6,14 +6,14 @@ Community Structure in Networks
 --------
 Project Description
 -------------
->This project contains implementation of the main algorithm for detecting community structures (or clusters) in a network. 
+This project contains implementation of the main algorithm for detecting community structures (or clusters) in a network. 
 The ability to detect such groups is of significant importance.
 > For example, partitioning a protein-protein interaction network into clusters can provide a modular view of the network, with different groups of nodes performing different functions within the cell.
 
 --------
 The Goal
 -------------
-> The goal in this project is to find a division that **maximizes the modularity**, that
+The goal in this project is to find a division that **maximizes the modularity**, that
 is, a division of the graph into groups such that the modularity Q, the sum of all group
 modularities, is close to maximal.
 
@@ -23,7 +23,7 @@ The Mathematical Basis
 > we represent a network by a graph G = (V,E), and let A be the adjacency matrix of G.
 ![](examples/1.png)
 
-> A given group of vertices in a network is considered a **community** if the number of edges
+A given group of vertices in a network is considered a **community** if the number of edges
 within the group is significantly more than expected (by chance). We define the **modularity
 of a group** as the number of edges within the group minus the **expected** number of edges in
 a random graph with the same degrees.
@@ -41,7 +41,7 @@ Design
 
 Executing the Project
 -------------
-> The executable file name is "cluster" (according to the makefile).
+The executable file name is "cluster" (according to the makefile).
 It receives two command-line arguments:
 The 1st is an input filename, and the 2nd is an output filename. 
 The input of the program is a network (a graph), and the output is a list of groups (the division).
