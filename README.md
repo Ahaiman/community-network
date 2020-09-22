@@ -31,9 +31,9 @@ a random graph with the same degrees.
 --------
 Design
 -------------
-![](examples/3.png)
+> ![](examples/3.png)
 
-![](examples/4.png)
+> ![](examples/4.png)
 
 
 
