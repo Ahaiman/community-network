@@ -33,9 +33,9 @@ a random graph with the same degrees.
 --------
 Design
 -------------
-> ![Click](examples/3.png)
+> ![Click](examples/3.jpg)
 
-> ![Click](examples/4.png)
+> ![Click](examples/4.jpg)
 
 
 
