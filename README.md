@@ -42,10 +42,11 @@ Design
 
 Executing the Project
 -------------
-> The name of the program is cluster.
+> The executable file name is "cluster" (according to the makefile).
 It receives two command-line arguments:
 The 1st is an input filename, and the 2nd is an output filename. 
 The input of the program is a network (a graph), and the output is a list of groups (the division).
+
 --------
 File Format
 -------------
