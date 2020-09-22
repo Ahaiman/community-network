@@ -39,7 +39,6 @@ Design
 > ![Click](examples/4.jpg)
 
 
-
 Executing the Project
 -------------
 > The executable file name is "cluster" (according to the makefile).
@@ -47,7 +46,6 @@ It receives two command-line arguments:
 The 1st is an input filename, and the 2nd is an output filename. 
 The input of the program is a network (a graph), and the output is a list of groups (the division).
 
---------
 File Format
 -------------
 The input and output files are both **binary** files consisting only of integers.
@@ -58,6 +56,6 @@ This can be determined in code by sizeof(int).
 
 Technology Wise
 -------------
-This project was created using C.
-The projbect partitioned into fles (modules) and functions.
-The design of the program, including interfaces, function declarations, and partition into modules, described below.
+This project was created using C, partitioned into files (modules) and functions.
+The design of the program, including interfaces, function declarations, and partition into modules, described in "design".
+
