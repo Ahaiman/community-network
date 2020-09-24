@@ -6,14 +6,14 @@ Community Structure in Networks
 --------
 Project Description
 -------------
-> This project contains implementation of the main algorithm for detecting community structures (or clusters) in a network. 
+This project contains implementation of the main algorithm for detecting community structures (or clusters) in a network. 
 The ability to detect such groups is of significant importance.
 For example, partitioning a protein-protein interaction network into clusters can provide a modular view of the network, with different groups of nodes performing different functions within the cell.
 
 > Note:
 > * Each module in the project, contains fill information about the purpose of the file, the structure used (if exists) and their functions.
 > * The full information, can be found in the header files.
-
+> * For further project's organization considerations, you can use folders. In that case, the "makefile" should be modified respectively.
 --------
 The Goal
 -------------
