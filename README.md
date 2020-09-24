@@ -17,7 +17,7 @@ For example, partitioning a protein-protein interaction network into clusters ca
 
 The Goal
 -------------
-The goal in this project is to find a division that **maximizes the modularity**:
+The goal of this project is to find a division that **maximizes the modularity**:
 A division of the graph into groups such that the modularity Q, the sum of all group
 modularities, is close to maximal.
 
