@@ -43,13 +43,15 @@ Design
 
 Executing the Project
 -------------
-The executable file name is "cluster" (according to the makefile).
-It receives two command-line arguments:
-The 1st is an input filename, and the 2nd is an output filename. 
-The input of the program is a network (a graph), and the output is a list of groups (the division of the network).
-The makefile compiles all relevant parts of the code and creates an executable named cluster. 
+The **makefile** compiles all relevant parts of the code and creates an executable file named "cluster". 
 The code will be executed by running the "make all" command in a **UNIX** terminal.
 The makefile also contains a clean command.
+The file "cluster" receives two command-line arguments:
+The 1st is an input filename, and the 2nd is an output filename. 
+The input of the program is a network (a graph), and the output is a list of groups (the division of the network).
+
+> make all
+> ./cluster input_file_name output_file_name
 
 File Format
 -------------
