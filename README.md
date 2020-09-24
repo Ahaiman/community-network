@@ -14,7 +14,7 @@ For example, partitioning a protein-protein interaction network into clusters ca
 > * Each module in the project, contains fill information about the purpose of the file, the structure used (if exists) and their functions.
 > * The full information, can be found in the header files.
 > * For further project's organization considerations, you can use folders. In that case, the "makefile" should be modified respectively.
---------
+
 The Goal
 -------------
 The goal in this project is to find a division that **maximizes the modularity**:
