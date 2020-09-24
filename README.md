@@ -61,3 +61,9 @@ Technology Wise
 This project was created using C language, partitioned into files (modules) and functions.
 The design of the program, including interfaces, function declarations, and partition into modules, is described in the "design" section.
 
+Executing The Project
+-------------
+The makefile compiles all relevant parts of the code and creates an executable named cluster. 
+The code will be executed by running the "make all" command in a **UNIX** terminal.
+The makefile also contains a clean command.
+
