@@ -11,7 +11,8 @@ The ability to detect such groups is of significant importance.
 For example, partitioning a protein-protein interaction network into clusters can provide a modular view of the network, with different groups of nodes performing different functions within the cell.
 
 > Note:
-* Each module in the project, contains fill information about the purpose of the file, the structure used (if exists) and their functions.
+> * Each module in the project, contains fill information about the purpose of the file, the structure used (if exists) and their functions.
+> * The full information, can be found in the header files.
 
 --------
 The Goal
