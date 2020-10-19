@@ -2,6 +2,7 @@ Community Structure in Networks
 ===================
 
 > In complex networks, a network is said to have a **community structure** if the nodes of the network can be grouped into groups of nodes with dense connections internally, and sparser connections between the groups.
+The project been submitted ad a final project of "Software Course" with final grde of 100.
 
 --------
 Project Description
@@ -9,7 +10,6 @@ Project Description
 This project contains implementation of the main algorithm for detecting community structures (or clusters) in a network. 
 The ability to detect such groups is of significant importance.
 For example, partitioning a protein-protein interaction network into clusters can provide a modular view of the network, with different groups of nodes performing different functions within the cell.
-Project's finale grade: 100
 
 > Note:
 > * Each module in the project, contains information of the purpose of the file, the structures used (if there are any) and the functions.
