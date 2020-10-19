@@ -3,7 +3,7 @@ Community Structure in Networks
 
 > In complex networks, a network is said to have a **community structure** if the nodes of the network can be grouped into groups of nodes with dense connections internally, and sparser connections between the groups.
 
-The project been submitted ad a final project of "Software Course" with final grde of 100.
+The project been submitted as a final project of "Software Course" with final grade of 100.
 
 --------
 Project Description
